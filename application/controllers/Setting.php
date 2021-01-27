@@ -31,6 +31,7 @@ class Setting extends Base_Controller {
         $this->data['menu_id'] = 'settings';
 
 	}
+    
 	public function drugs ()
 	{	
         $this->data['title'] = 'Drugs';
