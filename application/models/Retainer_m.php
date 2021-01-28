@@ -20,6 +20,21 @@ class Retainer_m extends CI_Model {
         return $retainer;  
         
     }
+
+
+    public function add_price()
+    {
+        $data = array(
+            'retainer_id' => $this->input->post('retainer_id'),
+            'cost' => $this->input->post('price'),
+            'item_id' => $this->input->post('item_id'),
+            'item_type_id' => $this->input->post('item_type_id')
+        );
+        $insert = $this->db->insert('retainer_price_lists', $data);
+        return $insert;
+
+
+    }
 		
 }
 
