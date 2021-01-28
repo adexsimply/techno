@@ -11,8 +11,7 @@ class Department_m extends CI_Model {
     public function get_clinic_list() {
         $get_clinics = $this->db->select('*')->from('clinics')->get();
         $clinic_list = $get_clinics->result();
-        return $clinic_list;  
-        
+        return $clinic_list;        
     }
 
     public function get_patient_by_id($patient_id) {
@@ -58,5 +57,3 @@ class Department_m extends CI_Model {
 
 		
 }
-
-?>

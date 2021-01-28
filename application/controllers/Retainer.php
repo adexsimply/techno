@@ -1,46 +1,45 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Retainer extends Base_Controller {
+class Retainer extends Base_Controller
+{
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function __construct() {
-		
-		parent::__construct();
+    /**
+     * Index Page for this controller.
+     *
+     * Maps to the following URL
+     * 		http://example.com/index.php/welcome
+     *	- or -
+     * 		http://example.com/index.php/welcome/index
+     *	- or -
+     * Since this controller is set as the default controller in
+     * config/routes.php, it's displayed at http://example.com/
+     *
+     * So any other public methods not prefixed with an underscore will
+     * map to /index.php/welcome/<method_name>
+     * @see https://codeigniter.com/user_guide/general/urls.html
+     */
+    public function __construct()
+    {
 
-		$this->load->model('retainer_m');
-		$this->data['menu_id'] = 'retainer';
+        parent::__construct();
 
-	}
-	public function index ()
-	{	
-        $this->data['title'] = "Retainers"; 
-		$this->data['retainers_list'] =  $this->retainer_m->get_retainers_list();
-		$this->load->view('retainer/main', $this->data);
-
-	}
-	public function add ()
-	{	
-		$this->load->view('patients/add_patient', $this->data);
-
-	}
-    public function add_retainer ()
-    {   
-        $this->data['title'] = "Add Retainer"; 
+        $this->load->model('retainer_m');
+        $this->data['menu_id'] = 'retainer';
+    }
+    public function index()
+    {
+        $this->data['title'] = "Retainers";
+        $this->data['retainers_list'] =  $this->retainer_m->get_retainers_list();
+        $this->load->view('retainer/main', $this->data);
+    }
+    public function add()
+    {
+        $this->load->view('patients/add_patient', $this->data);
+    }
+    public function add_retainer()
+    {
+        $this->data['title'] = "Add Retainer";
         //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
 
         if ($this->uri->segment(3)) {
@@ -48,28 +47,26 @@ class Retainer extends Base_Controller {
             $this->data['retainer_details'] = $this->retainer_m->get_retainer_by_id($this->uri->segment(3));
         }
         $this->load->view('retainer/new_retainer_modal', $this->data);
-
     }
 
-	public function view ()
-	{	
-		if($this->uri->segment(3)) {
+    public function view()
+    {
+        if ($this->uri->segment(3)) {
 
-		$this->load->view('patients/view', $this->data);
-		}
-		else {
-			show_404();
-		}
-
-	}
+            $this->load->view('patients/view', $this->data);
+        } else {
+            show_404();
+        }
+    }
 
 
-	// public function load_image() {
+    // public function load_image() {
 
-	// 	$this->load->view('patients/image_test', $this->data);
-	// }
+    // 	$this->load->view('patients/image_test', $this->data);
+    // }
 
-	function upload_patient() {
+    function upload_patient()
+    {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('patient_title', 'Title', 'required', array('required' => 'Please select %s.'));
         $this->form_validation->set_rules('patient_name', 'Patient Name', 'required');
@@ -86,61 +83,58 @@ class Retainer extends Base_Controller {
         $this->form_validation->set_rules('nok_phone', 'Phone Number', 'required');
         $this->form_validation->set_rules('nok_relationship', 'Relationship', 'required');
         $this->form_validation->set_rules('nok_address', 'Address', 'required');
-        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">','</div>');
+        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
         if ($this->form_validation->run() == TRUE) {
-            if($_FILES['image']['error'] != 0) {
+            if ($_FILES['image']['error'] != 0) {
                 $result['status'] = false;
-                $result['message'] = array("image"=>"Select image to upload");
+                $result['message'] = array("image" => "Select image to upload");
             } else {
                 $config['upload_path']       = 'uploads';
                 $config['allowed_types']     = 'gif|jpg|jpeg|png';
-                $this->load->library('upload',$config);
+                $this->load->library('upload', $config);
                 $this->upload->initialize($config);
-                if ($this->upload->do_upload('image'))
-                {
+                if ($this->upload->do_upload('image')) {
                     $data['upload_data'] = $this->upload->data('file_name');
                     $image_name = $data['upload_data'];
-                }
-                else
-                {
+                } else {
                     $image_name = '';
                 }
                 $data = array(
 
-                'patient_name'         => $this->input->post('patient_name'),
-                'patient_id_num'    => $this->input->post('patient_id_num'),
-                'patient_photo'         => $image_name,
-                'patient_title'   => $this->input->post('patient_title'),
-                'patient_address'   => $this->input->post('patient_address'),
-                'patient_status'   => $this->input->post('patient_status'),
-                'patient_service'   => $this->input->post('patient_service'),
-                'patient_blood_group'   => $this->input->post('patient_blood_group'),
-                'patient_phone'   => $this->input->post('patient_phone'),
-                'patient_dob'   => $this->input->post('patient_dob'),
-                'patient_gender'   => $this->input->post('patient_gender'),
-                'patient_email'   => $this->input->post('patient_email'),
+                    'patient_name'         => $this->input->post('patient_name'),
+                    'patient_id_num'    => $this->input->post('patient_id_num'),
+                    'patient_photo'         => $image_name,
+                    'patient_title'   => $this->input->post('patient_title'),
+                    'patient_address'   => $this->input->post('patient_address'),
+                    'patient_status'   => $this->input->post('patient_status'),
+                    'patient_service'   => $this->input->post('patient_service'),
+                    'patient_blood_group'   => $this->input->post('patient_blood_group'),
+                    'patient_phone'   => $this->input->post('patient_phone'),
+                    'patient_dob'   => $this->input->post('patient_dob'),
+                    'patient_gender'   => $this->input->post('patient_gender'),
+                    'patient_email'   => $this->input->post('patient_email'),
                 );
 
 
                 $result['status'] = true;
 
-                $this->db->insert('patient_details',$data);
-	            $last_id = $this->db->insert_id();
+                $this->db->insert('patient_details', $data);
+                $last_id = $this->db->insert_id();
 
                 $data2 = array(
 
-                'nok_title'         => $this->input->post('nok_title'),
-                'nok_name'    => $this->input->post('nok_name'),
-                'nok_address'   => $this->input->post('nok_address'),
-                'nok_relationship'   => $this->input->post('nok_relationship'),
-                'nok_phone'   => $this->input->post('nok_phone'),
-                'patient_id'   => $last_id,
+                    'nok_title'         => $this->input->post('nok_title'),
+                    'nok_name'    => $this->input->post('nok_name'),
+                    'nok_address'   => $this->input->post('nok_address'),
+                    'nok_relationship'   => $this->input->post('nok_relationship'),
+                    'nok_phone'   => $this->input->post('nok_phone'),
+                    'patient_id'   => $last_id,
                 );
-                $this->db->insert('patient_nok',$data2);
+                $this->db->insert('patient_nok', $data2);
 
                 $result['message'] = "Data inserted successfully.";
             }
-        }else {
+        } else {
             $result['status'] = false;
             // $result['message'] = validation_errors();
             $result['message'] = $this->form_validation->error_array();
@@ -148,16 +142,17 @@ class Retainer extends Base_Controller {
         echo json_encode($result);
     }
 
-	function add_history() {
+    function add_history()
+    {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('case_title', 'Title', 'required', array('required' => 'Please select %s.'));
         $this->form_validation->set_rules('case_date', 'Date', 'required');
         $this->form_validation->set_rules('case_prescription', 'Prescription', 'required');
         $this->form_validation->set_rules('case_remark', 'Remark', 'required');
         $this->form_validation->set_rules('case_description', 'Description', 'required');
-        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">','</div>');
+        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
         if ($this->form_validation->run() == TRUE) {
-                $data = array(
+            $data = array(
 
                 'patient_id'         => $this->input->post('patient_id'),
                 'case_description'    => $this->input->post('case_description'),
@@ -165,16 +160,16 @@ class Retainer extends Base_Controller {
                 'case_title'   => $this->input->post('case_title'),
                 'case_prescription'   => $this->input->post('case_prescription'),
                 'case_date'   => $this->input->post('case_date')
-                );
+            );
 
 
-                $result['status'] = true;
+            $result['status'] = true;
 
-                $this->db->insert('patient_health_history',$data);
-	            
+            $this->db->insert('patient_health_history', $data);
 
-                $result['message'] = "Data inserted successfully.";
-            }else {
+
+            $result['message'] = "Data inserted successfully.";
+        } else {
             $result['status'] = false;
             // $result['message'] = validation_errors();
             $result['message'] = $this->form_validation->error_array();
@@ -182,44 +177,42 @@ class Retainer extends Base_Controller {
         echo json_encode($result);
     }
 
-	//////////////
-	public function validate_fee()
-	{
-		$rules = [
-			[
-				'field' => 'class',
-				'label' => 'Class',
-				'rules' => 'trim|required'
-			],
-			[
-				'field' => 'duration',
-				'label' => 'Duration',
-				'rules' => 'trim|required'
-			],
-			[
-				'field' => 'amount',
-				'label' => 'Amount',
-				'rules' => 'trim|required'
-			]
-		];
+    //////////////
+    public function validate_fee()
+    {
+        $rules = [
+            [
+                'field' => 'class',
+                'label' => 'Class',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'duration',
+                'label' => 'Duration',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'amount',
+                'label' => 'Amount',
+                'rules' => 'trim|required'
+            ]
+        ];
 
-		$this->form_validation->set_rules($rules);
-		if ($this->form_validation->run()) {
-			header("Content-type:application/json");
-			echo json_encode('success');
-		} else {
-			header("Content-type:application/json");
-			echo json_encode($this->form_validation->get_all_errors());
-		}
-
-	}
-
-public function add_fee_name()
-        {                
-        	$this->fee_m->add_fee_name();
-
-			header('Content-Type: application/json');
-	    	echo json_encode('success');
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
         }
+    }
 
+    public function add_fee_name()
+    {
+        $this->fee_m->add_fee_name();
+
+        header('Content-Type: application/json');
+        echo json_encode('success');
+    }
 }

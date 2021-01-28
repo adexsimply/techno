@@ -2,66 +2,68 @@
 <html lang="en">
 
 <head>
-<title>:: Techno :: <?php echo $title; ?></title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<link rel="icon" href="<?php echo base_url(); ?>favicon.ico" type="image/x-icon">
-<!-- VENDOR CSS -->
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/font-awesome/css/font-awesome.min.css">
+    <title>:: Techno :: <?php echo $title; ?></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" href="<?php echo base_url(); ?>favicon.ico" type="image/x-icon">
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/font-awesome/css/font-awesome.min.css">
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/jquery-datatable/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/jquery-datatable/fixedeader/dataTables.fixedcolumns.bootstrap4.min.css">
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/jquery-datatable/fixedeader/dataTables.fixedheader.bootstrap4.min.css">
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/sweetalert/sweetalert.css"/>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/jquery-datatable/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/jquery-datatable/fixedeader/dataTables.fixedcolumns.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/jquery-datatable/fixedeader/dataTables.fixedheader.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/vendor/sweetalert/sweetalert.css" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/confirm.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/confirm.css">
 
-<!-- MAIN CSS -->
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/main.css">
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/color_skins.css">
-<style>
-    td.details-control {
-    background: url('<?php echo base_url(); ?>assets/images/details_open.png') no-repeat center center;
-    cursor: pointer;
-}
-    tr.shown td.details-control {
-        background: url('<?php echo base_url(); ?>assets/images/details_close.png') no-repeat center center;
-    }
-</style>
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/main.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/color_skins.css">
+    <style>
+        td.details-control {
+            background: url('<?php echo base_url(); ?>assets/images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            background: url('<?php echo base_url(); ?>assets/images/details_close.png') no-repeat center center;
+        }
+    </style>
 </head>
+
 <body class="theme-cyan">
 
-<!-- Page Loader -->
-<div class="page-loader-wrapper">
+    <!-- Page Loader -->
+    <!-- <div class="page-loader-wrapper">
     <div class="loader">
         <div class="m-t-30"><img src="<?php echo base_url(); ?>assets/images/logo-icon.svg" width="48" height="48" alt="Lucid"></div>
         <p>Please wait...</p>        
     </div>
-</div>
-<!-- Overlay For Sidebars -->
+</div> -->
+    <!-- Overlay For Sidebars -->
 
-<div id="wrapper">
+    <div id="wrapper">
 
-    <nav class="navbar navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-btn">
-                <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
-            </div>
+        <nav class="navbar navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-btn">
+                    <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
+                </div>
 
-            <div class="navbar-brand">
-                <a href="<?php echo base_url(); ?>"><img src="<?php echo base_url(); ?>assets/images/logo_techno.png" alt="Lucid Logo" class="img-responsive logo"></a>                
-            </div>
-            
-            <div class="navbar-right">
-                <form id="navbar-search" class="navbar-form search-form">
-                    <input value="" class="form-control" placeholder="Search here..." type="text">
-                    <button type="button" class="btn btn-default"><i class="icon-magnifier"></i></button>
-                </form>
+                <div class="navbar-brand">
+                    <a href="<?php echo base_url(); ?>"><img src="<?php echo base_url(); ?>assets/images/logo_techno.png" alt="Lucid Logo" class="img-responsive logo"></a>
+                </div>
 
-               <!--  <div id="navbar-menu">
+                <div class="navbar-right">
+                    <form id="navbar-search" class="navbar-form search-form">
+                        <input value="" class="form-control" placeholder="Search here..." type="text">
+                        <button type="button" class="btn btn-default"><i class="icon-magnifier"></i></button>
+                    </form>
+
+                    <!--  <div id="navbar-menu">
                     <ul class="nav navbar-nav">
                         <li>
                             <a href="doctor-events.html" class="icon-menu d-none d-sm-block d-md-none d-lg-block"><i class="icon-calendar"></i></a>
@@ -153,6 +155,6 @@
                         </li>
                     </ul>
                 </div> -->
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>

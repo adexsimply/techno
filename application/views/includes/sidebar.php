@@ -13,7 +13,7 @@
                         <li><a href="<?php echo base_url('auth/logout'); ?>"><i class="icon-power"></i>Logout</a></li>
                     </ul>
                 </div>
-              <!--   <hr>
+                <!--   <hr>
                 <ul class="row list-unstyled">
                     <li class="col-4">
                         <small>Exp</small>
@@ -30,19 +30,19 @@
                 </ul> -->
             </div>
             <!-- Nav tabs -->
-           <!--  <ul class="nav nav-tabs">
+            <!--  <ul class="nav nav-tabs">
                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#menu">Menu</a></li>                
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#sub_menu"><i class="icon-grid"></i></a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Chat"><i class="icon-book-open"></i></a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#setting"><i class="icon-settings"></i></a></li>                
             </ul> -->
-                
+
             <!-- Tab panes -->
             <div class="tab-content p-l-0 p-r-0" style="height:80%;overflow-y: visible;">
                 <div class="tab-pane active" id="menu">
                     <nav class="sidebar-nav">
                         <ul class="main-menu metismenu">
-                            <li <?php if ($menu_id=='dashboard') {?> class="active"<?php } ?>><a href="<?php echo base_url(); ?>"><i class="icon-home"></i><span>Dashboard</span></a></li>
+                            <li <?php if ($menu_id == 'dashboard') { ?> class="active" <?php } ?>><a href="<?php echo base_url(); ?>"><i class="icon-home"></i><span>Dashboard</span></a></li>
                             <!--  <li><a href="app-taskboard.html"><i class="icon-list"></i>Taskboard</a></li>
                             <li><a href="app-inbox.html"><i class="icon-home"></i>Inbox App</a></li>
                             <li><a href="app-chat.html"><i class="icon-bubbles"></i>Chat App</a></li>
@@ -62,20 +62,21 @@
                                     <li><a href="patient-invoice.html">Invoice</a></li> -->
                                 </ul>
                             </li>
-                            <li <?php if ($menu_id=='personnel') {?> class="active"<?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-users"></i><span>Personnel</span> </a>
+                            <li <?php if ($menu_id == 'personnel') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-users"></i><span>Personnel</span> </a>
                                 <ul>
                                     <li><a href="<?php echo base_url('menu') ?>">Menus</a></li>
                                     <li><a href="<?php echo base_url('menu/assign') ?>">Assign Roles</a></li>
                                     <li><a href="<?php echo base_url('staff') ?>">Staff List</a></li>
                                 </ul>
                             </li>
-                            <li <?php if ($menu_id == 'appointment') {?> class="active"<?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-calendar"></i>Appointment</a>
+                            <li <?php if ($menu_id == 'appointment') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-calendar"></i>Appointment</a>
                                 <ul>
                                     <li><a href="<?php echo base_url('appointment') ?>">View Appointments</a></li>
-                                    <!-- <li><a href="<?php //echo base_url('appointment') ?>">Waiting List</a></li> -->
+                                    <!-- <li><a href="<?php //echo base_url('appointment') 
+                                                        ?>">Waiting List</a></li> -->
                                 </ul>
                             </li>
-                            <li <?php if ($menu_id == 'nursing') {?> class="active"<?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-user-female"></i>Nursing Care</a>
+                            <li <?php if ($menu_id == 'nursing') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-user-female"></i>Nursing Care</a>
                                 <ul>
                                     <li><a href="<?php echo base_url('nursing/vitals') ?>">Vitals</a></li>
                                     <li><a href="<?php echo base_url('nursing/notes') ?>">Handover Notes</a></li>
@@ -85,7 +86,8 @@
                                     <li><a href="<?php echo base_url('nursing/operations') ?>">Operations</a></li>
                                     <li><a href="<?php echo base_url('nursing/admission') ?>">Admission Register</a></li>
                                     <li><a href="<?php echo base_url('nursing/store_requests') ?>">Ward Occupation</a></li>
-                                    <!-- <li><a href="<?php //echo base_url('appointment') ?>">Waiting List</a></li> -->
+                                    <!-- <li><a href="<?php //echo base_url('appointment') 
+                                                        ?>">Waiting List</a></li> -->
                                 </ul>
                             </li>
                             <li><a href="javascript:void(0);" class="has-arrow"><i class="fa fa-plus"></i><span>Pharmacy</span> </a>
@@ -109,14 +111,14 @@
                                     <li><a href="<?php echo base_url('pharmacy/prescription_requests') ?>">Prescription Requests</a></li>
                                 </ul>
                             </li>
-                            <li<?php if ($menu_id=='settings') {?> class="active"<?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-settings"></i><span>Settings</span> </a>
+                            <li <?php if ($menu_id == 'settings') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-settings"></i><span>Settings</span> </a>
                                 <ul>
                                     <li><a href="<?php echo base_url('department') ?>">Departments</a></li>
-                                    <li><a href="<?php echo base_url('settings/parameters') ?>">Parameters</a></li>
+                                    <li><a href="<?php echo base_url('parameters') ?>">Parameters</a></li>
                                     <li><a href="<?php echo base_url('retainer') ?>">Retainers</a></li>
                                 </ul>
                             </li>
-                            <li <?php if ($menu_id=='users') {?> class="active"<?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-users"></i><span>Users</span> </a>
+                            <li <?php if ($menu_id == 'users') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-users"></i><span>Users</span> </a>
                                 <ul>
                                     <li><a href="<?php echo base_url('role') ?>">Roles</a></li>
                                     <li><a href="<?php echo base_url('menu') ?>">Menus</a></li>
@@ -126,7 +128,7 @@
                                 </ul>
                             </li>
                             <li style="margin-bottom: 30px;">&nbsp;</li>
-                           <!--   <li><a href="javascript:void(0);" class="has-arrow"><i class="icon-layers"></i><span>Departments</span> </a>
+                            <!--   <li><a href="javascript:void(0);" class="has-arrow"><i class="icon-layers"></i><span>Departments</span> </a>
                                 <ul>
                                     <li><a href="depa-add.html">Add</a></li>
                                     <li><a href="depa-all.html">All Departments</a></li>
@@ -255,9 +257,9 @@
                                     <li><a href="map-jvectormap.html">jVector Map</a></li>
                                 </ul>
                             </li> -->
-                        </ul>
-                    </nav>
-                </div>
+                </ul>
+                </nav>
+            </div>
             <!--     <div class="tab-pane p-l-15 p-r-15" id="Chat">
                     <form>
                         <div class="input-group m-b-20">
@@ -398,7 +400,7 @@
                             </label>
                         </li>
                     </ul>
-                </div>   -->           
-            </div>          
+                </div>   -->
         </div>
+    </div>
     </div>

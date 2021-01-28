@@ -1,59 +1,56 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class appointment extends Base_Controller {
+class appointment extends Base_Controller
+{
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function __construct() {
-		
-		parent::__construct();
+    /**
+     * Index Page for this controller.
+     *
+     * Maps to the following URL
+     * 		http://example.com/index.php/welcome
+     *	- or -
+     * 		http://example.com/index.php/welcome/index
+     *	- or -
+     * Since this controller is set as the default controller in
+     * config/routes.php, it's displayed at http://example.com/
+     *
+     * So any other public methods not prefixed with an underscore will
+     * map to /index.php/welcome/<method_name>
+     * @see https://codeigniter.com/user_guide/general/urls.html
+     */
+    public function __construct()
+    {
 
-		$this->load->model('appointment_m');
+        parent::__construct();
+
+        $this->load->model('appointment_m');
         $this->load->model('patient_m');
         $this->load->model('department_m');
         $this->data['menu_id'] = 'appointment';
-
-	}
-	public function index ()
-	{	
-        $this->data['title'] = 'Department';  
-		$this->data['appointment_list'] =  $this->appointment_m->get_appointment_list();
-       // $this->data['patient_list'] =  $this->patient_m->get_patient_names();
+    }
+    public function index()
+    {
+        $this->data['title'] = 'Department';
+        $this->data['appointment_list'] =  $this->appointment_m->get_appointment_list();
+        // $this->data['patient_list'] =  $this->patient_m->get_patient_names();
         $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
-		$this->load->view('appointment/main', $this->data);
+        $this->load->view('appointment/main', $this->data);
+    }
+    public function add()
+    {
+        $this->load->view('patients/add_patient', $this->data);
+    }
 
-	}
-	public function add ()
-	{	
-		$this->load->view('patients/add_patient', $this->data);
+    public function view()
+    {
+        if ($this->uri->segment(3)) {
 
-	}
-
-	public function view ()
-	{	
-		if($this->uri->segment(3)) {
-
-		$this->load->view('patients/view', $this->data);
-		}
-		else {
-			show_404();
-		}
-
-	}
+            $this->load->view('patients/view', $this->data);
+        } else {
+            show_404();
+        }
+    }
 
     public function delete_department_name()
     {
@@ -61,10 +58,11 @@ class appointment extends Base_Controller {
         $this->db->delete('departments', array('id' => $id));
     }
 
-    public function get_department_details() {
+    public function get_department_details()
+    {
 
         $department_list = $this->department_m->get_department_by_id();
-        echo "[".json_encode($department_list)."]";       
+        echo "[" . json_encode($department_list) . "]";
     }
 
 
@@ -72,48 +70,48 @@ class appointment extends Base_Controller {
 
 
 
-	// public function load_image() {
+    // public function load_image() {
 
-	// 	$this->load->view('patients/image_test', $this->data);
-	// }
+    // 	$this->load->view('patients/image_test', $this->data);
+    // }
 
 
-    function add_appointment() {
-        $user_id = $this->session->userdata('active_user')->id; 
+    function add_appointment()
+    {
+        $user_id = $this->session->userdata('active_user')->id;
         $this->load->library('form_validation');
         $this->form_validation->set_rules('appointment_date', 'Date', 'required');
         $this->form_validation->set_rules('appointment_time', 'Time', 'required');
         $this->form_validation->set_rules('clinic', 'Clinic', 'required');
-        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">','</div>');
+        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
         if ($this->form_validation->run() == TRUE) {
-                $data = array(
+            $data = array(
 
                 'patient_id'         => $this->input->post('patient_id'),
                 'appointment_date'    => $this->input->post('appointment_date'),
                 'appointment_time'         => $this->input->post('appointment_time'),
                 'clinic_id'   => $this->input->post('clinic')
+            );
+
+
+            $result['status'] = true;
+
+            $this->db->insert('patient_appointments', $data);
+
+            $last_id = $this->db->insert_id();
+            if (!empty($this->input->post('vital_signs'))) {
+                $data = array(
+
+                    'patient_id'         => $this->input->post('patient_id'),
+                    'appointment_id'    => $last_id,
+                    'sent_by'         => $user_id
                 );
 
+                $this->db->insert('vitals_request', $data);
+            }
 
-                $result['status'] = true;
-
-                $this->db->insert('patient_appointments',$data);
-                
-                $last_id = $this->db->insert_id();
-                if (!empty($this->input->post('vital_signs'))) {  
-                    $data = array(
-
-                'patient_id'         => $this->input->post('patient_id'),
-                'appointment_id'    => $last_id,
-                'sent_by'         => $user_id
-                );
-
-                $this->db->insert('vitals_request',$data);
-
-                }
-
-                $result['message'] = "Data inserted successfully.";
-            }else {
+            $result['message'] = "Data inserted successfully.";
+        } else {
             $result['status'] = false;
             // $result['message'] = validation_errors();
             $result['message'] = $this->form_validation->error_array();
@@ -141,19 +139,19 @@ class appointment extends Base_Controller {
             header("Content-type:application/json");
             echo json_encode($this->form_validation->get_all_errors());
         }
-
     }
 
     public function add_department_name()
-        {                
+    {
 
-            $this->department_m->create_department_name();
+        $this->department_m->create_department_name();
 
-            header('Content-Type: application/json');
-            echo json_encode('success');
-        }
+        header('Content-Type: application/json');
+        echo json_encode('success');
+    }
 
-    public function get_patient_list() {
+    public function get_patient_list()
+    {
         $patient_lists = array();
 
         $patients_list = $this->patient_m->get_patient_names();
@@ -161,22 +159,19 @@ class appointment extends Base_Controller {
         foreach ($patients_list as $patient_list) {
 
 
-        $patient_lists[] = array("id"=>$patient_list->id,"label"=>$patient_list->patient_name);
+            $patient_lists[] = array("id" => $patient_list->id, "label" => $patient_list->patient_name);
         }
 
         echo json_encode($patient_lists);
-
     }
 
-    public function get_patient_list2() {
+    public function get_patient_list2()
+    {
         $patient_lists2 = array();
 
         $patients_list2 = $this->patient_m->get_patient_names2();
-        $patient_lists2[] = array("id"=>$patients_list2->id,"name"=>$patients_list2->patient_name,"email"=>$patients_list2->patient_email);
+        $patient_lists2[] = array("id" => $patients_list2->id, "name" => $patients_list2->patient_name, "email" => $patients_list2->patient_email);
 
         echo json_encode($patient_lists2);
-
     }
-
-
 }
