@@ -17,7 +17,7 @@
 										<div class="input-group-append" data-target="#casedatepicker1" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
-										<input type="date" name="patient_reg_date" class="form-control datetimepicker-input" />
+										<input type="date" name="patient_reg_date" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_reg_date; ?>" <?php } ?> class="form-control datetimepicker-input" />
 									</div>
 									<span style="color:#ff0000;" class="error patient_reg_date"></span>
 								</div>
@@ -27,7 +27,7 @@
 										<div class="input-group-append" data-target="#casedatepicker1" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
-										<input type="date" name="patient_expiry_date" class="form-control datetimepicker-input" />
+										<input type="date" name="patient_expiry_date" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_expiry_date; ?>" <?php } ?> class="form-control datetimepicker-input" />
 									</div>
 									<span style="color:#ff0000;" class="error patient_expiry_date"></span>
 								</div>
@@ -79,7 +79,7 @@
 								</div>
 							</div>
 							<div class="form-row mt-2">
-								<div class="form-group col-md-8">
+								<div class="form-group col-md-4">
 									<label for="docEmail">Other Names</label><span style="color: red">*</span>
 									<input type="text" class="form-control" id="patient_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_name; ?>" <?php } ?> name="patient_other_names" placeholder="Enter Name">
 									<span style="color:#ff0000;" class="error patient_other_names"></span>
@@ -97,8 +97,6 @@
 									</select>
 									<span style="color:#ff0000;" class="error patient_tribe"></span>
 								</div>
-							</div>
-							<div class="form-row mt-2">
 								<div class="form-group col-md-4">
 									<label for="docpassword">Date of Birth</label>
 									<div class="input-group date" id="casedatepicker1" data-target-input="nearest">
@@ -126,60 +124,6 @@
 									</select>
 									<span style="color:#ff0000;" class="error patient_religion"></span>
 								</div>
-							</div>
-							<!-- 	<div class="form-row mt-2">
-							<div class="form-group col-md-4">
-							  	<label for="docEmail">Phone Number</label>
-							  	<input type="text" class="form-control" id="patient_phone" name="patient_phone" placeholder="Enter Number">
-								<span style="color:#ff0000;" class="error patient_phone"></span>
-							</div>
-							<div class="form-group col-md-4">
-							  	<label for="docName">Blood Group</label>
-								<select class="form-control" name="patient_blood_group" id="exampleFormControlSelect3">
-									<option value="">Select Blood Group</option>
-									<option value="A">A</option>
-									<option value="B">B</option>
-								</select>
-								<span style="color:#ff0000;" class="error patient_blood_group"></span>
-							</div>
-							<div class="form-group col-md-8">
-							  	<label for="docEmail">Address</label>
-							  	<input type="text" class="form-control" id="patient_address" name="patient_address" placeholder="Enter Address">
-								<span style="color:#ff0000;" class="error patient_address"></span>
-							</div>
-						</div> -->
-							<!-- 	<div class="form-row mt-2">
-							<div class="form-group col-md-6">
-							  	<label for="docEmail">State</label>
-								<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
-									<option value="">Select State</option>
-									<option value="A">Lawyer</option>
-								</select>
-								<span style="color:#ff0000;" class="error patient_occupation"></span>
-							</div>
-							<div class="form-group col-md-6">
-							  	<label for="docEmail">Country</label>
-								<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
-									<option value="">Select Country</option>
-									<option value="A">Lawyer</option>
-								</select>
-								<span style="color:#ff0000;" class="error patient_occupation"></span>
-							</div>
-						</div> -->
-							<div class="form-row mt-2">
-								<!-- <div class="form-group col-md-4">
-							  	<label for="docEmail">Occupation</label>
-								<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
-									<option value="">Select Status</option>
-									<option value="A">Lawyer</option>
-								</select>
-								<span style="color:#ff0000;" class="error patient_occupation"></span>
-							</div>
-							<div class="form-group col-md-4">
-							  	<label for="docEmail">Place of Origin</label>
-							  	<input type="text" class="form-control" id="patient_origin" name="patient_origin" placeholder="Enter Origin">
-								<span style="color:#ff0000;" class="error patient_origin"></span>
-							</div> -->
 								<div class="form-group col-md-4">
 									<label for="docName">Reg Type</label>
 									<select class="form-control" name="patient_regtype" id="exampleFormControlSelect7">
@@ -193,11 +137,14 @@
 									</select>
 									<span style="color:#ff0000;" class="error patient_regtype"></span>
 								</div>
-								<!-- 	<div class="form-group col-md-4">
-							  	<label for="docEmail">Upload Photo</label>
-							  	<input type="file" class="form-control" id="image2" name="image2" placeholder="Select Photo">
-								<span style="color:#ff0000;" class="error image"></span>
-							</div> -->
+								<div class="form-group col-md-4">
+									<label for="docEmail">Blood Group</label>
+									<input type="text" class="form-control" id="patient_blood_group" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_blood_group; ?>" <?php } ?> name="patient_blood_group" placeholder="Enter Patient Blood Group">
+								</div>
+								<div class="form-group col-md-4">
+									<label for="docEmail">Occupation</label>
+									<input type="text" class="form-control" id="patient_occupation" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_occupation; ?>" <?php } ?> name="patient_occupation" placeholder="Enter Patient Occupation">
+								</div>
 							</div>
 						</fieldset>
 
@@ -205,35 +152,31 @@
 							<legend> Address & other contact information</legend>
 							<div class="form-row mt-2">
 								<div class="form-group col-md-6">
-									<label for="docEmail">Address</label>
-									<textarea class="form-control" id="patient_address" name="patient_address"><?php if ($this->uri->segment(3)) { ?><?php echo $patient_details->patient_address; ?> <?php } ?></textarea>
-									<!-- <input type="text" class="form-control" id="patient_address" name="patient_address" placeholder="Enter Address"> -->
-									<span style="color:#ff0000;" class="error patient_address"></span>
+									<label for="docName">Next of Kin Title</label><span style="color: red">*</span>
+									<select class="form-control" name="nok_title" id="exampleFormControlSelect1">
+										<option value="">Select Title</option>
+										<option value="Mr" <?php if ($this->uri->segment(3)) {
+																if ($patient_details->nok_title == 'Mr') { ?> selected <?php }
+																												} ?>>Mr</option>
+										<option value="Miss" <?php if ($this->uri->segment(3)) {
+																	if ($patient_details->nok_title == 'Miss') { ?> selected <?php }
+																														} ?>>Miss</option>
+									</select>
+									<span style="color:#ff0000;" class="error nok_title"></span>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">Phone Number</label>
 									<input type="text" class="form-control" id="patient_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_phone; ?>" <?php } ?> name="patient_phone" placeholder="Enter Number">
 									<span style="color:#ff0000;" class="error patient_phone"></span>
 								</div>
-							</div>
-
-							<div class="form-row mt-2">
-								<!-- <div class="form-group col-md-4">
-							  	<label for="docName">Title</label>
-								<select class="form-control" name="nok_title" id="nok_title">
-									<option value="">Select Title</option>
-									<option value="Mr">Mr</option>
-								</select>
-								<span style="color:#ff0000;" class="error nok_title"></span>
-							</div> -->
 								<div class="form-group col-md-6">
-									<label for="docName">Next of Kin Name</label>
+									<label for="docName">Next of Kin Name</label><span style="color: red">*</span>
 									<input type="text" class="form-control" id="nok_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_name; ?>" <?php } ?> name="nok_name" placeholder="Enter Name">
 									<span style="color:#ff0000;" class="error nok_name"></span>
 								</div>
-								<div class="form-group col-md-6">
+								<!-- <div class="form-group col-md-6">
 									<label for="docEmail">Occupation</label>
-									<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
+									<select class="form-control" name="patient_occupation" id="patient_occupation">
 										<option value="">Select Status</option>
 										<option value="Lawyer" <?php if ($this->uri->segment(3)) {
 																	if ($patient_details->patient_occupation == 'Lawyer') { ?> selected <?php }
@@ -249,21 +192,34 @@
 																														} ?>>A</option>
 									</select>
 									<span style="color:#ff0000;" class="error patient_occupation"></span>
-								</div>
+								</div> -->
 								<div class="form-group col-md-6">
-									<label for="docEmail">Next of Kin Relationship</label>
+									<label for="docEmail">Next of Kin Relationship</label><span style="color: red">*</span>
 									<input type="text" name="nok_relationship" class="form-control" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_relationship; ?>" <?php } ?> id="nok_relationship" placeholder="Enter Relationship">
 									<span style="color:#ff0000;" class="error nok_relationship"></span>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">City Area</label>
-									<input type="text" class="form-control" id="patient_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_phone; ?>" <?php } ?> name="patient_phone" placeholder="Area">
-									<span style="color:#ff0000;" class="error patient_phone"></span>
+									<input type="text" class="form-control" id="patient_city" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_city; ?>" <?php } ?> name="patient_city" placeholder="Area">
+									<span style="color:#ff0000;" class="error patient_city"></span>
 								</div>
 								<div class="form-group col-md-6">
-									<label for="docName">Next of Kin Number</label>
+									<label for="docName">Next of Kin Number</label><span style="color: red">*</span>
 									<input type="text" class="form-control" id="nok_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_phone; ?>" <?php } ?> name="nok_phone" placeholder="Enter Number">
 									<span style="color:#ff0000;" class="error nok_phone"></span>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="docEmail">State</label>
+									<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
+										<option value="">Select State</option>
+										<option value="A">Lawyer</option>
+									</select>
+									<span style="color:#ff0000;" class="error patient_occupation"></span>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="docEmail">Next of Kin Address</label><span style="color: red">*</span>
+									<input type="text" name="nok_address" class="form-control" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_address; ?>" <?php } ?> id="nok_address" placeholder="Enter Address">
+									<span style="color:#ff0000;" class="error nok_address"></span>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">Country</label>
@@ -273,18 +229,11 @@
 									</select>
 									<span style="color:#ff0000;" class="error patient_occupation"></span>
 								</div>
-								<div class="form-group col-md-6">
-									<label for="docEmail">Next of Kin Address</label>
-									<input type="text" name="nok_address" class="form-control" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_address; ?>" <?php } ?> id="nok_address" placeholder="Enter Address">
-									<span style="color:#ff0000;" class="error nok_address"></span>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docEmail">State</label>
-									<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
-										<option value="">Select State</option>
-										<option value="A">Lawyer</option>
-									</select>
-									<span style="color:#ff0000;" class="error patient_occupation"></span>
+								<div class="form-group col-md-12">
+									<label for="docEmail">Address</label>
+									<textarea class="form-control" id="patient_address" name="patient_address"><?php if ($this->uri->segment(3)) { ?><?php echo $patient_details->patient_address; ?> <?php } ?></textarea>
+									<!-- <input type="text" class="form-control" id="patient_address" name="patient_address" placeholder="Enter Address"> -->
+									<span style="color:#ff0000;" class="error patient_address"></span>
 								</div>
 							</div>
 						</fieldset>
