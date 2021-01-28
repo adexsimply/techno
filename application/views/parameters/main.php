@@ -42,7 +42,7 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-hover js-basic-example dataTable table-custom">
+                            <table class="table table-bordered table-striped table-hover dataTable js-exportable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th width="5%">S/N</th>
