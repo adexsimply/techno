@@ -226,7 +226,7 @@
 								</fieldset>
 
 								<div class="d-flex justify-content-end">
-									<button type="submit" title="add_patient" onclick="form_routes_add('add_patient')" class="btn btn-primary px-4 m-2">Register</button>
+									<input type="submit" title="add_patient" class="btn btn-primary px-4 m-2" value="Register">
 								</div>
 							</form>
 						</div>
@@ -239,4 +239,3 @@
 </div>
 <?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('patient/script'); ?>
-<?php $this->load->view('patient/create_script'); ?>

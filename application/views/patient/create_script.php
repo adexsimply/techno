@@ -5,7 +5,7 @@
         $('#add-patient').disable([".action"]);
         $("button[title='add_patient']").html("Validating data, please wait...");
         $.ajax({
-            url: "<?php echo base_url() . 'parameters/validate'; ?>",
+            url: "<?php echo base_url() . 'patient/patient_validate'; ?>",
             async: false,
             type: 'POST',
             enctype: 'multipart/form-data',
@@ -36,6 +36,23 @@
         console.log(returnData);
     }
 
+    function validate_image(formData) {
+        var returnData;
+        $('#add-patient').disable([".action"]);
+        $("button[title='add_patient']").html("Validating data, please wait...");
+        $.ajax({
+            url: "<?php echo base_url() . 'patient/validate_image'; ?>",
+            async: false,
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            data: formData,
+            success: function(data, textStatus, jqXHR) {
+                returnData = data;
+                console.log(returnData);
+            }
+        });
+    }
+
     function save_patient_name(formData) {
         $("button[title='add_patient']").html("Saving data, please wait...");
         $.post("<?php echo base_url() . 'parameters/add_new_parameter'; ?>", formData).done(function(data) {
@@ -49,20 +66,21 @@
             var formData = $('#add-patient').serialize();
             if (validate(formData) == 'success') {
 
-                $.confirm({
-                    title: 'Add Parameter',
-                    content: 'Are you sure you want to add new Parameter?',
-                    icon: 'fa fa-check-circle',
-                    type: 'green',
-                    buttons: {
-                        yes: function() {
-                            save_patient_name(formData);
-                        },
-                        no: function() {
+                if (validate_image(formData) == 'success') {}
+                // $.confirm({
+                //     title: 'Add Parameter',
+                //     content: 'Are you sure you want to add new Parameter?',
+                //     icon: 'fa fa-check-circle',
+                //     type: 'green',
+                //     buttons: {
+                //         yes: function() {
+                //             save_patient_name(formData);
+                //         },
+                //         no: function() {
 
-                        }
-                    }
-                });
+                //         }
+                //     }
+                // });
             }
         } else {
             cancel();

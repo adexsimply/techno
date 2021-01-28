@@ -82,21 +82,25 @@ class Patient extends Base_Controller
 
     function patient_validate()
     {
-        $rules = [
-            [
-                'field' => 'patient_title',
-                'label' => 'Title',
-                'rules' => 'trim|required'
-            ],
-            [
-                'field' => 'patient_name',
-                'label' => 'Patient Name',
-                'rules' => 'trim|required|min_length[3]'
-            ],
-        ];
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('patient_title', 'Title', 'required', array('required' => 'Please select %s.'));
+        $this->form_validation->set_rules('patient_name', 'Patient Name', 'required');
+        $this->form_validation->set_rules('patient_id_num', 'Patient ID', 'required');
+        $this->form_validation->set_rules('patient_gender', 'Gender', 'required');
+        $this->form_validation->set_rules('patient_dob', 'Date of Birth', 'required');
+        $this->form_validation->set_rules('patient_phone', 'Patient Phone Number', 'required');
+        $this->form_validation->set_rules('patient_blood_group', 'Blood Group', 'required');
+        $this->form_validation->set_rules('patient_address', 'Address', 'required');
+        // $this->form_validation->set_rules('patient_occupation', 'Patient Occupation', 'required');
+        $this->form_validation->set_rules('patient_regtype', 'Registration Type', 'required');
+        $this->form_validation->set_rules('nok_title', 'Title', 'required');
+        $this->form_validation->set_rules('nok_name', 'Name', 'required');
+        $this->form_validation->set_rules('nok_phone', 'Phone Number', 'required');
+        $this->form_validation->set_rules('nok_relationship', 'Relationship', 'required');
+        $this->form_validation->set_rules('nok_address', 'Address', 'required');
 
-        $this->form_validation->set_rules($rules);
-        echo $this->form_validation->get_all_errors();
+        // $this->form_validation->set_rules($rules);
+        // echo $this->form_validation->get_all_errors();
         if ($this->form_validation->run()) {
             header("Content-type:application/json");
             echo json_encode('success');
@@ -105,6 +109,17 @@ class Patient extends Base_Controller
             echo json_encode($this->form_validation->get_all_errors());
         }
     }
+
+    function validate_image()
+    {
+        echo json_encode($_FILES['image']);
+        // if ($_FILES['image']['error'] != 0) {
+        //     $result['status'] = false;
+        //     $result['message'] = array("image" => "Select image to upload");
+        //     echo json_encode($result);
+        // }
+    }
+
     function upload_patient()
     {
         $this->load->library('form_validation');
@@ -144,6 +159,7 @@ class Patient extends Base_Controller
                 } else {
                     $patient_status = $this->input->post('patient_status2');
                 }
+
                 $data = array(
 
                     'patient_name'         => $this->input->post('patient_name'),
