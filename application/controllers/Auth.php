@@ -1,5 +1,6 @@
 <?php
-class Auth extends CI_Controller {
+class Auth extends CI_Controller
+{
 
 	//////
 
@@ -7,6 +8,7 @@ class Auth extends CI_Controller {
 	{
 		$data['title'] = 'Login';
 		$this->load->view('login', $data);
+		$this->load->model('staff_m');
 	}
 	//////////////
 	public function login_attempt()
@@ -31,11 +33,31 @@ class Auth extends CI_Controller {
 				header("Content-type:application/json");
 				echo json_encode(['password' => 'Wrong username or password']);
 			} else {
-				$this->session->set_userdata('active_user', $attempt);
-			
-				//
-				header("Content-type:application/json");
-				echo json_encode(['status' => 'success']);
+				if ($attempt->user_status == 'Active') {
+					$this->session->set_userdata('active_user', $attempt);
+					header("Content-type:application/json");
+					echo json_encode(['status' => 'success']);
+				} elseif ($attempt->user_status == 'Disabled') {
+					header("Content-type:application/json");
+					echo json_encode(['username' => 'Your Account has been disabled']);
+				} elseif ($attempt->user_status == 'Suspended') {
+					if ($attempt->suspension_time > time()) {
+						header("Content-type:application/json");
+						echo json_encode(['password' => 'Your Account has been disabled']);
+					} else {
+						// $this->staff_m->suspend_update($attempt->id);
+						$data = array(
+							'suspension_time' => null,
+							'user_status' => 'Active'
+						);
+
+						$this->db->where('id', $attempt->id);
+						$update = $this->db->update('users', $data);
+						$this->session->set_userdata('active_user', $attempt);
+						header("Content-type:application/json");
+						echo json_encode(['status' => 'success']);
+					}
+				}
 			}
 		} else {
 			header("Content-type:application/json");
@@ -43,17 +65,16 @@ class Auth extends CI_Controller {
 		}
 	}
 	/**
-     * Logout User
-     *
-     * @access 	public
-     * @param 	
-     * @return 	redirect
-     */
+	 * Logout User
+	 *
+	 * @access 	public
+	 * @param 	
+	 * @return 	redirect
+	 */
 
-	public function logout() {
+	public function logout()
+	{
 		$this->session->unset_userdata('active_user');
-		redirect(base_url().'auth/login');
+		redirect(base_url() . 'auth/login');
 	}
 }
-
-?>

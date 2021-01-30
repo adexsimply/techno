@@ -3,8 +3,7 @@
          <!--    <div class="modal-header">
                 <h6 class="title" id="defaultModalLabel">Add Staff</h6>
             </div> -->
-                <div class="row clearfix">
-                    
+                <div class="row clearfix">                    
                    <?php //var_dump($user_details); ?>
                    <?php if (!$this->uri->segment(3)) {  ?>
                      <div class="col-4">
@@ -116,7 +115,7 @@
         document.getElementById('fullname').removeAttribute("disabled");
         //document.getElementById('staff_name').focus();
         document.getElementById('staff_name').setAttribute("disabled", "true");
-        $("#staff_name").val('');   
+        $("#staff_name").val('');
       }
       
     }

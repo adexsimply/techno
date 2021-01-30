@@ -72,7 +72,7 @@ z-index: 2150000000;
                         </div>
                         <div class="body">
                             <!-- Nav tabs -->
-                            <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#addappointment" onclick="clear_textbox()">
+                            <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="New Appointment" href="<?php echo base_url('appointment/new_appointment') ?>">
                                 <i class="icon wb-plus" aria-hidden="true"></i> Create Appointment
                             </button>
 

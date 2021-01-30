@@ -42,6 +42,38 @@ class appointment extends Base_Controller
         $this->load->view('patients/add_patient', $this->data);
     }
 
+    public function new_appointment ()
+    {   
+        $this->data['title'] = "Add Appointment"; 
+        $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+        //$this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+        //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
+
+        if ($this->uri->segment(3)) {
+
+            $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+        }
+        $this->load->view('appointment/new_appointment_modal', $this->data);
+
+    }
+
+
+    public function new_appointment2 ()
+    {   
+        $this->data['title'] = "Add Appointment"; 
+        $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+        $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+        //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
+
+        if ($this->uri->segment(3)) {
+
+            $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+        }
+        $this->load->view('appointment/new_appointment_modal2', $this->data);
+
+    }
+
+
     public function view()
     {
         if ($this->uri->segment(3)) {
@@ -117,6 +149,7 @@ class appointment extends Base_Controller
             $result['message'] = $this->form_validation->error_array();
         }
         echo json_encode($result);
+        redirect('/appointment', 'refresh');
     }
 
 
