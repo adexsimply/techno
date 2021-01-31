@@ -4,7 +4,7 @@ class Appointment_m extends CI_Model
 
     public function get_appointment_list()
     {
-        $get_appointments = $this->db->select('pa.*,p.*,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname, pa.id as app_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->get();
+        $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname, pa.id as app_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->order_by('p.id', 'ASC')->get();
         $appointment_list = $get_appointments->result();
         return $appointment_list;
     }

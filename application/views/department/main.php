@@ -1,19 +1,19 @@
 <?php $this->load->view('includes/head_2'); ?>
 <?php $this->load->view('includes/sidebar'); ?>
 
-    <div id="main-content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <div class="row">
-                    <div class="col-lg-6 col-md-8 col-sm-12">
-                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Departments</h2>
-                       <!--  <ul class="breadcrumb">
+<div id="main-content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-6 col-md-8 col-sm-12">
+                    <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Departments</h2>
+                    <!--  <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html"><i class="icon-home"></i></a></li>                            
                             <li class="breadcrumb-item">Table</li>
                             <li class="breadcrumb-item active">Jquery Datatable</li>
                         </ul> -->
-                    </div>            
-               <!--      <div class="col-lg-6 col-md-4 col-sm-12 text-right">
+                </div>
+                <!--      <div class="col-lg-6 col-md-4 col-sm-12 text-right">
                         <div class="bh_chart hidden-xs">
                             <div class="float-left m-r-15">
                                 <small>Visitors</small>
@@ -36,60 +36,59 @@
                             <span class="bh_chats float-right">1,8,5,6,2,4,3,2</span>
                         </div>
                     </div> -->
-                </div>
             </div>
+        </div>
 
 
-            <div class="row clearfix">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <!-- <div class="header">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <!-- <div class="header">
                             <h2>Departments</h2>                       
                         </div> -->
-                        <div class="body">
-                            <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#addcontact" onclick="clear_textbox()">
-                                <i class="icon wb-plus" aria-hidden="true"></i> Add Department
-                            </button>
-                            <table class="table table-bordered table-hover table-striped" cellspacing="0" id="example">
-                                <thead>
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Department Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Department Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <?php 
-                                    $i=1;
-                                    foreach ($department_list as $department) { ?>
+                    <div class="body">
+                        <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#addcontact" onclick="clear_textbox()">
+                            <i class="icon wb-plus" aria-hidden="true"></i> Add Department
+                        </button>
+                        <table class="table table-bordered table-hover table-striped" cellspacing="0" id="example">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Department Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Department Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <?php
+                                $i = 1;
+                                foreach ($department_list as $department) { ?>
                                     <tr class="gradeA">
                                         <td><?php echo $i; ?></td>
                                         <td><?php echo $department->department_name; ?></td>
                                         <td class="actions">
-                                            <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit"
-                                            data-toggle="tooltip" data-original-title="Edit" onclick="get_department_data('<?php echo $department->id; ?>')"><i class="icon-pencil" aria-hidden="true" data-toggle="modal" data-target="#addcontact"></i></a>
-                                            <button class="btn btn-sm btn-icon btn-pure btn-default on-default button-remove"
-                                            data-toggle="tooltip" data-original-title="Remove" onclick="delete_department_name('<?php echo $department->id; ?>')"><i class="icon-trash" aria-hidden="true"></i></a>
+                                            <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" data-toggle="tooltip" data-original-title="Edit" onclick="get_department_data('<?php echo $department->id; ?>')"><i class="icon-pencil" aria-hidden="true" data-toggle="modal" data-target="#addcontact"></i></button>
+                                            <button class="btn btn-sm btn-icon btn-pure btn-default on-default button-remove" data-toggle="tooltip" data-original-title="Remove" onclick="delete_department_name('<?php echo $department->id; ?>')"><i class="icon-trash" aria-hidden="true"></i></button>
                                         </td>
                                     </tr>
-                                    <?php $i++; } ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                <?php $i++;
+                                } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
         </div>
+
     </div>
-    
+</div>
+
 <?php $this->load->view('department/department-modal'); ?>
 <?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('department/script'); ?>

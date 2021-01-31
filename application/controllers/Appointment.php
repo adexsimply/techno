@@ -31,7 +31,7 @@ class appointment extends Base_Controller
     }
     public function index()
     {
-        $this->data['title'] = 'Department';
+        $this->data['title'] = 'Appointments';
         $this->data['appointment_list'] =  $this->appointment_m->get_appointment_list();
         // $this->data['patient_list'] =  $this->patient_m->get_patient_names();
         $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
@@ -42,9 +42,9 @@ class appointment extends Base_Controller
         $this->load->view('patients/add_patient', $this->data);
     }
 
-    public function new_appointment ()
-    {   
-        $this->data['title'] = "Add Appointment"; 
+    public function new_appointment()
+    {
+        $this->data['title'] = "Add Appointment";
         $this->data['patients_list'] =  $this->patient_m->get_patient_list();
         //$this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
@@ -54,13 +54,12 @@ class appointment extends Base_Controller
             $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
         }
         $this->load->view('appointment/new_appointment_modal', $this->data);
-
     }
 
 
-    public function new_appointment2 ()
-    {   
-        $this->data['title'] = "Add Appointment"; 
+    public function new_appointment2()
+    {
+        $this->data['title'] = "Add Appointment";
         $this->data['patients_list'] =  $this->patient_m->get_patient_list();
         $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
@@ -70,7 +69,6 @@ class appointment extends Base_Controller
             $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
         }
         $this->load->view('appointment/new_appointment_modal2', $this->data);
-
     }
 
 
@@ -90,6 +88,13 @@ class appointment extends Base_Controller
         $this->db->delete('departments', array('id' => $id));
     }
 
+    public function delete_appointment()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('patient_appointments', array('id' => $id));
+        // $this->db->delete('vitals_request', array('appointment_id' => $id));
+    }
+
     public function get_department_details()
     {
 
@@ -107,49 +112,80 @@ class appointment extends Base_Controller
     // 	$this->load->view('patients/image_test', $this->data);
     // }
 
+    function validate_new()
+    {
+        $rules = [
+            [
+                'field' => 'appointment_date',
+                'label' => 'Appointment Date',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'appointment_time',
+                'label' => 'Appointment Time',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'clinic',
+                'label' => 'Clinic',
+                'rules' => 'trim|required'
+            ],
+
+        ];
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
 
     function add_appointment()
     {
         $user_id = $this->session->userdata('active_user')->id;
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('appointment_date', 'Date', 'required');
-        $this->form_validation->set_rules('appointment_time', 'Time', 'required');
-        $this->form_validation->set_rules('clinic', 'Clinic', 'required');
-        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
-        if ($this->form_validation->run() == TRUE) {
-            $data = array(
+        $data = array(
 
-                'patient_id'         => $this->input->post('patient_id'),
-                'appointment_date'    => $this->input->post('appointment_date'),
-                'appointment_time'         => $this->input->post('appointment_time'),
-                'clinic_id'   => $this->input->post('clinic')
-            );
+            'patient_id'         => $this->input->post('patient_id'),
+            'appointment_date'    => $this->input->post('appointment_date'),
+            'appointment_time'         => $this->input->post('appointment_time'),
+            'clinic_id'   => $this->input->post('clinic')
+        );
 
 
-            $result['status'] = true;
+        $result['status'] = true;
 
-            $this->db->insert('patient_appointments', $data);
+        $this->db->insert('patient_appointments', $data);
 
-            $last_id = $this->db->insert_id();
-            if (!empty($this->input->post('vital_signs'))) {
-                $data = array(
+        // $last_id = $this->db->insert_id();
+        // if (!empty($this->input->post('vital_signs'))) {
+        //     $data = array(
 
-                    'patient_id'         => $this->input->post('patient_id'),
-                    'appointment_id'    => $last_id,
-                    'sent_by'         => $user_id
-                );
+        //         'patient_id'         => $this->input->post('patient_id'),
+        //         'appointment_id'    => $last_id,
+        //         'sent_by'         => $user_id
+        //     );
 
-                $this->db->insert('vitals_request', $data);
-            }
+        //     $this->db->insert('vitals_request', $data);
+        // }
+        // $this->load->library('form_validation');
+        // $this->form_validation->set_rules('appointment_date', 'Appointment Date', 'required');
+        // $this->form_validation->set_rules('appointment_time', 'Appointment Time', 'required');
+        // $this->form_validation->set_rules('clinic', 'Clinic', 'required');
+        // $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
+        // if ($this->form_validation->run() == TRUE) {
 
-            $result['message'] = "Data inserted successfully.";
-        } else {
-            $result['status'] = false;
-            // $result['message'] = validation_errors();
-            $result['message'] = $this->form_validation->error_array();
-        }
-        echo json_encode($result);
-        redirect('/appointment', 'refresh');
+
+
+        //     $result['message'] = "Data inserted successfully.";
+        // } else {
+        //     $result['status'] = false;
+        //     // $result['message'] = validation_errors();
+        //     $result['message'] = $this->form_validation->error_array();
+        // }
+        // echo json_encode($result);
+        // redirect('/appointment', 'refresh');
     }
 
 
