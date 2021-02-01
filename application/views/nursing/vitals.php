@@ -1,5 +1,7 @@
 <?php $this->load->view('includes/head_2'); ?>
 <?php $this->load->view('includes/sidebar') ?>
+<link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
+<link src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js" rel="stylesheet">
 <div id="main-content">
     <div class="container-fluid">
         <div class="block-header">
@@ -30,7 +32,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="display table table-hover" id="example" width="100%">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
@@ -264,7 +266,33 @@
 
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script>
+    $(document).ready(function() {
+        // Setup - add a text input to each footer cell
+        $('#example thead tr').clone(true).appendTo('#example thead');
+        $('#example thead tr:eq(1) th').each(function(i) {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
 
+            $('input', this).on('keyup change', function() {
+                if (table.column(i).search() !== this.value) {
+                    table
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        var table = $('#example').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true,
+            paging: false,
+            searching: false
+        });
+    });
+</script>
 
 <?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('nursing/script'); ?>
