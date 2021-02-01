@@ -4,7 +4,7 @@ class Nursing_m extends CI_Model
 
     public function get_vitals_request_list()
     {
-        $get_vitals_request = $this->db->select('vr.*,p.*,a.*,c.clinic_name')->from('vitals_request vr')->join('patient_details as p', 'p.id=vr.patient_id', 'left')->join('patient_appointments as a', 'a.id=vr.appointment_id', 'left')->join('clinics as c', 'a.clinic_id=c.id', 'left')->get();
+        $get_vitals_request = $this->db->select('pv.*,p.*,a.*,u.fullname,c.clinic_name')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('users as u', 'u.id=pv.doctor_id', 'lrft')->join('clinics as c', 'c.id=pv.id', 'left')->get();
         $vitals_request_list = $get_vitals_request->result();
         return $vitals_request_list;
     }
@@ -48,5 +48,49 @@ class Nursing_m extends CI_Model
         $get_admission_requests = $this->db->select('ar.*,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date')->from('admission_requests ar')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->get();
         $admission_requests = $get_admission_requests->result();
         return $admission_requests;
+    }
+
+    /////Add New User
+    public function create_new_vital()
+    {
+
+        if ($this->input->post('vital_id')) {
+            //  $data2 = array(
+            //      'role_id' => $this->input->post('role'),
+            //      'username' => $this->input->post('username'),
+            //      'password' => $this->input->post('password')
+            //  );
+            //  $this->db->where('id', $this->input->post('user_id')); 
+            //  $this->db->update('patient_vitals', $data2);
+        } else {
+            $data2 = array(
+                'clinic_id' => $this->input->post('clinic_id'),
+                'doctor_id' => $this->input->post('doctor_id'),
+                'appointment_id' => $this->input->post('appointment_id'),
+                'patient_id' => $this->input->post('patient_id'),
+                'weight' => $this->input->post('weight'),
+                'height' => $this->input->post('height'),
+                'BMI' => $this->input->post('BMI'),
+                'bmi_remark' => $this->input->post('bmi_remark'),
+                'HC' => $this->input->post('HC'),
+                'MUAC' => $this->input->post('MUAC'),
+                'nutritional_status' => $this->input->post('nutritional_status'),
+                'BP' => $this->input->post('BP'),
+                'temp' => $this->input->post('temp'),
+                'ANC' => $this->input->post('ANC'),
+                'respiration' => $this->input->post('respiration'),
+                'paulse' => $this->input->post('paulse'),
+                'SPO2' => $this->input->post('SPO2'),
+                'RE' => $this->input->post('RE'),
+                'LE' => $this->input->post('LE'),
+                'LMP' => $this->input->post('LMP'),
+                'EGA' => $this->input->post('EGA'),
+                'EDD' => $this->input->post('EDD'),
+            );
+
+            $insert = $this->db->insert('patient_vitals', $data2);
+            $user_id = $this->db->insert_id();
+            return $insert;
+        }
     }
 }

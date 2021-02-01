@@ -155,19 +155,6 @@
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="LMP"></code>
                         </div>
-                        <!-- <div class="col-lg-4 col-md-6">
-                            <b>EDD</b>
-                            <div class="input-group">
-                                <input type="text" class="form-control email" placeholder="75">
-                            </div>
-                        </div> -->
-                        <!-- <div class="col-lg-4 col-md-6">
-                            <b>EGA</b>
-                            <div class="input-group">
-                                <input type="text" class="form-control key" placeholder="60">
-                                <span style="color:#ff0000;" class="error appointment_date"></span>
-                            </div>
-                        </div> -->
                         <div class="col-lg-12 col-md-6 mb-3">
                             <b>To See</b>
                             <div class="input-group">
