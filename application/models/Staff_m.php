@@ -95,22 +95,6 @@ class Staff_m extends CI_Model
 
             $this->db->update('users', $data2);
         } else {
-            // $data = array(
-            //     'username' => $this->input->post('username'),
-            //     'password' => $this->input->post('password'),
-            //     'role_id' => $this->input->post('role')
-            // );
-            // $insert = $this->db->insert('users', $data);
-            // $user_id = $this->db->insert_id();
-
-            // if ($this->input->post('can_consult')) {
-            //     $can_consult = $this->input->post('can_consult');
-            // }
-            // else {
-            //     $can_consult = 0;
-            // }
-
-
             $data2 = array(
                 //'user_id' => $user_id,
                 'fullname' => $this->input->post('fullname'),

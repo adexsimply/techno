@@ -1,6 +1,32 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 
+ 
+$('input[name="dates"]').daterangepicker();   
+function delete_vital_now(rowIndex) {
+    swal({
+        title: "Are you sure want to delete this Vital?",
+        text: "Deleted Vital can not be restored!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        cancelButtonText: "Cancel",
+        confirmButtonText: "Proceed",
+        closeOnConfirm: true
+      },
+      function(isConfirm) {
+        if (isConfirm) {
+          console.log(rowIndex)
+          $.post("<?php echo base_url() . 'nursing/delete_vital'; ?>", {
+            id: rowIndex
+          }).done(function(data) {
+            location.reload();
+          });
+
+        }
+    })
+}
+
   $(function() {
     function log( message ) {
       $( "<div>" ).text( message ).prependTo( "#log" );
@@ -66,6 +92,9 @@
       }
     });
   });
+
+  
+    
 
    function toggleRadio(flag){
       if(!flag) {

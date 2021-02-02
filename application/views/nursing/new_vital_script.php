@@ -47,6 +47,7 @@
     function form_routes_vital(action) {
         if (action == 'add_vital') {
             var formData = $('#add-vital').serialize();
+            console.log(formData)
             if (validate(formData) == 'success') {
                 $.confirm({
                     title: 'Take Vital',

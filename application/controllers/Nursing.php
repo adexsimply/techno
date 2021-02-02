@@ -36,6 +36,7 @@ class Nursing extends Base_Controller
         $this->data['title'] = 'Take Vitals';
         $this->data['vitals_list'] =  $this->nursing_m->get_vitals_request_list();
         $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+        $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         $this->load->view('nursing/vitals', $this->data);
     }
     public function vital_appointments()
@@ -52,6 +53,11 @@ class Nursing extends Base_Controller
         } else {
             redirect('/nursing/vitals');
         }
+    }
+    public function delete_vital()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('patient_vitals', array('id' => $id));
     }
 
     public function notes()

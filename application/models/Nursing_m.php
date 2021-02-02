@@ -4,7 +4,7 @@ class Nursing_m extends CI_Model
 
     public function get_vitals_request_list()
     {
-        $get_vitals_request = $this->db->select('pv.*,p.*,a.*,u.fullname,c.clinic_name')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('users as u', 'u.id=pv.doctor_id', 'lrft')->join('clinics as c', 'c.id=pv.id', 'left')->get();
+        $get_vitals_request = $this->db->select('pv.*,p.*,a.*,s.*,c.*,pv.date_added as date,pv.id as vital_id')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->order_by('pv.id', 'DESC')->get();
         $vitals_request_list = $get_vitals_request->result();
         return $vitals_request_list;
     }
@@ -63,6 +63,18 @@ class Nursing_m extends CI_Model
             //  $this->db->where('id', $this->input->post('user_id')); 
             //  $this->db->update('patient_vitals', $data2);
         } else {
+
+            $datetime1 = date("Y-m-d");
+            $datetime2 = $this->input->post('LMP');
+            $diff = abs(strtotime($datetime2) - strtotime($datetime1));
+            $years = floor($diff / (365 * 60 * 60 * 24));
+            $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+            $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+            $weeks = $days / 7;
+            $EGA = number_format((float)$months / 7, 0, '.', '') . ' Months, ' .  number_format((float)$weeks, 0, '.', '') . ' ' . 'Weeks, ' . number_format((float)$days / 7, 0, '.', '') . ' Days';
+            $EDD = date('l jS \of F Y h:i:s A', strtotime($this->input->post('LMP') . "+40 week"));
+
+
             $data2 = array(
                 'clinic_id' => $this->input->post('clinic_id'),
                 'doctor_id' => $this->input->post('doctor_id'),
@@ -84,8 +96,8 @@ class Nursing_m extends CI_Model
                 'RE' => $this->input->post('RE'),
                 'LE' => $this->input->post('LE'),
                 'LMP' => $this->input->post('LMP'),
-                'EGA' => $this->input->post('EGA'),
-                'EDD' => $this->input->post('EDD'),
+                'EGA' => $EGA,
+                'EDD' => $EDD,
             );
 
             $insert = $this->db->insert('patient_vitals', $data2);

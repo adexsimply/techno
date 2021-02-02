@@ -22,7 +22,7 @@
                                 <input type="hidden" name="clinic_id" value="<?php echo $vital_details->clinic_id ?>">
                                 <input type="hidden" name="appointment_id" value="<?php echo $vital_details->p_id ?>">
                                 <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
-                                <input type="date" class="form-control date" disabled="" value="<?php echo date("Y-m-d") ?>">
+                                <input type="" class="form-control date" disabled="" value="<?php echo date('l jS \of F Y h:i:s A') ?>">
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 mb-3">
@@ -46,14 +46,14 @@
                         <div class="col-lg-4 col-md-6 mb-3">
                             <b>Weight(kg)</b>
                             <div class="input-group">
-                                <input type="number" class="form-control mobile-phone-number" name="weight" id="weight" placeholder="75">
+                                <input type="number" class="form-control" name="weight" id="weight" placeholder="75">
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="weight"></code>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-3">
                             <b>Height(m)</b>
                             <div class="input-group">
-                                <input type="number" class="form-control phone-number" name="height" id="height" placeholder="1.75">
+                                <input type="number" class="form-control" name="height" id="height" placeholder="1.75">
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="height"></code>
                         </div>
@@ -174,7 +174,7 @@
                                 <select class="form-control" name="doctor_id" id="doctor_id">
                                     <option value="">Select Doctor</option>
                                     <?php foreach ($doctors_list as $doctor) { ?>
-                                        <option value="<?php echo $doctor->user_id; ?>"><?php echo $doctor->staff_title . " " . $doctor->staff_firstname . " " . $doctor->staff_lastname; ?></option>
+                                        <option value="<?php echo $doctor->user_id; ?>"><?php echo "Dr. " . $doctor->staff_firstname . " " . $doctor->staff_lastname; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>

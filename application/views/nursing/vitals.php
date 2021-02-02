@@ -2,6 +2,11 @@
 <?php $this->load->view('includes/sidebar') ?>
 <link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
 <link src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js" rel="stylesheet">
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <div id="main-content">
     <div class="container-fluid">
         <div class="block-header">
@@ -30,19 +35,81 @@
                         </button> -->
 
                         <!-- Tab panes -->
+
+                        <div class="box">
+                            <div class="box-body">
+                                <form class="form-horizontal" action="{{ url('admin/transactions') }}" method="GET" id='transaction_form'>
+
+                                    <input id="startfrom" type="hidden" name="from" value="{{ isset($from) ? $from : '' }}">
+                                    <input id="endto" type="hidden" name="to" value="{{ isset($to) ? $to : '' }}">
+                                    <input id="user_id" type="hidden" name="user_id" value="{{ isset($user) ? $user : '' }}">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <!-- Date and time range -->
+                                                <div class="col-md-2">
+                                                    <label>Date Range</label>
+                                                    <input type="" class="form-control" name="dates" id="dates">
+                                                </div>
+
+
+                                                <!-- Currency -->
+                                                <div class="col-md-2">
+                                                    <label for="currency">Clinic</label>
+                                                    <select class="form-control select2" name="currency" id="currency">
+                                                        <option value="all" selected>All</option>
+                                                        <?php foreach ($clinic_list as $clinic) { ?>
+                                                            <option value="<?php echo $clinic->id ?>"><?php echo $clinic->clinic_name ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label for="status">Status</label>
+                                                    <select class="form-control select2" name="status" id="status">
+                                                        <option value="all" selected>All</option>
+                                                        <option value="Pending">Pending</option>
+                                                        <option value="Treated">Treated</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label for="status">Doctor</label>
+                                                    <select class="form-control select2" name="status" id="status">
+                                                        <option value="all" selected>All</option>
+                                                        <?php foreach ($doctors_list as $doctor) {
+                                                        ?>
+                                                            <option value="<?php echo $doctor->id ?>">Dr. <?php echo $doctor->staff_firstname ?> <?php echo $doctor->staff_middlename ?> <?php echo $doctor->staff_lastname ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="input-group" style="margin-top: 25px;">
+                                                        <button type="submit" name="btn" class="btn btn-primary btn-flat" id="btn">Filter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="display table table-hover" id="example" width="100%">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
+                                            <th>Date Added</th>
+                                            <th>IMG</th>
                                             <th>Name</th>
                                             <th>Sex</th>
                                             <th>Hospital No</th>
                                             <th>Account Status</th>
                                             <th>Clinic</th>
+                                            <th>Doctor To See</th>
+                                            <th>Vital Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -55,42 +122,48 @@
                                         ?>
                                             <tr>
                                                 <td><?php echo $i; ?></td>
-                                                <td><span class="list-name"><?php $ini_date = date_create($appointment->appointment_date);
-                                                                            echo date_format($ini_date, "D M d, Y"); ?></span></td>
-                                                <td><span class="list-name"><?php echo $appointment->appointment_time; ?></span></td>
+                                                <td><span class="list-name"><?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date)) ?></span></td>
+                                                <td><span class="list-icon"><img class="patients-img" src="<?php echo base_url('uploads/') . $appointment->patient_photo; ?>" alt=""></span></td>
                                                 <td><?php echo $appointment->patient_title . " " . $appointment->patient_name;; ?></td>
                                                 <td><?php echo $appointment->patient_gender; ?></td>
                                                 <td><?php echo $appointment->patient_id_num; ?></td>
                                                 <td><?php echo $appointment->patient_status ?></td>
                                                 <td><?php echo $appointment->clinic_name; ?></td>
+                                                <td><?php echo "Dr. " . $appointment->staff_firstname . " " . $appointment->staff_lastname . " " . $appointment->staff_middlename; ?></td>
+
+                                                <td><?php if ($appointment->vital_status == 'Treated') { ?>
+                                                        <span class="badge badge-success"><?php echo $appointment->vital_status; ?></span>
+                                                    <?php } else { ?>
+                                                        <span class="badge badge-warning"><?php echo $appointment->vital_status; ?></span>
+                                                    <?php } ?>
+                                                </td>
                                                 <td>
-                                                    <!-- <span class="badge badge-primary" data-toggle="modal" data-target="#takeVitals" onclick="clear_textbox()" style="cursor: pointer;">Take Vitals</span> -->
-                                                    <span class="badge badge-success" data-toggle="modal" data-target="#EditVital<?php echo $appointment->id; ?>" style="cursor: pointer;">Edit Vitals</span>
-                                                    <span class="badge badge-warning" data-toggle="modal" data-target="#EditVital<?php echo $appointment->id; ?>" style="cursor: pointer;">View Vitals</span>
+                                                    <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" data-toggle="modal" data-target="#EditVital<?php echo $appointment->vital_id; ?>" style="cursor: pointer;">Edit</span>
+                                                    <span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" data-toggle="modal" data-target="#ViewVital<?php echo $appointment->vital_id; ?>" style="cursor: pointer;">View</span>
+                                                    <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->vital_id ?>)" style="cursor: pointer;">Delete</span>
                                                 </td>
                                             </tr>
 
-                                            <div class="modal fade" id="EditVital<?php echo $appointment->id; ?>" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
+                                            <div class="modal fade" id="EditVital<?php echo $appointment->vital_id; ?>" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                                     <div class="modal-content">
                                                         <div class="col-12">
                                                             <div class="card box-margin">
                                                                 <div class="card-body">
-
-                                                                    <form id="add-vital">
+                                                                    <form id="">
                                                                         <div class="modal-body edit-doc-profile">
                                                                             <div class="row clearfix">
-                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                <div class="col-lg-7 col-md-6 mb-3">
                                                                                     <b>Date</b>
                                                                                     <div class="input-group">
                                                                                         <div class="input-group-prepend">
                                                                                             <span class="input-group-text"><i class="icon-calendar"></i></span>
                                                                                         </div>
-                                                                                        <input type="hidden" name="id" value="<?php echo $appointment->id ?>">
-                                                                                        <input type="date" class="form-control date" disabled="" value="<?php echo $appointment->appointment_date ?>">
+                                                                                        <input type="hidden" name="id" value="<?php echo $appointment->vital_id ?>">
+                                                                                        <input type="" class="form-control" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date)) ?>">
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                <div class="col-lg-5 col-md-6 mb-3">
                                                                                     <b>Clinic</b>
                                                                                     <div class="input-group">
                                                                                         <input type="text" class="form-control time24" disabled="" value="<?php echo $appointment->clinic_name ?>">
@@ -99,101 +172,101 @@
                                                                                 <div class="col-lg-8 col-md-6 mb-3">
                                                                                     <b>Name</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control time12" value="<?php echo $appointment->patient_name ?>" disabled="">
+                                                                                        <input type="text" class="form-control time12" value="<?php echo $appointment->patient_title . " " . $appointment->patient_name ?>" disabled="">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>Age</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control datetime" disabled="" value="<?php echo $appointment->patient_dob; ?>">
+                                                                                        <input type="text" class="form-control datetime" disabled="" value="<?php echo date_diff(date_create($appointment->patient_dob), date_create('today'))->y; ?> years ">
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>Weight(kg)</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="number" class="form-control mobile-phone-number" name="weight" id="weight" placeholder="75">
+                                                                                        <input type="number" class="form-control mobile-phone-number" name="weight" id="weight" value="<?php echo $appointment->weight; ?>">>
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="weight"></code>
                                                                                 </div>
-                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>Height(m)</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="number" class="form-control phone-number" name="height" id="height" placeholder="1.75">
+                                                                                        <input type="number" class="form-control phone-number" name="height" id="height" value="<?php echo $appointment->height; ?>">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="height"></code>
                                                                                 </div>
-                                                                                <!-- <div class="col-lg-3 col-md-6">
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>BMI</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="number" class="form-control money-dollar" disabled="" placeholder="22.9">
+                                                                                        <input type="number" class="form-control money-dollar" disabled="" value="<?php echo $appointment->BMI; ?>">
                                                                                     </div>
-                                                                                </div> -->
-                                                                                <!-- <div class="col-lg-3 col-md-6">
+                                                                                </div>
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>BMI Remark</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control ip" disabled="" placeholder="Obese">
+                                                                                        <input type="text" class="form-control ip" disabled="" value="<?php echo $appointment->bmi_remark; ?>">
                                                                                     </div>
-                                                                                </div> -->
+                                                                                </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>HC</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control credit-card" placeholder="46" name="HC" id="HC">
+                                                                                        <input type="text" class="form-control credit-card" value="<?php echo $appointment->HC; ?>" name="HC" id="HC">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="HC"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>MUAC (Paed.)</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control email" placeholder="75" name="MUAC" id="MUAC">
+                                                                                        <input type="text" class="form-control email" value="<?php echo $appointment->MUAC; ?>" name="MUAC" id="MUAC">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="MUAC"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>Nutritional Status</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control key" placeholder="60" name="nutritional_status" id="nutritional_status">
+                                                                                        <input type="text" class="form-control key" value="<?php echo $appointment->nutritional_status; ?>" name="nutritional_status" id="nutritional_status">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="nutritional_status"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>BP</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control bp_input_tag" maxlength="5" placeholder="10/39" name="BP" id="BP">
+                                                                                        <input type="text" class="form-control bp_input_tag" maxlength="5" value="<?php echo $appointment->BP; ?>" name="BP" id="BP">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="BP"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>Temp</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control email" placeholder="75" name="temp" id="temp">
+                                                                                        <input type="text" class="form-control email" value="<?php echo $appointment->temp; ?>" name="temp" id="temp">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="temp"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>Urine(ANC)</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control key" placeholder="60" name="ANC" id="ANC">
+                                                                                        <input type="text" class="form-control key" value="<?php echo $appointment->ANC; ?>" name="ANC" id="ANC">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="ANC"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>Respiration</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control credit-card" placeholder="45" name="respiration" id="respiration">
+                                                                                        <input type="text" class="form-control credit-card" value="<?php echo $appointment->respiration; ?>" name="respiration" id="respiration">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="respiration"></code>
                                                                                 </div>
-                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>Pulse</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control email" placeholder="75" name="paulse" id="paulse">
+                                                                                        <input type="text" class="form-control email" value="<?php echo $appointment->paulse; ?>" name="paulse" id="paulse">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="paulse"></code>
                                                                                 </div>
-                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
                                                                                     <b>SPO2</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control key" placeholder="60" name="SPO2" id="SPO2">
+                                                                                        <input type="text" class="form-control key" value="<?php echo $appointment->SPO2; ?>" name="SPO2" id="SPO2">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="SPO2"></code>
                                                                                 </div>
@@ -202,23 +275,37 @@
                                                                                     <small>Eye Clinic Visual Acuity </small><br>
                                                                                     <b>RE</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control email" placeholder="75" name="RE" id="RE">
+                                                                                        <input type="text" class="form-control email" value="<?php echo $appointment->RE; ?>" name="RE" id="RE">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="RE"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3"><br>
                                                                                     <b>LE</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control key" placeholder="60" name="LE" id="LE">
+                                                                                        <input type="text" class="form-control key" value="<?php echo $appointment->LE; ?>" name="LE" id="LE">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="LE"></code>
                                                                                 </div>
-                                                                                <div class="col-lg-4 col-md-6 mb-3">
-                                                                                    <br>LMP</>
+                                                                                <div class="col-lg-4 col-md-6 mb-3"><br>
+                                                                                    <b>LMP</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="date" class="form-control credit-card" placeholder="45" name="LMP" id="LMP">
+                                                                                        <input type="date" class="form-control credit-card" value="<?php echo $appointment->LMP; ?>" name="LMP" id="LMP">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="LMP"></code>
+                                                                                </div>
+
+
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <b>EDD</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->EDD ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <b>EGA</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->EGA ?>">
+                                                                                    </div>
                                                                                 </div>
                                                                                 <div class="col-lg-12 col-md-6 mb-3">
                                                                                     <b>To See</b>
@@ -226,7 +313,9 @@
                                                                                         <select class="form-control" name="doctor_id" id="doctor_id">
                                                                                             <option value="">Select Doctor</option>
                                                                                             <?php foreach ($doctors_list as $doctor) { ?>
-                                                                                                <option value="<?php echo $doctor->user_id; ?>"><?php echo $doctor->staff_title . " " . $doctor->staff_firstname . " " . $doctor->staff_lastname; ?></option>
+                                                                                                <option value="<?php echo $doctor->user_id; ?>" <?php if ($doctor->user_id == $appointment->staff_id) {
+                                                                                                                                                    echo 'selected';
+                                                                                                                                                } ?>><?php echo "Dr. " . $doctor->staff_firstname . " " . $doctor->staff_lastname; ?></option>
                                                                                             <?php } ?>
                                                                                         </select>
                                                                                     </div>
@@ -236,7 +325,8 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="text-right">
-                                                                            <button type="button" class="btn btn-success" onclick="form_routes_vital('add_vital')" title="add_vital">Take Vital</button>
+                                                                            <button type="button" class="btn btn-success" onclick="form_routes_vital()" title="">Update Vital</button>
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                                         </div>
                                                                     </form>
                                                                 </div>
@@ -249,6 +339,177 @@
                                                                 $(this).val(foo);
                                                             }, );
                                                         </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="modal fade" id="ViewVital<?php echo $appointment->vital_id; ?>" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="col-12">
+                                                            <div class="card box-margin">
+                                                                <div class="card-body">
+
+                                                                    <form>
+                                                                        <div class="modal-body edit-doc-profile">
+                                                                            <div class="row clearfix">
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <b>Date Added</b>
+                                                                                    <div class="input-group">
+                                                                                        <!-- <div class="input-group-prepend">
+                                                                                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                                                                        </div> -->
+                                                                                        <input type="hidden" name="id" value="<?php echo $appointment->vital_id ?>">
+                                                                                        <input type="" class="form-control" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date)) ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <b>Clinic</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control time24" disabled="" value="<?php echo $appointment->clinic_name ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-8 col-md-6 mb-3">
+                                                                                    <b>Name</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control time12" value="<?php echo $appointment->patient_title . " " . $appointment->patient_name ?>" disabled="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>Age</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control datetime" disabled="" value="<?php echo date_diff(date_create($appointment->patient_dob), date_create('today'))->y; ?> years ">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
+                                                                                    <b>Weight(kg)</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="number" class="form-control mobile-phone-number" disabled="" value="<?php echo $appointment->weight; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
+                                                                                    <b>Height(m)</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="number" class="form-control phone-number" disabled="" value="<?php echo $appointment->height; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
+                                                                                    <b>BMI</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="number" class="form-control money-dollar" disabled="" value="<?php echo $appointment->BMI; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-3 col-md-6 mb-3">
+                                                                                    <b>BMI Remark</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control ip" disabled="" value="<?php echo $appointment->bmi_remark; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>HC</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control credit-card" disabled="" value="<?php echo $appointment->HC; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>MUAC (Paed.)</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control email" disabled="" value="<?php echo $appointment->MUAC; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>Nutritional Status</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control key" disabled="" value="<?php echo $appointment->nutritional_status; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>BP</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control bp_input_tag" disabled="" value="<?php echo $appointment->BP; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>Temp</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control email" disabled="" placeholder="75" name="temp" id="temp">
+                                                                                    </div>
+                                                                                    <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="temp"></code>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>Urine(ANC)</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control key" disabled="" value="<?php echo $appointment->ANC; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>Respiration</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control credit-card" disabled="" value="<?php echo $appointment->respiration; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>Pulse</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->paulse; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-4 col-md-6 mb-3">
+                                                                                    <b>SPO2</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control key" disabled="" value="<?php echo $appointment->SPO2; ?>">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <small>Eye Clinic Visual Acuity </small><br>
+                                                                                    <b>RE</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->RE; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 mb-3"><br>
+                                                                                    <b>LE</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control key" disabled="" value="<?php echo $appointment->LE; ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <b>LMP</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="" class="form-control credit-card" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->LMP)) ?>">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <b>EDD</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->EDD ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 mb-3">
+                                                                                    <b>EGA</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->EGA ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-12 col-md-12 mb-3">
+                                                                                    <b>To See</b>
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" class="form-control key" disabled="" value="Dr. <?php echo $appointment->staff_firstname ?> <?php echo $appointment->staff_middlename ?> <?php echo $appointment->staff_lastname ?>" placeholder="60">
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="text-right">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -266,33 +527,5 @@
 
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script>
-    $(document).ready(function() {
-        // Setup - add a text input to each footer cell
-        $('#example thead tr').clone(true).appendTo('#example thead');
-        $('#example thead tr:eq(1) th').each(function(i) {
-            var title = $(this).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-
-            $('input', this).on('keyup change', function() {
-                if (table.column(i).search() !== this.value) {
-                    table
-                        .column(i)
-                        .search(this.value)
-                        .draw();
-                }
-            });
-        });
-
-        var table = $('#example').DataTable({
-            orderCellsTop: true,
-            fixedHeader: true,
-            paging: false,
-            searching: false
-        });
-    });
-</script>
-
-<?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('nursing/script'); ?>
+<?php $this->load->view('includes/footer_2'); ?>
