@@ -40,35 +40,35 @@
                         <div class="col-lg-4 col-md-6 mb-3">
                             <b>Age</b>
                             <div class="input-group">
-                                <input type="text" class="form-control datetime" disabled="" value="<?php echo $vital_details->patient_dob; ?>">
+                                <input type="text" class="form-control datetime" disabled="" value="<?php echo date_diff(date_create($vital_details->patient_dob ), date_create('today'))->y; ?>">
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="col-lg-3 col-md-6 mb-3">
                             <b>Weight(kg)</b>
                             <div class="input-group">
-                                <input type="number" class="form-control" name="weight" id="weight" placeholder="75">
+                                <input type="number" class="form-control" name="weight" id="weight2" placeholder="75">
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="weight"></code>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="col-lg-3 col-md-6 mb-3">
                             <b>Height(m)</b>
                             <div class="input-group">
-                                <input type="number" class="form-control" name="height" id="height" placeholder="1.75">
+                                <input type="number" class="form-control" onblur="calc_bmi()" name="height" id="height2" placeholder="1.75">
                             </div>
-                            <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="height"></code>
+                            <code style="color: #ff0000;font-size: 12px;"class="form-control-feedback" data-field="height"></code>
                         </div>
-                        <!-- <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <b>BMI</b>
                             <div class="input-group">
-                                <input type="number" class="form-control money-dollar" disabled="" placeholder="22.9">
+                                <input type="number" class="form-control money-dollar" disabled="" id="bmi2" placeholder="22.9">
                             </div>
-                        </div> -->
-                        <!-- <div class="col-lg-3 col-md-6">
+                        </div>
+                        <div class="col-lg-3 col-md-6">
                             <b>BMI Remark</b>
                             <div class="input-group">
-                                <input type="text" class="form-control ip" disabled="" placeholder="Obese">
+                                <input type="text" class="form-control ip" disabled="" id="bmi_remark2" placeholder="Obese">
                             </div>
-                        </div> -->
+                        </div>
                         <div class="col-lg-4 col-md-6 mb-3">
                             <b>HC</b>
                             <div class="input-group">
@@ -118,14 +118,14 @@
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="respiration"></code>
                         </div>
-                        <div class="col-lg-6 col-md-6 mb-3">
+                        <div class="col-lg-4 col-md-6 mb-3">
                             <b>Pulse</b>
                             <div class="input-group">
                                 <input type="text" class="form-control email" placeholder="75" name="paulse" id="paulse">
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="paulse"></code>
                         </div>
-                        <div class="col-lg-6 col-md-6 mb-3">
+                        <div class="col-lg-4 col-md-6 mb-3">
                             <b>SPO2</b>
                             <div class="input-group">
                                 <input type="text" class="form-control key" placeholder="60" name="SPO2" id="SPO2">
@@ -141,7 +141,7 @@
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="RE"></code>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-3"><br>
+                        <div class="col-lg-6 col-md-6 mb-3"><br>
                             <b>LE</b>
                             <div class="input-group">
                                 <input type="text" class="form-control key" placeholder="60" name="LE" id="LE">
@@ -151,23 +151,23 @@
                         <div class="col-lg-4 col-md-6 mb-3">
                             <br>LMP</>
                             <div class="input-group">
-                                <input type="date" class="form-control credit-card" placeholder="45" name="LMP" id="LMP">
+                                <input type="date" class="form-control credit-card" onblur="get_ega_edd()" placeholder="45" name="LMP" id="LMP2">
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="LMP"></code>
                         </div>
-                        <!-- <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6">
                             <b>EDD</b>
                             <div class="input-group">
-                                <input type="text" class="form-control email" placeholder="75">
+                                <input type="text" class="form-control email" id="edd" placeholder="75">
                             </div>
-                        </div> -->
-                        <!-- <div class="col-lg-4 col-md-6">
+                        </div>
+                        <div class="col-lg-4 col-md-6">
                             <b>EGA</b>
                             <div class="input-group">
-                                <input type="text" class="form-control key" placeholder="60">
+                                <input type="text" class="form-control key" id="ega" placeholder="60">
                                 <span style="color:#ff0000;" class="error appointment_date"></span>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="col-lg-12 col-md-6 mb-3">
                             <b>To See</b>
                             <div class="input-group">
@@ -196,6 +196,68 @@
         foo = foo.match(new RegExp('.{1,2}', 'g')).join("/");
         $(this).val(foo);
     }, );
+
+    function calc_bmi() {
+        var weight = document.getElementById('weight2').value;
+        var height = document.getElementById('height2').value;
+
+        if ((weight !== null && weight !=='') && (height !== null && height !=='')) {
+           
+            var bmi = (weight/(Math.pow(height,2))).toFixed(2);
+            if (bmi < 18.5) {
+                var bmi_remark = "Underweight";
+            }
+            else if(bmi > 18.5 && bmi < 25) {
+                var bmi_remark = "Normal";
+            }
+            else if (bmi >= 25 && bmi < 30 ) {
+                var bmi_remark = "Overweight";
+            }
+            else if (bmi >= 30 && bmi < 40 ) {
+                var bmi_remark = "Obese";
+            }
+
+            else if (bmi >= 40) {
+                var bmi_remark = "Extremly Obese";
+            }
+            else {
+
+                var bmi_remark = "Error";
+            }
+
+
+            $('#bmi2').val(bmi);
+            $('#bmi_remark2').val(bmi_remark);
+
+            console.log(bmi);
+        }
+    }
+
+    /////
+
+      ////Function to show form for session editing
+          function get_ega_edd() {
+
+        var lmp = document.getElementById('LMP2').value;
+                     $.ajax({
+                          type: "POST",
+                          url: '<?php echo base_url().'nursing/get_ega_edd'; ?>',
+                          dataType : 'json',
+                          data: {lmp: lmp},
+                          success: function(data){
+                           console.log(data.ega);
+                           //return data;
+
+                            $('#ega').val(data.ega);
+                            $('#edd').val(data.edd);
+
+
+                          }
+          });
+
+          }
+
 </script>
+
 
 <?php $this->load->view('nursing/new_vital_script'); ?>
