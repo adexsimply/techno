@@ -105,4 +105,107 @@ class Nursing_m extends CI_Model
             return $insert;
         }
     }
+
+
+
+
+    public function get_appointment_vitals2()
+    {
+        $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id, pv.id as vital_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->join('patient_vitals as pv', 'pv.appointment_id=pa.id', 'left')->order_by('pa.id', 'DESC')->get();
+        $appointment_list = $get_appointments->result();
+        return $appointment_list;
+    }
+
+    public function get_appointment_vitals()
+    {
+        if ($this->input->post('status'))
+        {
+            $status = $this->input->post('status');
+            if ($status =='Pending') {
+                $cond = 'pa.id NOT IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
+            }
+            elseif ($status == 'Treated') {
+                $cond = 'pa.id IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
+            }
+            else {
+                $cond = '1=1';
+            }
+        }
+        if ($this->input->post('doctor_id'))
+        {
+            $doctor_id = $this->input->post('doctor_id');
+            if ($doctor_id !='all') {
+                $doctor_cond = 'pa.doctor_id IN (SELECT doctor_id FROM patient_appointments WHERE doctor_id='.$doctor_id.')';
+                //$doctor_cond = 'pa.doctor_id',
+                //$doctor_cond = explode(',', $doctor_cond);
+            }
+            else {
+                $doctor_cond = '1=1';
+            }
+        }
+        if ($this->input->post('clinic_id'))
+        {
+            $clinic_id = $this->input->post('clinic_id');
+            if ($clinic_id !='all') {
+                $clinic_cond = 'pa.clinic_id IN (SELECT clinic_id FROM patient_appointments WHERE clinic_id='.$clinic_id.')';
+                //$doctor_cond = 'pa.doctor_id',
+                //$doctor_cond = explode(',', $doctor_cond);
+            }
+            else {
+                $clinic_cond = '1=1';
+            }
+        }
+
+        if ($this->input->post('date_range'))
+        {
+            $date_range = explode('-', $this->input->post('date_range'));
+
+
+            $date1 = date_create($date_range[0]);
+            $date2 = date_create($date_range[1]);
+            //echo date_format($date,"Y/m/d H:i:s");
+            $first_date = date_format($date1,"Y-m-d");
+            $second_date =  date_format($date2,"Y-m-d");
+
+            $date_range = array('appointment_date >=' => $first_date, 'appointment_date <=' => $second_date);
+
+        }
+        else {
+            $date_range = '1=1';
+        }
+
+       // $doctor_cond = '1=1';
+               // $cond = 'pa.id IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
+       // $cond = 'pa.id IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
+        // $first_date = "2020-10-16";
+        // $second_date = "2021-01-30";
+
+        //$cond1 = 'pa.id NOT IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
+        $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->join('patient_vitals as pv', 'pv.appointment_id=pa.id', 'left')->where($cond)->where($doctor_cond)->where($clinic_cond)->where($date_range)->order_by('pa.id', 'DESC')->get();
+       // print_r($this->db->last_query());
+        $appointment_list = $get_appointments->result();
+        return $appointment_list;
+    }
+
+    public function calc_ega_edd() {
+
+
+            $datetime1 = date("Y-m-d");
+            $datetime2 = $this->input->post('LMP2');
+            $diff = abs(strtotime($datetime2) - strtotime($datetime1));
+            $years = floor($diff / (365 * 60 * 60 * 24));
+            $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+            $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+            $weeks = $days / 7;
+
+            $EGA = number_format((float)$months / 7, 0, '.', '') . ' Months, ' .  number_format((float)$weeks, 0, '.', '') . ' ' . 'Weeks, ' . number_format((float)$days / 7, 0, '.', '') . ' Days';
+
+
+            $EDD = date('l jS \of F Y h:i:s A', strtotime($this->input->post('LMP2') . "+30 week"));
+
+            return array('ega' => $EGA , 'edd' => $EDD);
+    }
+    public function calc_edd() {
+            $EDD = date('l jS \of F Y h:i:s A', strtotime($this->input->post('LMP') . "+40 week"));
+    }
 }

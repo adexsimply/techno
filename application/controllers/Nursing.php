@@ -34,7 +34,8 @@ class Nursing extends Base_Controller
     public function vitals()
     {
         $this->data['title'] = 'Take Vitals';
-        $this->data['vitals_list'] =  $this->nursing_m->get_vitals_request_list();
+        //$this->data['vitals_list'] =  $this->nursing_m->get_vitals_request_list();
+        $this->data['vitals_list'] =  $this->nursing_m->get_appointment_vitals2();
         $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
         $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         $this->load->view('nursing/vitals', $this->data);
@@ -201,5 +202,26 @@ class Nursing extends Base_Controller
         $this->nursing_m->create_new_vital();
         header('Content-Type: application/json');
         echo json_encode('success');
+    }
+    public function filter_appointment()
+    {
+        $appointment_vitals = $this->nursing_m->get_appointment_vitals();
+
+            header("Content-type:application/json");
+        echo json_encode($appointment_vitals);
+    }
+    public function get_ega_edd()
+    {
+        $ega = $this->nursing_m->calc_ega_edd();
+        
+          //  header("Content-type:application/json");
+        echo json_encode($ega);
+    }
+    public function get_edd()
+    {
+        $edd = $this->nursing_m->calc_edd();
+        
+          //  header("Content-type:application/json");
+        echo json_encode($edd);
     }
 }
