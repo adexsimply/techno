@@ -56,6 +56,13 @@ class appointment extends Base_Controller
         $this->load->view('appointment/new_appointment_modal', $this->data);
     }
 
+    public function search_appointment()
+    {
+        $result = $this->appointment_m->search();
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+
 
     public function new_appointment2()
     {

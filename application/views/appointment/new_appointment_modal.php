@@ -1,7 +1,21 @@
 <div class="col-12">
 	<div class="card box-margin">
         <div class="card-body">
-				<div class="modal-body edit-doc-profile">	
+				<div class="modal-body edit-doc-profile">
+                        <div class="box">
+                            <div class="box-body">
+                                <form>
+                                    <div class="col-md-12">
+                                        <div class="row text-center">
+                                            <!-- Currency -->
+                                            <div class="col-md-4 offset-md-4">
+                                                <input type="text" class="form-control" name="search_patient" id="search_patient" style="height: 60px; border: 4px solid; border-radius: 10px; font-size:30px; text-align:center" placeholder="Enter Patient Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 						<div class="form-group col-12">
 							                            <!-- Tab panes -->
                             <div class="tab-content m-t-10 padding-0">
@@ -65,6 +79,29 @@
         ]
     });
 });
+
+
+
+$(document).ready(function(){
+        $("#search_patient").keyup(function(){
+            var name = $("#search_patient").val();
+            if(name == ''){
+                $("#result").html('');
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url() . 'appointment/search_appointment'; ?>",
+                    data: {
+                        name: name
+                    },
+                    success: function(data) {
+                        console.log(data)
+                        $("#result").html(data).show()
+                    }
+                })
+            }
+        })
+    })
 </script>
 
 <?php //$this->load->view('includes/footer_2'); ?>

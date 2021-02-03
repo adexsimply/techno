@@ -38,12 +38,7 @@
 
                         <div class="box">
                             <div class="box-body">
-                                <form class="form-horizontal" action="{{ url('admin/transactions') }}" method="GET" id='transaction_form'>
-
-                                    <input id="startfrom" type="hidden" name="from" value="{{ isset($from) ? $from : '' }}">
-                                    <input id="endto" type="hidden" name="to" value="{{ isset($to) ? $to : '' }}">
-                                    <input id="user_id" type="hidden" name="user_id" value="{{ isset($user) ? $user : '' }}">
-
+                                <form class="form-horizontal">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="row">
@@ -150,7 +145,7 @@
                                                         <div class="col-12">
                                                             <div class="card box-margin">
                                                                 <div class="card-body">
-                                                                    <form id="">
+                                                                    <form id="edit-vital">
                                                                         <div class="modal-body edit-doc-profile">
                                                                             <div class="row clearfix">
                                                                                 <div class="col-lg-7 col-md-6 mb-3">
@@ -159,13 +154,16 @@
                                                                                         <div class="input-group-prepend">
                                                                                             <span class="input-group-text"><i class="icon-calendar"></i></span>
                                                                                         </div>
-                                                                                        <input type="hidden" name="id" value="<?php echo $appointment->vital_id ?>">
+                                                                                        <input type="hidden" name="edit_vital_id" value="<?php echo $appointment->vital_id ?>">
                                                                                         <input type="" class="form-control" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date)) ?>">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-5 col-md-6 mb-3">
                                                                                     <b>Clinic</b>
                                                                                     <div class="input-group">
+                                                                                    <input type="hidden" name="clinic_id" value="<?php echo $appointment->clinic_id ?>">
+                                                                                    <input type="hidden" name="appointment_id" value="<?php echo $appointment->appointment_id ?>">
+                                                                                    <input type="hidden" name="patient_id" value="<?php echo $appointment->patient_id ?>">
                                                                                         <input type="text" class="form-control time24" disabled="" value="<?php echo $appointment->clinic_name ?>">
                                                                                     </div>
                                                                                 </div>
@@ -313,7 +311,7 @@
                                                                                         <select class="form-control" name="doctor_id" id="doctor_id">
                                                                                             <option value="">Select Doctor</option>
                                                                                             <?php foreach ($doctors_list as $doctor) { ?>
-                                                                                                <option value="<?php echo $doctor->user_id; ?>" <?php if ($doctor->user_id == $appointment->staff_id) {
+                                                                                                <option value="<?php echo $doctor->user_id; ?>" <?php if ($doctor->user_id == $appointment->user_id) {
                                                                                                                                                     echo 'selected';
                                                                                                                                                 } ?>><?php echo "Dr. " . $doctor->staff_firstname . " " . $doctor->staff_lastname; ?></option>
                                                                                             <?php } ?>
@@ -325,7 +323,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="text-right">
-                                                                            <button type="button" class="btn btn-success" onclick="form_routes_vital()" title="">Update Vital</button>
+                                                                            <button type="button" class="btn btn-success" onclick="form_routes_vital('edit_vital')" title="edit_vital">Update Vital</button>
                                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                                         </div>
                                                                     </form>

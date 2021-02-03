@@ -53,56 +53,51 @@ class Nursing_m extends CI_Model
     /////Add New User
     public function create_new_vital()
     {
-
-        if ($this->input->post('vital_id')) {
-            //  $data2 = array(
-            //      'role_id' => $this->input->post('role'),
-            //      'username' => $this->input->post('username'),
-            //      'password' => $this->input->post('password')
-            //  );
-            //  $this->db->where('id', $this->input->post('user_id')); 
-            //  $this->db->update('patient_vitals', $data2);
-        } else {
-
-            $datetime1 = date("Y-m-d");
-            $datetime2 = $this->input->post('LMP');
-            $diff = abs(strtotime($datetime2) - strtotime($datetime1));
-            $years = floor($diff / (365 * 60 * 60 * 24));
-            $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
-            $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
-            $weeks = $days / 7;
-            $EGA = number_format((float)$months / 7, 0, '.', '') . ' Months, ' .  number_format((float)$weeks, 0, '.', '') . ' ' . 'Weeks, ' . number_format((float)$days / 7, 0, '.', '') . ' Days';
-            $EDD = date('l jS \of F Y h:i:s A', strtotime($this->input->post('LMP') . "+40 week"));
+        $datetime1 = date("Y-m-d");
+        $datetime2 = $this->input->post('LMP');
+        $diff = abs(strtotime($datetime2) - strtotime($datetime1));
+        $years = floor($diff / (365 * 60 * 60 * 24));
+        $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
+        $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+        $weeks = $days / 7;
+        $EGA = number_format((float)$months / 7, 0, '.', '') . ' Months, ' .  number_format((float)$weeks, 0, '.', '') . ' ' . 'Weeks, ' . number_format((float)$days / 7, 0, '.', '') . ' Days';
+        $EDD = date('l jS \of F Y h:i:s A', strtotime($this->input->post('LMP') . "+40 week"));
 
 
-            $data2 = array(
-                'clinic_id' => $this->input->post('clinic_id'),
-                'doctor_id' => $this->input->post('doctor_id'),
-                'appointment_id' => $this->input->post('appointment_id'),
-                'patient_id' => $this->input->post('patient_id'),
-                'weight' => $this->input->post('weight'),
-                'height' => $this->input->post('height'),
-                'BMI' => $this->input->post('BMI'),
-                'bmi_remark' => $this->input->post('bmi_remark'),
-                'HC' => $this->input->post('HC'),
-                'MUAC' => $this->input->post('MUAC'),
-                'nutritional_status' => $this->input->post('nutritional_status'),
-                'BP' => $this->input->post('BP'),
-                'temp' => $this->input->post('temp'),
-                'ANC' => $this->input->post('ANC'),
-                'respiration' => $this->input->post('respiration'),
-                'paulse' => $this->input->post('paulse'),
-                'SPO2' => $this->input->post('SPO2'),
-                'RE' => $this->input->post('RE'),
-                'LE' => $this->input->post('LE'),
-                'LMP' => $this->input->post('LMP'),
-                'EGA' => $EGA,
-                'EDD' => $EDD,
-            );
+        $data2 = array(
+            'clinic_id' => $this->input->post('clinic_id'),
+            'doctor_id' => $this->input->post('doctor_id'),
+            'appointment_id' => $this->input->post('appointment_id'),
+            'patient_id' => $this->input->post('patient_id'),
+            'weight' => $this->input->post('weight'),
+            'height' => $this->input->post('height'),
+            'BMI' => $this->input->post('BMI'),
+            'bmi_remark' => $this->input->post('bmi_remark'),
+            'HC' => $this->input->post('HC'),
+            'MUAC' => $this->input->post('MUAC'),
+            'nutritional_status' => $this->input->post('nutritional_status'),
+            'BP' => $this->input->post('BP'),
+            'temp' => $this->input->post('temp'),
+            'ANC' => $this->input->post('ANC'),
+            'respiration' => $this->input->post('respiration'),
+            'paulse' => $this->input->post('paulse'),
+            'SPO2' => $this->input->post('SPO2'),
+            'RE' => $this->input->post('RE'),
+            'LE' => $this->input->post('LE'),
+            'LMP' => $this->input->post('LMP'),
+            'EGA' => $EGA,
+            'EDD' => $EDD,
+        );
 
+
+        if ($this->input->post('edit_vital_id')) {
+             $this->db->where('id', $this->input->post('edit_vital_id')); 
+             $update = $this->db->update('patient_vitals', $data2);
+             return $update;
+        }else{
             $insert = $this->db->insert('patient_vitals', $data2);
-            $user_id = $this->db->insert_id();
             return $insert;
         }
+
     }
 }

@@ -78,10 +78,6 @@
                             <i class="icon wb-plus" aria-hidden="true"></i> Create Appointment
                         </button>
 
-                        <!-- 
-                <td><input type='text' class='name' id='name' ></td>
-                <td><input type='text' class='email' id='email' ></td> -->
-
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">

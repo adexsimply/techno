@@ -15,6 +15,18 @@ class Appointment_m extends CI_Model
         $patient_list = $get_patients->row();
         return $patient_list;
     }
+    
+    public function search()
+    {
+        if ($this->input->post('name')) {
+            $name = $this->input->post('name');
+            $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname, pa.id as app_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->where('patient_id', 'like', '%$name%')->order_by('p.id', 'ASC')->get();
+            $appointment_list = $get_appointments->result();
+            return $appointment_list;
+
+        }
+    }
+
     public function get_patient_history_by_id($patient_id)
     {
         $get_patient_history = $this->db->select('*')->from('patient_health_history')->where('patient_id', $patient_id)->get();
@@ -37,6 +49,7 @@ class Appointment_m extends CI_Model
             return $insert;
         }
     }
+
 
     function get_department_by_id()
     {

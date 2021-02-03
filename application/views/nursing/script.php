@@ -174,4 +174,75 @@ function delete_vital_now(rowIndex) {
             });
           }
 
+
+
+      function validate(formData) {
+        var returnData;
+        $('#edit-vital').disable([".action"]);
+        $("button[title='edit_vital']").html("Validating data, please wait...");
+        $.ajax({
+            url: "<?php echo base_url() . 'nursing/validate_new'; ?>",
+            async: false,
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            data: formData,
+            success: function(data, textStatus, jqXHR) {
+                console.log(data);
+                returnData = data;
+            }
+        });
+
+
+
+        $('#edit-vital').enable([".action"]);
+        $("button[title='edit_vital']").html("Create vital");
+        if (returnData != 'success') {
+            $('#edit-vital').enable([".action"]);
+            $("button[title='edit_vital']").html("Create vital");
+            $('.form-control-feedback').html('');
+            $('.form-control-feedback').each(function() {
+                for (var key in returnData) {
+                    if ($(this).attr('data-field') == key) {
+                        $(this).html(returnData[key]);
+                    }
+                }
+            });
+        } else {
+            return 'success';
+        }
+    }
+
+    function save_vital_name(formData) {
+        $("button[title='edit_vital']").html("Saving data, please wait...");
+        $.post("<?php echo base_url() . 'nursing/add_vital'; ?>", formData).done(function(data) {
+
+            window.location = "<?php echo base_url('nursing/vitals'); ?>";
+        });
+    }
+
+    function form_routes_vital(action) {
+        if (action == 'edit_vital') {
+            var formData = $('#edit-vital').serialize();
+            console.log(formData)
+            if (validate(formData) == 'success') {
+                $.confirm({
+                    title: 'Update Vital',
+                    content: 'Are you sure you want to Update vital?',
+                    icon: 'fa fa-check-circle',
+                    type: 'green',
+                    buttons: {
+                        yes: function() {
+                            save_vital_name(formData);
+                        },
+                        no: function() {
+
+                        }
+                    }
+                });
+            }
+        } else {
+            cancel();
+        }
+    }
+
 </script>
