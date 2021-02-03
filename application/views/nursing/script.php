@@ -213,6 +213,7 @@
         success: function(response) {
           console.log(response);
           var html = '';
+          var sn = 1;
           var i;
           for (i = 0; i < response.length; i++) {
 
@@ -246,7 +247,7 @@
               var buttons = '<button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for " href="<?php echo base_url('nursing/take_vital/'); ?>' + response[i].app_id + '"><i class="icon wb-plus" aria-hidden="true"></i> Take Vitals </button>';
             }
 
-            html += '<tr><td>' + i + '</td> <td>' + response[i].appointment_date +
+            html += '<tr><td>' + sn++ + '</td> <td>' + response[i].appointment_date +
               '</td> <td>' + response[i].patient_title + ' ' + response[i].patient_name +
               '</td> <td>' + response[i].patient_gender +
               '</td> <td>' + response[i].patient_id_num +
@@ -284,10 +285,10 @@
 
 
     $('#edit-vital').enable([".action"]);
-    $("button[title='edit_vital']").html("Create vital");
+    $("button[title='edit_vital']").html("Update vital");
     if (returnData != 'success') {
       $('#edit-vital').enable([".action"]);
-      $("button[title='edit_vital']").html("Create vital");
+      $("button[title='edit_vital']").html("Update vital");
       $('.form-control-feedback').html('');
       $('.form-control-feedback').each(function() {
         for (var key in returnData) {

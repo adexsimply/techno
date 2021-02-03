@@ -69,25 +69,4 @@
     }
     //////////////Add session form ends
 
-
-    $(document).ready(function(){
-        $("#search_patient").keyup(function(){
-            var name = $("$search_patient").val();
-            if(name == ''){
-                $("$result").html('');
-            }else{
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url() . 'appointment/search_appointment'; ?>",
-                    data: {
-                        name: name
-                    },
-                    success: function(data) {
-                        console.log(data)
-                        $("#result").html(data).show()
-                    }
-                })
-            }
-        })
-    })
 </script>

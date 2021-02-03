@@ -27,7 +27,7 @@
                     </div>
                     <div class="body">
                         <!-- Nav tabs -->
-                     <!--    <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="Appointment List" href="<?php echo base_url('nursing/vital_appointments') ?>">
+                        <!--    <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="Appointment List" href="<?php echo base_url('nursing/vital_appointments') ?>">
                             <i class="icon wb-plus" aria-hidden="true"></i> Take Vitals
                         </button> -->
                         <!-- <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="clear_textbox()">
@@ -132,15 +132,15 @@
                                                 </td>
                                                 <td>
                                                     <?php if ($appointment->vital_id) { ?>
-                                                    <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" data-toggle="modal" data-target="#EditVital<?php echo $appointment->vital_id; ?>" style="cursor: pointer;">Edit Vitals</span>
-                                                    <span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" data-toggle="modal" data-target="#ViewVital<?php echo $appointment->vital_id; ?>" style="cursor: pointer;">View Vitals</span>
-                                                    <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->vital_id ?>)" style="cursor: pointer;">Delete Vitals</span>
-                                                <?php  } else { ?>
-                                                    <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/take_vital/' . $appointment->app_id); ?>">
-                                                        <i class="icon wb-plus" aria-hidden="true"></i> Take Vitals
-                                                    </button>
+                                                        <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" data-toggle="modal" data-target="#EditVital<?php echo $appointment->vital_id; ?>" style="cursor: pointer;">Edit Vitals</span>
+                                                        <span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" data-toggle="modal" data-target="#ViewVital<?php echo $appointment->vital_id; ?>" style="cursor: pointer;">View Vitals</span>
+                                                        <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->vital_id ?>)" style="cursor: pointer;">Delete Vitals</span>
+                                                    <?php  } else { ?>
+                                                        <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/take_vital/' . $appointment->app_id); ?>">
+                                                            <i class="icon wb-plus" aria-hidden="true"></i> Take Vitals
+                                                        </button>
 
-                                                <?php } ?>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
 
@@ -160,15 +160,15 @@
                                                                                             <span class="input-group-text"><i class="icon-calendar"></i></span>
                                                                                         </div>
                                                                                         <input type="hidden" name="edit_vital_id" value="<?php echo $appointment->vital_id ?>">
-                                                                                        <input type="" class="form-control" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date)) ?>">
+                                                                                        <input type="" class="form-control" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date_added)) ?>">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-5 col-md-6 mb-3">
                                                                                     <b>Clinic</b>
                                                                                     <div class="input-group">
-                                                                                    <input type="hidden" name="clinic_id" value="<?php echo $appointment->clinic_id ?>">
-                                                                                    <input type="hidden" name="appointment_id" value="<?php echo $appointment->appointment_id ?>">
-                                                                                    <input type="hidden" name="patient_id" value="<?php echo $appointment->patient_id ?>">
+                                                                                        <input type="hidden" name="clinic_id" value="<?php echo $appointment->clinic_id ?>">
+                                                                                        <input type="hidden" name="appointment_id" value="<?php echo $appointment->appointment_id ?>">
+                                                                                        <input type="hidden" name="patient_id" value="<?php echo $appointment->patient_id ?>">
                                                                                         <input type="text" class="form-control time24" disabled="" value="<?php echo $appointment->clinic_name ?>">
                                                                                     </div>
                                                                                 </div>
@@ -187,27 +187,28 @@
                                                                                 <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>Weight(kg)</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="number" class="form-control mobile-phone-number" name="weight" id="weight" value="<?php echo $appointment->weight; ?>">>
+                                                                                        <input type="number" class="form-control mobile-phone-number" onkeypress="weight_not_empty()" name="weight" id="weight2" value="<?php echo $appointment->weight; ?>">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="weight"></code>
                                                                                 </div>
                                                                                 <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>Height(m)</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="number" class="form-control phone-number" name="height" id="height" value="<?php echo $appointment->height; ?>">
+                                                                                        <input type="number" class="form-control phone-number" onkeydown="not_empty()" onblur="calc_bmi()" name="height" id="height2" value="<?php echo $appointment->height; ?>">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="height"></code>
+                                                                                    <span style="color: #ff0000;font-size: 12px;" id="error-h"></span>
                                                                                 </div>
                                                                                 <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>BMI</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="number" class="form-control money-dollar" disabled="" value="<?php echo $appointment->BMI; ?>">
+                                                                                        <input type="number" class="form-control money-dollar" readonly="" name="BMI" id="bmi2" value="<?php echo $appointment->BMI; ?>">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-3 col-md-6 mb-3">
                                                                                     <b>BMI Remark</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control ip" disabled="" value="<?php echo $appointment->bmi_remark; ?>">
+                                                                                        <input type="text" class="form-control ip" readonly="" name="bmi_remark" id="bmi_remark2" value="<?php echo $appointment->bmi_remark; ?>">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-4 col-md-6 mb-3">
@@ -292,7 +293,7 @@
                                                                                 <div class="col-lg-4 col-md-6 mb-3"><br>
                                                                                     <b>LMP</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="date" class="form-control credit-card" value="<?php echo $appointment->LMP; ?>" name="LMP" id="LMP">
+                                                                                        <input type="date" class="form-control" value="<?php echo $appointment->LMP; ?>" onblur="get_ega_edd()" name="LMP" id="LMP2">
                                                                                     </div>
                                                                                     <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="LMP"></code>
                                                                                 </div>
@@ -301,13 +302,13 @@
                                                                                 <div class="col-lg-6 col-md-6 mb-3">
                                                                                     <b>EDD</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->EDD ?>">
+                                                                                        <input type="text" class="form-control" disabled="" name="EDD" id="edd" value="<?php echo $appointment->EDD ?>">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-6 col-md-6 mb-3">
                                                                                     <b>EGA</b>
                                                                                     <div class="input-group">
-                                                                                        <input type="text" class="form-control" disabled="" value="<?php echo $appointment->EGA ?>">
+                                                                                        <input type="text" class="form-control" disabled="" name="EGA" id="ega" value="<?php echo $appointment->EGA ?>">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-12 col-md-6 mb-3">
@@ -316,7 +317,7 @@
                                                                                         <select class="form-control" name="doctor_id" id="doctor_id">
                                                                                             <option value="">Select Doctor</option>
                                                                                             <?php foreach ($doctors_list as $doctor) { ?>
-                                                                                                <option value="<?php echo $doctor->user_id; ?>" <?php if ($doctor->user_id == $appointment->user_id) {
+                                                                                                <option value="<?php echo $doctor->user_id; ?>" <?php if ($doctor->user_id == $appointment->doctor_id) {
                                                                                                                                                     echo 'selected';
                                                                                                                                                 } ?>><?php echo "Dr. " . $doctor->staff_firstname . " " . $doctor->staff_lastname; ?></option>
                                                                                             <?php } ?>
@@ -363,8 +364,7 @@
                                                                                         <!-- <div class="input-group-prepend">
                                                                                             <span class="input-group-text"><i class="icon-calendar"></i></span>
                                                                                         </div> -->
-                                                                                        <input type="hidden" name="id" value="<?php echo $appointment->vital_id ?>">
-                                                                                        <input type="" class="form-control" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date)) ?>">
+                                                                                        <input type="" class="form-control" disabled="" value="<?php echo date('l jS \of F Y h:i:s A', strtotime($appointment->date_added)) ?>">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-lg-6 col-md-6 mb-3">
@@ -497,7 +497,7 @@
                                                                                         <input type="text" class="form-control" disabled="" value="<?php echo $appointment->EGA ?>">
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-lg-12 col-md-12 mb-3">
+                                                                                <div class="col-lg-6 col-md-12 mb-3">
                                                                                     <b>To See</b>
                                                                                     <div class="input-group">
                                                                                         <input type="text" class="form-control key" disabled="" value="Dr. <?php echo $appointment->staff_firstname ?> <?php echo $appointment->staff_middlename ?> <?php echo $appointment->staff_lastname ?>" placeholder="60">
@@ -532,6 +532,88 @@
 </div>
 <script type="text/javascript">
     $("#date_range").val('');
+
+    jQuery('.numbersOnly').keyup(function() {
+        this.value = this.value.replace(/[^0-9\.]/g, '');
+    });
+
+    $('.bp_input_tag').keyup(function() {
+        var foo = $(this).val().split("/").join(""); // remove hyphens  if (foo.length > 0) {
+        foo = foo.match(new RegExp('.{1,2}', 'g')).join("/");
+        $(this).val(foo);
+    }, );
+
+    function weight_not_empty() {
+        document.getElementById('error-h').innerHTML = "";
+    }
+
+    function not_empty() {
+        var weight = document.getElementById('weight2').value;
+        if (weight == '') {
+            document.getElementById('height2').value = '';
+            document.getElementById('error-h').innerHTML = "Weight field needs to be filled first";
+            return false;
+        } else if (weight !== null && weight !== '') {
+            document.getElementById('error-h').innerHTML = "";
+            return true;
+        }
+    }
+
+    function calc_bmi() {
+        var weight = document.getElementById('weight2').value;
+        var height = document.getElementById('height2').value;
+
+        if ((weight !== null && weight !== '') && (height !== null && height !== '')) {
+
+            var bmi = (weight / (Math.pow(height, 2))).toFixed(2);
+            if (bmi < 18.5) {
+                var bmi_remark = "Underweight";
+            } else if (bmi > 18.5 && bmi < 25) {
+                var bmi_remark = "Normal";
+            } else if (bmi >= 25 && bmi < 30) {
+                var bmi_remark = "Overweight";
+            } else if (bmi >= 30 && bmi < 40) {
+                var bmi_remark = "Obese";
+            } else if (bmi >= 40) {
+                var bmi_remark = "Extremly Obese";
+            } else {
+
+                var bmi_remark = "Error";
+            }
+
+
+            $('#bmi2').val(bmi);
+            $('#bmi_remark2').val(bmi_remark);
+
+            console.log(bmi);
+        }
+    }
+
+    /////
+
+    ////Function to show form for session editing
+    function get_ega_edd() {
+
+        var lmp = document.getElementById('LMP2').value;
+        $.ajax({
+            type: "POST",
+            url: '<?php echo base_url() . 'nursing/get_ega_edd'; ?>',
+            dataType: 'json',
+            data: {
+                lmp: lmp
+            },
+            success: function(data) {
+                console.log(data);
+                //return data;
+
+                $('#ega').val(data.ega);
+                $('#edd').val(data.edd);
+
+
+            }
+        });
+
+    }
 </script>
 <?php $this->load->view('nursing/script'); ?>
 <?php $this->load->view('includes/footer_2'); ?>

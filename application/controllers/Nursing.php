@@ -207,7 +207,7 @@ class Nursing extends Base_Controller
     {
         $appointment_vitals = $this->nursing_m->get_appointment_vitals();
 
-            header("Content-type:application/json");
+        header("Content-type:application/json");
         echo json_encode($appointment_vitals);
     }
     public function get_ega_edd()
