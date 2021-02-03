@@ -4,7 +4,7 @@ class Nursing_m extends CI_Model
 
     public function get_vitals_request_list()
     {
-        $get_vitals_request = $this->db->select('pv.*,p.*,a.*,s.*,c.*,pv.date_added as date,pv.id as vital_id')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->order_by('pv.id', 'DESC')->get();
+        $get_vitals_request = $this->db->select('pv.*,p.*,a.*,s.*,c.*,pv.date_added as date,pv.id as vital_id')->from('patient_vitals as pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->order_by('pv.id', 'DESC')->get();
         $vitals_request_list = $get_vitals_request->result();
         return $vitals_request_list;
     }
@@ -28,6 +28,14 @@ class Nursing_m extends CI_Model
         $vital = $get_vital->row();
         return $vital;
     }
+
+    public function get_edit_vitals_request_by_id($id)
+    {
+        $get_vitals_request = $this->db->select('pv.*,p.*,a.id as appointment_id,s.staff_firstname,s.staff_middlename,s.staff_lastname,c.*,pv.date_added as date,a.id as a_id,pv.id as vital_id')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->where('pv.id', $id)->get();
+        $vitals_request_list = $get_vitals_request->row();
+        return $vitals_request_list;
+    }
+
 
     public function get_handover_notes_list()
     {
@@ -61,7 +69,7 @@ class Nursing_m extends CI_Model
         $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
         $weeks = $days / 7;
         $EGA = number_format((float)$months, 0, '.', '') . ' Months, ' .  number_format((float)$weeks, 0, '.', '') . ' ' . 'Weeks, ' . number_format((float)$days, 0, '.', '') . ' Days';
-        $EDD = date('l jS \of F Y h:i:s A', strtotime($this->input->post('LMP') . "+40 week"));
+        $EDD = date('d M Y', strtotime($this->input->post('LMP') . "+40 week"));
 
 
         $data2 = array(
@@ -106,6 +114,12 @@ class Nursing_m extends CI_Model
     public function get_appointment_vitals2()
     {
         $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id, pv.id as vital_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('patient_vitals as pv', 'pv.appointment_id=pa.id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->order_by('pv.id', 'DESC')->get();
+        $appointment_list = $get_appointments->result();
+        return $appointment_list;
+    }
+    public function get_appointment_vitals3()
+    {
+        $get_appointments = $this->db->select('pv.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id,')->from('patient_vitals pv')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->order_by('pv.id', 'DESC')->get();
         $appointment_list = $get_appointments->result();
         return $appointment_list;
     }

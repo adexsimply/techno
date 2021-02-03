@@ -55,6 +55,29 @@ class Nursing extends Base_Controller
             redirect('/nursing/vitals');
         }
     }
+
+    public function edit_vital()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+            $this->load->view('nursing/vitals-modal', $this->data);
+        } else {
+            redirect('/nursing/vitals');
+        }
+    }
+
+    public function view_vital()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+            $this->load->view('nursing/view_vital', $this->data);
+        } else {
+            redirect('/nursing/vitals');
+        }
+    }
+
     public function delete_vital()
     {
         $id = $this->input->post('id');
@@ -213,15 +236,15 @@ class Nursing extends Base_Controller
     public function get_ega_edd()
     {
         $ega = $this->nursing_m->calc_ega_edd();
-        
-          //  header("Content-type:application/json");
+
+        //  header("Content-type:application/json");
         echo json_encode($ega);
     }
     public function get_edd()
     {
         $edd = $this->nursing_m->calc_edd();
-        
-          //  header("Content-type:application/json");
+
+        //  header("Content-type:application/json");
         echo json_encode($edd);
     }
 }

@@ -27,6 +27,8 @@ class appointment extends Base_Controller
         $this->load->model('appointment_m');
         $this->load->model('patient_m');
         $this->load->model('department_m');
+        $this->load->model('nursing_m');
+        $this->load->model('staff_m');
         $this->data['menu_id'] = 'appointment';
     }
     public function index()
@@ -37,6 +39,16 @@ class appointment extends Base_Controller
         $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         $this->load->view('appointment/main', $this->data);
     }
+
+    public function waiting_list()
+    {
+        $this->data['title'] = 'Waiting List';
+        $this->data['vitals_list'] =  $this->nursing_m->get_appointment_vitals3();
+        $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+        $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+        $this->load->view('appointment/waiting_list', $this->data);
+    }
+
     public function add()
     {
         $this->load->view('patients/add_patient', $this->data);

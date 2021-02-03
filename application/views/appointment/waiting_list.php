@@ -12,7 +12,7 @@
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-6 col-md-8 col-sm-12">
-                    <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Vital Signs</h2>
+                    <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Waiting List</h2>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <div class="header">
-                        <h2>Vital Signs</h2>
+                        <h2>Waiting List</h2>
                         <?php //echo $this->session->userdata('active_user')->role_id 
                         ?>
                     </div>
@@ -98,7 +98,7 @@
                                             <th>Account Status</th>
                                             <th>Clinic</th>
                                             <th>Doctor To See</th>
-                                            <th>Vital Status</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -111,7 +111,7 @@
                                         ?>
                                             <tr>
                                                 <td><?php echo $i; ?></td>
-                                                <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($appointment->appointment_date)) ?></span></td>
+                                                <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($appointment->date_added)) ?></span></td>
                                                 <td><?php echo $appointment->patient_title . " " . $appointment->patient_name; ?></td>
                                                 <td><?php echo $appointment->patient_gender; ?></td>
                                                 <td><?php echo $appointment->patient_id_num; ?></td>
@@ -119,23 +119,13 @@
                                                 <td><?php echo $appointment->clinic_name; ?></td>
                                                 <td><?php echo $appointment->staff_firstname . " " . $appointment->staff_lastname . " " . $appointment->staff_middlename; ?></td>
 
-                                                <td><?php if ($appointment->vital_id) { ?>
-                                                        <span class="badge badge-success">Treated</span>
-                                                    <?php } else { ?>
-                                                        <span class="badge badge-warning">Pending</span>
-                                                    <?php } ?>
+                                                <td>
+                                                    <span class="badge badge-success">Treated</span>
                                                 </td>
                                                 <td>
-                                                    <?php if ($appointment->vital_id) { ?>
-                                                        <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Edit Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/edit_vital/' . $appointment->id); ?>" style="cursor: pointer;">Edit Vitals</span>
-                                                        <span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/view_vital/' . $appointment->id); ?>" style="cursor: pointer;">View Vitals</span>
-                                                        <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->vital_id ?>)" style="cursor: pointer;">Delete Vitals</span>
-                                                    <?php  } else { ?>
-                                                        <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/take_vital/' . $appointment->app_id); ?>">
-                                                            <i class="icon wb-plus" aria-hidden="true"></i> Take Vitals
-                                                        </button>
-
-                                                    <?php } ?>
+                                                    <!-- <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Edit Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/edit_vital/' . $appointment->id); ?>" style="cursor: pointer;">Edit Vitals</span>
+                                                    <span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/view_vital/' . $appointment->id); ?>" style="cursor: pointer;">View Vitals</span>
+                                                    <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->id ?>)" style="cursor: pointer;">Delete Vitals</span> -->
                                                 </td>
                                             </tr>
 
