@@ -1,6 +1,45 @@
 
 <script type="text/javascript">
-    
+  function assign_menu_to_role(id) {
+
+            var role_id = document.getElementById('role_id').value;
+            console.log(role_id);
+
+       
+            if ($('#menu_child_id'+id).is(":checked"))
+            {
+              console.log('checked');
+            //var row = datagrid.getRowData(rowIndex);
+            $.post("<?php echo base_url() . 'menu/assign_menu_to_role'; ?>", {role_id : role_id,menu_child_id : id,status : 1}).done(function(data) {
+             //window.location = "<?php echo base_url().'students/manage'; ?>";
+            });
+            }
+            else {
+            //var row = datagrid.getRowData(rowIndex);
+             console.log('unchecked');
+            $.post("<?php echo base_url() . 'menu/assign_menu_to_role'; ?>", {role_id : role_id,menu_child_id : id,status : 0}).done(function(data) {
+             //window.location = "<?php echo base_url().'students/manage'; ?>";
+            });
+            }
+
+  }
+    function get_url() {
+
+
+      var role = document.getElementById('role').value;
+      var role2 = $('#role option:selected').text();
+      if (role !='') {
+
+      document.getElementById("select_btn").removeAttribute("disabled");
+      document.getElementById("select_btn").setAttribute("href","<?php echo base_url('menu/assign2/'); ?>"+role);
+      document.getElementById("select_btn").setAttribute("data-title","Assign Roles for "+role2);
+      }
+      else {
+        document.getElementById("select_btn").setAttribute("disabled","");
+      }
+
+      console.log(role);
+    }
     /////Add Session form begins
     function validate(formData) {
         var returnData;

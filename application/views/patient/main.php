@@ -55,7 +55,8 @@
                                                 <td><?php echo $patient_list->patient_status ?></td>
                                                 <td><?php echo $patient_list->patient_phone; ?></td>
                                                 <td>
-                                                    <span class="badge badge-success"><a href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>">View More</a></span>
+                                                   <!--  <span class="badge badge-success"><a href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>">View More</a></span> -->
+                                                    <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="<?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>"><i class="icon-eye" aria-hidden="true"></i></button>
                                                     <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="shiEdit(event)" data-type="purple" data-size="xl" data-title="Edit <?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/add_patient/' . $patient_list->p_id); ?>"><i class="icon-pencil" aria-hidden="true" data-toggle="modal" data-target="#addstaff"></i></button>
                                                     <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="delete_patient(event)" data-type="purple" data-size="xl" data-title="Edit <?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/add_patient/' . $patient_list->p_id); ?>"><i class="icon-trash" aria-hidden="true" data-toggle="modal" data-target="#deletestaff"></i></button>
                                                 </td>

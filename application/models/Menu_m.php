@@ -13,6 +13,12 @@ class Menu_m extends CI_Model {
         return $menu_child_list;  
         
     }
+    public function get_menu_assigned_by_role($role_id, $menu_child_id) {
+        $check_menu_assigned = $this->db->select('*')->from('get_menu_assigned')->where('menu_child_id',$menu_child_id)->where('role_id',$role_id)->get();
+        $menu_assigned = $check_menu_assigned->row();
+        return $menu_assigned;  
+        
+    }
 
     public function create_menu_name()
     {

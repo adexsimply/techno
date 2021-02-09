@@ -1,17 +1,10 @@
-<?php $this->load->view('includes/head_2'); ?>
-<?php $this->load->view('includes/sidebar') ?>
-				<div class="wrapper">
-					<div id="main-content" class="profilepage_1">
+<?php //$this->load->view('includes/head_2'); ?>
+<?php //$this->load->view('includes/sidebar') ?>
 				        <div class="container-fluid">
 				            <div class="block-header">
 				                <div class="row">
 				                    <div class="col-lg-6 col-md-8 col-sm-12">
 				                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Patient Profile</h2>
-				                        <ul class="breadcrumb">
-				                            <li class="breadcrumb-item"><a href="index.html"><i class="icon-home"></i></a></li>
-				                            <li class="breadcrumb-item">Patient</li>
-				                            <li class="breadcrumb-item active">Patient Profile</li>
-				                        </ul>
 				                    </div>            
 				                </div>
 				            </div>
@@ -617,10 +610,7 @@
 				                </div>
 				            </div>
 				        </div>
-				    </div>
-
-				</div>
-	<?php $this->load->view('patient/patient-history-modal'); ?>
-<?php $this->load->view('patient/payment-modal'); ?>
-	<?php $this->load->view('includes/footer_2'); ?>
-	<?php $this->load->view('patient/script'); ?>
+	<?php //$this->load->view('patient/patient-history-modal'); ?>
+<?php //$this->load->view('patient/payment-modal'); ?>
+	<?php //$this->load->view('includes/footer_2'); ?>
+	<?php //$this->load->view('patient/script'); ?>

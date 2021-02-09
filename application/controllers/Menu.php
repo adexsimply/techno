@@ -23,6 +23,7 @@ class Menu extends Base_Controller {
 		parent::__construct();
 
 		$this->load->model('menu_m');
+        $this->load->model('role_m');
         $this->data['menu_id'] = 'department';
 
 	}
@@ -49,8 +50,27 @@ class Menu extends Base_Controller {
     public function assign ()
     {   
         $this->data['title'] = 'Assign Menu';  
+        $this->data['role_list'] =  $this->role_m->get_role_list();
         $this->data['menu_list'] =  $this->menu_m->get_menu_list();
+
+        if ($this->uri->segment(3)) {
+           // $this->data['sub_menu'] = $this->menu_m->get_menu_child_list($this->uri->segment(3));
+
+        }
         $this->load->view('menu/assign', $this->data);
+
+    }
+    public function assign2 ()
+    {   
+        $this->data['title'] = 'Assign Menu';  
+        $this->data['role_list'] =  $this->role_m->get_role_list();
+        $this->data['menu_list'] =  $this->menu_m->get_menu_list();
+
+        if ($this->uri->segment(3)) {
+           // $this->data['sub_menu'] = $this->menu_m->get_menu_child_list($this->uri->segment(3));
+
+        }
+        $this->load->view('menu/assign_modal', $this->data);
 
     }
 
@@ -146,6 +166,38 @@ class Menu extends Base_Controller {
             header('Content-Type: application/json');
             echo json_encode('success');
         }
+
+     public function assign_menu_to_role() {
+        $role_id = $this->input->post('role_id');
+        $status = $this->input->post('status');
+        $menu_child_id = $this->input->post('menu_child_id');
+        ///Check if already submitted
+        
+       // else {
+
+
+        if ($status ==1) {
+            $query_check_menu = $this->db->select('*')->from('menu_assigned')->where('menu_child_id', $menu_child_id)->where('role_id', $role_id)->get();
+        if ($query_check_menu->num_rows() > 0) {
+
+        }
+        else {
+        $data = array(
+            'role_id'  => $role_id,
+            'menu_child_id'    => $menu_child_id,
+        );
+
+        $insert = $this->db->insert('menu_assigned', $data);
+
+        }
+
+        }
+        else {
+        $this->db->delete('menu_assigned', array('role_id' => $role_id, 'menu_child_id'=> $menu_child_id));
+        }
+       // }
+
+     }
 
 
 
