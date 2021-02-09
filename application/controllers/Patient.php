@@ -25,6 +25,7 @@ class Patient extends Base_Controller
         parent::__construct();
 
         $this->load->model('patient_m');
+        $this->load->model('nursing_m');
         $this->data['menu_id'] = 'patient';
     }
     public function index()
@@ -66,7 +67,12 @@ class Patient extends Base_Controller
         if ($this->uri->segment(3)) {
 
             $this->data['patient_billings'] =  $this->patient_m->get_patient_billings($this->uri->segment(3));
-            $this->data['patient'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+            $this->data['patient'] = $patient = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+            $this->data['consultations'] = $consultation = $this->patient_m->get_consultations_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['eye_clinics'] = $eye_clinics = $this->patient_m->get_eye_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['dental_clinics'] = $dental_clinics = $this->patient_m->get_dental_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['med_report'] = $med_report = $this->patient_m->get_med_report_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            //var_dump($eye_clinics);
             $this->data['title'] = "Patients";
             $this->load->view('patient/view', $this->data);
         } else {
@@ -74,11 +80,127 @@ class Patient extends Base_Controller
         }
     }
 
+    public function add_consultation()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-consultation', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    function save_consultation()
+    {
+        $this->patient_m->save_consultation();
+    }
+    public function view_consultation()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['consultation_details'] =  $this->patient_m->get_consultation_by_id($this->uri->segment(3));
+            $this->load->view('patient/view-consultation', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
 
+    public function edit_consultation()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['consultation_details'] =  $this->patient_m->get_consultation_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-consultation', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function delete_consultation()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('consultations', array('id' => $id));
+    }
+
+    public function add_eye_clinic()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-eye-clinic', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function save_eye_clinic()
+    {
+        $this->patient_m->save_eye_clinic();
+    }
+    public function edit_eye_clinic()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_eye_clinic_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-eye-clinic', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function view_eye_clinic()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_eye_clinic_by_id($this->uri->segment(3));
+            $this->load->view('patient/view-eye-clinic', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function delete_eye_clinic()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('eye_clinics', array('id' => $id));
+    }
     // public function load_image() {
 
     // 	$this->load->view('patients/image_test', $this->data);
     // }
+
+
+    public function add_dental()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-dental', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function save_dental()
+    {
+        $this->patient_m->save_dental();
+    }
+
+    public function edit_dental_clinic()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_dental_clinic_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-dental', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function view_dental_clinic()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_dental_clinic_by_id($this->uri->segment(3));
+            $this->load->view('patient/view-dental', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function delete_dental_clinic()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('dental_clinics', array('id' => $id));
+    }
 
     function patient_validate()
     {
@@ -109,6 +231,24 @@ class Patient extends Base_Controller
             echo json_encode($this->form_validation->get_all_errors());
         }
     }
+
+
+
+    public function add_med_report()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-med-report', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function save_med_report()
+    {
+        $this->patient_m->save_med_report();
+    }
+
 
     function validate_image()
     {
@@ -209,6 +349,10 @@ class Patient extends Base_Controller
         }
         echo json_encode($result);
     }
+
+
+
+
 
     function add_history()
     {

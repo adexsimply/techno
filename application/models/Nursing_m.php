@@ -31,7 +31,7 @@ class Nursing_m extends CI_Model
 
     public function get_edit_vitals_request_by_id($id)
     {
-        $get_vitals_request = $this->db->select('pv.*,p.*,a.id as appointment_id,s.staff_firstname,s.staff_middlename,s.staff_lastname,c.*,pv.date_added as date,a.id as a_id,pv.id as vital_id')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->where('pv.id', $id)->get();
+        $get_vitals_request = $this->db->select('pv.*,p.*,a.id as appointment_id,s.id as doctor_id,s.staff_firstname,s.staff_middlename,s.staff_lastname,c.*,pv.date_added as date,pv.id as vital_id')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->where('pv.id', $id)->get();
         $vitals_request_list = $get_vitals_request->row();
         return $vitals_request_list;
     }
@@ -119,7 +119,7 @@ class Nursing_m extends CI_Model
     }
     public function get_appointment_vitals3()
     {
-        $get_appointments = $this->db->select('pv.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id,')->from('patient_vitals pv')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->order_by('pv.id', 'DESC')->get();
+        $get_appointments = $this->db->select('pv.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,p.id as p_id,pv.*, pa.id as app_id,')->from('patient_vitals pv')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->order_by('pv.id', 'DESC')->get();
         $appointment_list = $get_appointments->result();
         return $appointment_list;
     }
