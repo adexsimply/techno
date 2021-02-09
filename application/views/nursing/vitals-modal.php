@@ -37,7 +37,7 @@
                         <div class="col-lg-8 col-md-6 mb-3">
                             <b>Name</b>
                             <div class="input-group">
-                                <input type="text" class="form-control time12" value="<?php echo $vital_details->patient_name ?>" disabled="">
+                                <input type="text" class="form-control time12" value="<?php echo $vital_details->patient_name.$vital_details->patient_gender ?>" disabled="">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-3">
@@ -155,7 +155,7 @@
                         <div class="col-lg-4 col-md-6 mb-3">
                             <b>LMP</b>
                             <div class="input-group">
-                                <input type="date" class="form-control numbersOnly" onblur="get_ega_edd()" placeholder="45" name="LMP" id="LMP2" <?php if ($this->uri->segment(3) && isset($vital_details->LMP)) { ?>value="<?php echo $vital_details->LMP; ?>" <?php } ?>>
+                                <input type="date" class="form-control numbersOnly" <?php if($vital_details->patient_gender=='Male') { ?>disabled=""<?php } ?> onblur="get_ega_edd()" placeholder="45" name="LMP" id="LMP2" <?php if ($this->uri->segment(3) && isset($vital_details->LMP)) { ?>value="<?php echo $vital_details->LMP; ?>" <?php } ?>>
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="LMP"></code>
                         </div>

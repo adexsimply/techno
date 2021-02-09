@@ -489,12 +489,36 @@
 														</thead>
 														<tbody>
 															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar1.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00598</span></td>
-																<td>Daniel</td>
-																<td></td>
-																<td><span class="badge badge-success">Approved</span></td>
+
+																<?php $i = 1;
+																foreach ($med_ as $dental_clinic) {
+																	//var_dump($dental_clinic); 
+																?>
+															<tr>
+																<td><?php echo $i++ ?></td>
+																<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($dental_clinic->date_added)) ?></span></td>
+																<td><span class="list-name"><?php echo date('h:i:sa', strtotime($dental_clinic->date_added)) ?></span></td>
+																<td><span class="list-name"><?php echo $dental_clinic->staff_firstname . " " . $dental_clinic->staff_lastname . " " . $dental_clinic->staff_middlename; ?></span></td>
+																<td><?php echo $dental_clinic->complaint ?></td>
+																<td><?php echo $dental_clinic->assignment ?></td>
+																<td><?php //echo $dental_clinic->test 
+																	?></td>
+																<td><?php echo $dental_clinic->treatment ?></td>
+																<td>
+																	<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_dental_clinic/' . $dental_clinic->dental_id) ?>">
+																		<i class="fa fa-pencil"></i>
+																	</button>
+																	<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View Dental Clinic" href="<?php echo base_url('patient/view_dental_clinic/' . $dental_clinic->dental_id) ?>">
+																		<i class="fa fa-eye"></i>
+																	</button>
+																	<button class="btn btn-dark" type="button" onclick="delete_dental_clinic(<?php echo $dental_clinic->dental_id ?>)">
+																		<i class="fa fa-trash"></i>
+																	</button>
+																</td>
+
 															</tr>
+														<?php } ?>
+														</tr>
 														</tbody>
 													</table>
 												</div>
