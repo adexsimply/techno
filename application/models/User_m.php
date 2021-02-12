@@ -32,10 +32,11 @@ class User_m extends CI_Model
   public function attempt($input)
   {
     $query = $this->db->from('users u')
-      ->select('u.*, g.role_name')
+      ->select('u.*, g.role_name, s.department_id')
       ->where('username', $input['username'])
       ->where('password', $input['password'])
       ->join('roles as g', 'g.id = u.id', 'left')
+      ->join('staff as s', 's.user_id = u.id', 'left')
       ->get();
 
     return $query->row();

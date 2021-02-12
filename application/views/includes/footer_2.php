@@ -22,7 +22,7 @@
 <script src="<?php echo base_url(); ?>/assets/disabler-enabler/disabler.js" type="text/javascript"></script>
 
 <script src="<?php echo base_url(); ?>assets/bundles/mainscripts.bundle.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/pages/tables/jquery-datatable.js"></script>
+<!-- <script src="<?php echo base_url(); ?>assets/js/pages/tables/jquery-datatable.js"></script> -->
 <script src="<?php echo base_url(); ?>assets/js/shi.js"></script>
 </body>
 </html>
