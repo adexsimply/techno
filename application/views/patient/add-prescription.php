@@ -18,14 +18,14 @@
                                     <?php if (isset($patient_prescription_tests) && $patient_prescription_tests != null) {
                                         //var_dump($patient_prescription_tests);
                                         foreach ($patient_prescription_tests as $patient_prescription_test) {
-                                            echo "<input type='hidden' name='prescription_id[]' value='" . $patient_prescription_test->test_id . "' id='test_prescription" . $patient_prescription_test->test_id . "'>";
+                                            echo "<input type='hidden' name='prescription_id[]' value='" . $patient_prescription_test->prescription_id . "' id='test_prescription" . $patient_prescription_test->prescription_id . "'>";
                                         }
                                     }
                                     ?>
                                 </div>
-                                <?php if ($this->uri->segment(3) && isset($vital_details->radiology_id)) { ?>
+                                <?php if ($this->uri->segment(3) && isset($vital_details->prescription_id)) { ?>
                                     <input type="hidden" name="appointment_id" value="<?php echo $vital_details->appointment_id ?>">
-                                    <input type="hidden" name="edit_radiolody_id" value="<?php echo $vital_details->radiology_test_unique_id ?>">
+                                    <input type="hidden" name="edit_prescription_id" value="<?php echo $vital_details->prescription_unique_id ?>">
                                     <input type="hidden" name="vital_id" value="<?php echo $vital_details->vital_id ?>">
                                     <input type="hidden" name="doctor_id" value="<?php echo $vital_details->doctor_id ?>">
                                     <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
@@ -106,7 +106,9 @@
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>S/N</th>
-                                                    <th>Test</th>
+                                                    <th>Drug Name</th>
+                                                    <th>Quantity in Stock</th>
+                                                    <th>Drug Expiry Date</th>
                                                     <th>Price</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -114,13 +116,15 @@
                                             <tbody>
                                                 <?php
                                                 $i = 1;
-                                                foreach ($lab_tests as $lab_test) {
+                                                foreach ($drugs as $drug) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
-                                                        <td><?php echo $lab_test->lab_test_name; ?></td>
-                                                        <td><span class='text-success'>₦5000</span></td>
-                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $lab_test->id; ?>)">Add</button></td>
+                                                        <td><?php echo $drug->drug_item_name; ?></td>
+                                                        <td><?php echo $drug->quantity_in_stock; ?></td>
+                                                        <td><?php echo $drug->drug_expiry_date; ?></td>
+                                                        <td><span class='text-success'>₦<?php echo $drug->drug_cost; ?></span></td>
+                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $drug->id; ?>)">Add</button></td>
                                                     </tr>
                                                 <?php $i++;
                                                 } ?>
@@ -138,20 +142,24 @@
                                         <table id="testTable_prescription" class="table table-bordered table-striped table-hover dataTable">
                                             <thead class="thead-dark">
                                                 <tr>
-                                                    <th>Test</th>
-                                                    <th width='25%'>Price</th>
-                                                    <th width='10%'>Action</th>
+                                                    <th>Drug Name</th>
+                                                    <th>Quantity in Stock</th>
+                                                    <th>Drug Expiry Date</th>
+                                                    <th>Price</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if (isset($patient_prescription_tests) && $patient_prescription_tests != null) {
-                                                    //var_dump($patient_prescription_tests);
-                                                    foreach ($patient_prescription_tests as $patient_prescription_test) {
+                                                <?php if (isset($patient_prescriptions) && $patient_prescriptions != null) {
+                                                    // var_dump($patient_prescriptions);
+                                                    foreach ($patient_prescriptions as $patient_prescription_test) {
                                                 ?>
                                                         <tr>
-                                                            <td><?php echo $patient_prescription_test->lab_test_name; ?></td>
-                                                            <td><span class="text-success">₦5000</span></td>
-                                                            <td><button type='button' onclick='testDelete_prescription(this, <?php echo $patient_prescription_test->test_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td>
+                                                            <td><?php echo $patient_prescription_test->drug_item_name; ?></td>
+                                                            <td><?php echo $patient_prescription_test->quantity_in_stock; ?></td>
+                                                            <td><?php echo $patient_prescription_test->drug_expiry_date; ?></td>
+                                                            <td><span class='text-success'>₦<?php echo $drug->drug_cost; ?></span></td>
+                                                            <td><button type='button' onclick='testDelete_prescription(this, <?php echo $patient_prescription_test->prescription_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
@@ -166,7 +174,9 @@
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <fieldset>
                                 <legend><b>My Precription</b></legend>
-                                <textarea class="form-control" id="textarea" name="prescription" rows="7"></textarea>
+                                <textarea class="form-control" id="textarea" name="prescription" rows="7"><?php if ($this->uri->segment(3) && isset($patient_prescriptions)) {
+                                                                                                                echo $patient_prescriptions[0]->prescription;
+                                                                                                            } ?></textarea>
                                 <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="prescription"></code>
                             </fieldset>
                         </div>
@@ -209,6 +219,8 @@
         $("#testTable_prescription tbody").append("<tr>" +
             "<td>" + $(cols[1]).text() + "</td>" +
             "<td width='25%'>" + $(cols[2]).text() + "</td>" +
+            "<td width='25%'>" + $(cols[3]).text() + "</td>" +
+            "<td width='25%'><span class='text-success'>" + $(cols[4]).text() + "</span></td>" +
             "<td width='10%'><button type='button' onclick='testDelete_prescription(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
             "</tr>");
     }
@@ -218,5 +230,4 @@
         $(ctl).parents("tr").remove();
     }
 </script>
-
 <?php $this->load->view('patient/new_prescription_script'); ?>

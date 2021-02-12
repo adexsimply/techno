@@ -75,31 +75,40 @@
                                 <div class="text-center mb-2">
                                     <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback lab_id" id="lab_id" data-field="lab_id"></code>
                                 </div>
-                                <legend><b>Laboratory Tests</b></legend>
+                                <legend><b>Prescribed Drugs</b></legend>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable" id="example">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>S/N</th>
-                                                <th>Test</th>
+                                                <th>Drug</th>
+                                                <th>Expire On</th>
                                                 <th>Price</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             $i = 1;
-                                            foreach ($lab_tests as $lab_test) {
+                                            //var_dump($prescriptions);
+                                            foreach ($prescriptions as $prescription) {
                                             ?>
                                                 <tr>
                                                     <td><?php echo $i; ?></td>
-                                                    <td><?php echo $lab_test->lab_test_name; ?></td>
-                                                    <td><span class="text-success">₦5000</span></td>
+                                                    <td><?php echo $prescription->drug_item_name; ?></td>
+                                                    <td><?php echo $prescription->drug_expiry_date; ?></td>
+                                                    <td><span class="text-success">₦<?php echo $prescription->drug_sell; ?></span></td>
                                                 </tr>
                                             <?php $i++;
                                             } ?>
                                         </tbody>
                                     </table>
                                 </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-12 col-md-12 mb-3 mt-2">
+                            <fieldset>
+                                <legend><b>My Precription</b></legend>
+                                <textarea class="form-control" id="textarea" name="prescription" readonly rows="7"><?php echo $prescription->prescription; ?></textarea>
                             </fieldset>
                         </div>
                     </div>

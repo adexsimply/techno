@@ -74,6 +74,7 @@ class Patient extends Base_Controller
             $this->data['med_reports'] = $med_reports = $this->patient_m->get_med_report_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['radiologies'] = $radiology = $this->patient_m->get_radiology_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['prescriptions'] = $prescription = $this->patient_m->get_prescription_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             //var_dump($eye_clinics);
             $this->data['title'] = "Patients";
             $this->load->view('patient/view', $this->data);
@@ -635,13 +636,12 @@ class Patient extends Base_Controller
         }
     }
 
-    //PRescription
-    //Radiology
+    //Prescription
     public function add_prescription()
     {
         if ($this->uri->segment(3)) {
             $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
-            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->data['drugs'] = $this->patient_m->drugs();
             $this->load->view('patient/add-prescription', $this->data);
         } else {
             redirect('/appointment/waiting_list');
@@ -676,30 +676,30 @@ class Patient extends Base_Controller
         echo json_encode($this->patient_m->save_prescription());
     }
 
-    //  public function delete_prescription_test()
-    //  {
-    //      $id = $this->input->post('id');
-    //      $this->db->delete('patient_prescription_tests', array('prescription_test_unique_id' => $id));
-    //  }
-    //  function view_prescription()
-    //  {
-    //      if ($this->uri->segment(3)) {
-    //          $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
-    //          $this->data['prescription_tests'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
-    //          $this->load->view('patient/view-prescription', $this->data);
-    //      } else {
-    //          redirect('/appointment/waiting_list');
-    //      }
-    //  }
-    //  function edit_prescription()
-    //  {
-    //      if ($this->uri->segment(3)) {
-    //          $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
-    //          $this->data['patient_prescription_tests'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
-    //          $this->data['lab_tests'] = $this->patient_m->lab_tests();
-    //          $this->load->view('patient/add-prescription', $this->data);
-    //      } else {
-    //          redirect('/appointment/waiting_list');
-    //      }
-    //  }
+    public function delete_prescription_test()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('patient_prescriptions2', array('prescription_unique_id' => $id));
+    }
+    function view_prescription()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
+            $this->data['prescriptions'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+            $this->load->view('patient/view-prescription', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    function edit_prescription()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
+            $this->data['patient_prescriptions'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+            $this->data['drugs'] = $this->patient_m->drugs();
+            $this->load->view('patient/add-prescription', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
 }
