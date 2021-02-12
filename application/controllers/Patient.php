@@ -71,7 +71,9 @@ class Patient extends Base_Controller
             $this->data['consultations'] = $consultation = $this->patient_m->get_consultations_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['eye_clinics'] = $eye_clinics = $this->patient_m->get_eye_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['dental_clinics'] = $dental_clinics = $this->patient_m->get_dental_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
-            $this->data['med_report'] = $med_report = $this->patient_m->get_med_report_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['med_reports'] = $med_reports = $this->patient_m->get_med_report_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['radiologies'] = $radiology = $this->patient_m->get_radiology_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             //var_dump($eye_clinics);
             $this->data['title'] = "Patients";
             $this->load->view('patient/view', $this->data);
@@ -83,7 +85,7 @@ class Patient extends Base_Controller
     public function add_consultation()
     {
         if ($this->uri->segment(3)) {
-            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
             $this->load->view('patient/add-consultation', $this->data);
         } else {
             redirect('/appointment/waiting_list');
@@ -122,7 +124,7 @@ class Patient extends Base_Controller
     public function add_eye_clinic()
     {
         if ($this->uri->segment(3)) {
-            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
             $this->load->view('patient/add-eye-clinic', $this->data);
         } else {
             redirect('/appointment/waiting_list');
@@ -164,7 +166,7 @@ class Patient extends Base_Controller
     public function add_dental()
     {
         if ($this->uri->segment(3)) {
-            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
             $this->load->view('patient/add-dental', $this->data);
         } else {
             redirect('/appointment/waiting_list');
@@ -237,7 +239,7 @@ class Patient extends Base_Controller
     public function add_med_report()
     {
         if ($this->uri->segment(3)) {
-            $this->data['vital_details'] =  $this->nursing_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
             $this->load->view('patient/add-med-report', $this->data);
         } else {
             redirect('/appointment/waiting_list');
@@ -249,15 +251,88 @@ class Patient extends Base_Controller
         $this->patient_m->save_med_report();
     }
 
+    public function edit_med_report()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_med_report_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-med-report', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function view_med_report()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_med_report_by_id($this->uri->segment(3));
+            $this->load->view('patient/view-med-report', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function delete_med_report()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('med_reports', array('id' => $id));
+    }
+
+    public function add_pdf()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-pdf', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    function validate_pdf_form()
+    {
+        $this->load->library('form_validation');
+        // $this->form_validation->set_rules('pdf', 'PDF', 'required');
+        $this->form_validation->set_rules('description', 'Description', 'required');
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+
+    function validate_pdf()
+    {
+        if ($_FILES['pdf']['error'] != 0) {
+            $result['status'] = false;
+            $result['message'] = array("pdf" => "Select pdf to upload");
+            echo json_encode($result);
+        }
+    }
+
+    public function save_pdf()
+    {
+        $this->patient_m->save_pdf();
+    }
+
+    public function add_image()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->load->view('patient/add-image', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
 
     function validate_image()
     {
-        echo json_encode($_FILES['image']);
-        // if ($_FILES['image']['error'] != 0) {
-        //     $result['status'] = false;
-        //     $result['message'] = array("image" => "Select image to upload");
-        //     echo json_encode($result);
-        // }
+        //echo json_encode($_FILES['image']);
+        if ($_FILES['image']['error'] != 0) {
+            $result['status'] = false;
+            $result['message'] = array("image" => "Select image to upload");
+            echo json_encode($result);
+        }
     }
 
     function upload_patient()
@@ -427,4 +502,204 @@ class Patient extends Base_Controller
         header('Content-Type: application/json');
         echo json_encode('success');
     }
+
+    public function input()
+    {
+        $id = $this->input->post('idd');
+        echo json_encode($id);
+    }
+
+    //Lab
+    public function add_lab()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->load->view('patient/add-lab', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function validate_lab()
+    {
+        $rules = [
+            [
+                'field' => 'lab_id[]',
+                'label' => 'Laboratory Test',
+                'rules' => 'trim|required'
+            ]
+        ];
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+
+    public function save_lab()
+    {
+        echo json_encode($this->patient_m->save_lab());
+    }
+
+    function view_lab_test()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_lab_test_by_id($this->uri->segment(3));
+            $this->data['lab_tests'] =  $this->patient_m->get_lab_test_by_unique_id($this->uri->segment(3));
+            $this->load->view('patient/view-lab-test', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    function edit_lab_test()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_lab_test_by_id($this->uri->segment(3));
+            $this->data['patient_lab_tests'] =  $this->patient_m->get_lab_test_by_unique_id($this->uri->segment(3));
+            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->load->view('patient/add-lab', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    public function delete_lab_test()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('patient_lab_tests', array('lab_test_unique_id' => $id));
+    }
+
+
+    //Radiology
+    public function add_radiology()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->load->view('patient/add-radiology', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function validate_radiology()
+    {
+        $rules = [
+            [
+                'field' => 'radiology_id[]',
+                'label' => 'Radiology Test',
+                'rules' => 'trim|required'
+            ]
+        ];
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+    public function save_radiology()
+    {
+        echo json_encode($this->patient_m->save_radiology());
+    }
+    public function delete_radiology_test()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('patient_radiology_tests', array('radiology_test_unique_id' => $id));
+    }
+    function view_radiology()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_radiology_by_id($this->uri->segment(3));
+            $this->data['radiology_tests'] =  $this->patient_m->get_radiology_by_unique_id($this->uri->segment(3));
+            $this->load->view('patient/view-radiology', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    function edit_radiology()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_radiology_by_id($this->uri->segment(3));
+            $this->data['patient_radiology_tests'] =  $this->patient_m->get_radiology_by_unique_id($this->uri->segment(3));
+            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->load->view('patient/add-radiology', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+
+    //PRescription
+    //Radiology
+    public function add_prescription()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->load->view('patient/add-prescription', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function validate_prescription()
+    {
+        $rules = [
+            [
+                'field' => 'prescription_id[]',
+                'label' => 'Prescription Drugs',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'prescription',
+                'label' => 'Prescription',
+                'rules' => 'trim|required'
+            ]
+        ];
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+    public function save_prescription()
+    {
+        echo json_encode($this->patient_m->save_prescription());
+    }
+
+    //  public function delete_prescription_test()
+    //  {
+    //      $id = $this->input->post('id');
+    //      $this->db->delete('patient_prescription_tests', array('prescription_test_unique_id' => $id));
+    //  }
+    //  function view_prescription()
+    //  {
+    //      if ($this->uri->segment(3)) {
+    //          $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
+    //          $this->data['prescription_tests'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+    //          $this->load->view('patient/view-prescription', $this->data);
+    //      } else {
+    //          redirect('/appointment/waiting_list');
+    //      }
+    //  }
+    //  function edit_prescription()
+    //  {
+    //      if ($this->uri->segment(3)) {
+    //          $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
+    //          $this->data['patient_prescription_tests'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+    //          $this->data['lab_tests'] = $this->patient_m->lab_tests();
+    //          $this->load->view('patient/add-prescription', $this->data);
+    //      } else {
+    //          redirect('/appointment/waiting_list');
+    //      }
+    //  }
 }

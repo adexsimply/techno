@@ -13,20 +13,6 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="icon-calendar"></i></span>
                                 </div>
-                                <?php if ($this->uri->segment(3) && isset($vital_details->med_report_id)) { ?>
-                                    <input type="hidden" name="appointment_id" value="<?php echo $vital_details->appointment_id ?>">
-                                    <input type="hidden" name="med_report_id" value="<?php echo $vital_details->med_report_id ?>">
-                                    <input type="hidden" name="vital_id" value="<?php echo $vital_details->vital_id ?>">
-                                    <input type="hidden" name="doctor_id" value="<?php echo $vital_details->doctor_id ?>">
-                                    <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
-                                <?php } else { ?>
-                                    <input type="hidden" name="appointment_id" value="<?php echo $vital_details->appointment_id ?>">
-                                    <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
-                                    <input type="hidden" name="doctor_id" value="<?php echo $vital_details->doctor_id ?>">
-                                    <input type="hidden" name="vital_id" value="<?php echo $vital_details->vital_id ?>">
-                                    <input type="hidden" name="clinic_id" value="<?php echo $vital_details->clinic_id ?>">
-                                <?php } ?>
-
                                 <input type="" class="form-control date" disabled="" value="<?php if ($this->uri->segment(3) && isset($vital_details->dental_id)) {
                                                                                                 echo date('jS \of F Y', strtotime($vital_details->date));
                                                                                             } else {
@@ -78,24 +64,21 @@
                             <b>Reported by</b>
                             <div class="input-group">
                                 <input type="text" class="form-control time12" value="<?php if ($this->uri->segment(3) && isset($vital_details->staff_firstname)) {
-                                                                                            echo $vital_details->staff_firstname . '' . $vital_details->staff_middlename . '' . $vital_details->staff_lastname;
+                                                                                            echo $vital_details->staff_firstname . ' ' . $vital_details->staff_middlename . ' ' . $vital_details->staff_lastname;
                                                                                         } else {
-                                                                                            echo $vital_details->staff_firstname . '' . $vital_details->staff_middlename . '' . $vital_details->staff_lastname;
+                                                                                            echo $vital_details->staff_firstname . ' ' . $vital_details->staff_middlename . ' ' . $vital_details->staff_lastname;
                                                                                         } ?>" disabled="">
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 mb-3">
                             <b>Report</b>
                             <div class="input-group">
-                                <textarea rows="7" cols="" name="report" class="form-control"><?php if ($this->uri->segment(3) && isset($vital_details->report)) {
-                                                                                                    echo $vital_details->report;
-                                                                                                } ?></textarea>
+                                <textarea rows="7" cols="" name="report" readonly class="form-control"><?php if ($this->uri->segment(3) && isset($vital_details->report)) {
+                                                                                                            echo $vital_details->report;
+                                                                                                        } ?></textarea>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="text-right">
-                    <button type="button" class="btn btn-success" onclick="form_routes_med_report('add_med_report')" title="add_med_report">Save</button>
                 </div>
             </form>
         </div>

@@ -311,62 +311,87 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="laboratory">
-													<table class="table m-b-0 table-hover">
+													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Laboratory for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_lab/' . $patient->vital_id) ?>">
+														<i class="fa fa-plus-circle"></i> Add New
+													</button>
+													<?php //var_dump($lab_tests)
+													?>
+													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-dark">
 															<tr>
-																<th>Media</th>
-																<th>Patients ID</th>
-																<th>Name</th>
-																<th>Age</th>
-																<th>Address</th>
-																<th>Number</th>
-																<th>Last Visit</th>
-																<th>Status</th>
+																<th>S/N</th>
+																<th>Date</th>
+																<th>Time</th>
+																<!-- <th>Test</th>
+																<th>Price</th> -->
+																<th>Action</th>
 															</tr>
 														</thead>
 														<tbody>
-															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar1.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00598</span></td>
-																<td>Daniel</td>
-																<td>32</td>
-																<td>71 Pilgrim Avenue Chevy Chase, MD 20815</td>
-																<td>404-447-6013</td>
-																<td>11 Jan 2018</td>
-																<td><span class="badge badge-success">Approved</span></td>
-															</tr>
+															<?php $i = 1;
+															foreach ($lab_tests as $lab_test) { ?>
+																<tr>
+																	<td><?php echo $i++ ?></td>
+																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($lab_test->date_added)) ?></span></td>
+																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($lab_test->date_added)) ?></span></td>
+																	<!-- <td><?php echo $lab_test->lab_test_name;  ?></td>
+																	<td><span class="text-success">₦5000</span></td> -->
+																	<td>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_lab_test/' . $lab_test->lab_test_unique_id) ?>">
+																			<i class="fa fa-pencil"></i>
+																		</button>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View  Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_lab_test/' . $lab_test->lab_test_unique_id) ?>">
+																			<i class="fa fa-eye"></i>
+																		</button>
+																		<button class="btn btn-dark" type="button" onclick="delete_lab_test(<?php echo $lab_test->lab_test_unique_id ?>)">
+																			<i class="fa fa-trash"></i>
+																		</button>
+																	</td>
+																<?php } ?>
+																</tr>
 														</tbody>
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="radiology">
-													<table class="table m-b-0 table-hover">
+													<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Radiology for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_radiology/' . $patient->vital_id) ?>">
+														<i class="fa fa-plus-circle"></i> Add New
+													</button>
+													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-success">
 															<tr>
-																<th>Media</th>
-																<th>Patients ID</th>
-																<th>Name</th>
-																<th>Age</th>
-																<th>Address</th>
-																<th>Number</th>
-																<th>Last Visit</th>
-																<th>Status</th>
+																<th>S/N</th>
+																<th>Date</th>
+																<th>Time</th>
+																<th>Action</th>
 															</tr>
 														</thead>
 														<tbody>
-															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar1.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00598</span></td>
-																<td>Daniel</td>
-																<td>32</td>
-																<td>71 Pilgrim Avenue Chevy Chase, MD 20815</td>
-																<td>404-447-6013</td>
-																<td>11 Jan 2018</td>
-																<td><span class="badge badge-success">Approved</span></td>
-															</tr>
+															<?php $i = 1;
+															foreach ($radiologies as $radiology) { ?>
+																<tr>
+																	<td><?php echo $i++ ?></td>
+																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($radiology->date_added)) ?></span></td>
+																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($radiology->date_added)) ?></span></td>
+																	<td>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Radiology Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_radiology/' . $radiology->radiology_test_unique_id) ?>">
+																			<i class="fa fa-pencil"></i>
+																		</button>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View Radiology Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_radiology/' . $radiology->radiology_test_unique_id) ?>">
+																			<i class="fa fa-eye"></i>
+																		</button>
+																		<button class="btn btn-dark" type="button" onclick="delete_radiology(<?php echo $radiology->radiology_test_unique_id ?>)">
+																			<i class="fa fa-trash"></i>
+																		</button>
+																	</td>
+																<?php } ?>
+																</tr>
 														</tbody>
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="prescriptions">
+													<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_prescription/' . $patient->vital_id) ?>">
+														<i class="fa fa-plus-circle"></i> Add New
+													</button>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
@@ -491,27 +516,22 @@
 															<tr>
 
 																<?php $i = 1;
-																foreach ($med_ as $dental_clinic) {
-																	//var_dump($dental_clinic); 
+																foreach ($med_reports as $med_report) {
+																	//var_dump($med_report);
 																?>
 															<tr>
 																<td><?php echo $i++ ?></td>
-																<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($dental_clinic->date_added)) ?></span></td>
-																<td><span class="list-name"><?php echo date('h:i:sa', strtotime($dental_clinic->date_added)) ?></span></td>
-																<td><span class="list-name"><?php echo $dental_clinic->staff_firstname . " " . $dental_clinic->staff_lastname . " " . $dental_clinic->staff_middlename; ?></span></td>
-																<td><?php echo $dental_clinic->complaint ?></td>
-																<td><?php echo $dental_clinic->assignment ?></td>
-																<td><?php //echo $dental_clinic->test 
-																	?></td>
-																<td><?php echo $dental_clinic->treatment ?></td>
+																<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($med_report->date_added)) ?></span></td>
+																<td><span class="list-name"><?php echo date('h:i:sa', strtotime($med_report->date_added)) ?></span></td>
+																<td><span class="list-name"><?php echo $med_report->staff_firstname . " " . $med_report->staff_lastname . " " . $med_report->staff_middlename; ?></span></td>
 																<td>
-																	<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_dental_clinic/' . $dental_clinic->dental_id) ?>">
+																	<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_med_report/' . $med_report->med_report_id) ?>">
 																		<i class="fa fa-pencil"></i>
 																	</button>
-																	<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View Dental Clinic" href="<?php echo base_url('patient/view_dental_clinic/' . $dental_clinic->dental_id) ?>">
+																	<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View Dental Clinic" href="<?php echo base_url('patient/view_med_report/' . $med_report->med_report_id) ?>">
 																		<i class="fa fa-eye"></i>
 																	</button>
-																	<button class="btn btn-dark" type="button" onclick="delete_dental_clinic(<?php echo $dental_clinic->dental_id ?>)">
+																	<button class="btn btn-dark" type="button" onclick="delete_med_report(<?php echo $med_report->med_report_id ?>)">
 																		<i class="fa fa-trash"></i>
 																	</button>
 																</td>
@@ -523,20 +543,18 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="pdf">
-													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+													<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add PDF for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_pdf/' . $patient->vital_id) ?>">
 														<i class="fa fa-plus-circle"></i> Add New
 													</button>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-success">
 															<tr>
-																<th>Media</th>
-																<th>Patients ID</th>
-																<th>Name</th>
-																<th>Age</th>
-																<th>Address</th>
-																<th>Number</th>
-																<th>Last Visit</th>
-																<th>Status</th>
+																<th>S/N</th>
+																<th>Date</th>
+																<th>Time</th>
+																<th>Description</th>
+																<th>EntryBy</th>
+																<th>Action</th>
 															</tr>
 														</thead>
 														<tbody>
@@ -547,14 +565,12 @@
 																<td>32</td>
 																<td>71 Pilgrim Avenue Chevy Chase, MD 20815</td>
 																<td>404-447-6013</td>
-																<td>11 Jan 2018</td>
-																<td><span class="badge badge-success">Approved</span></td>
 															</tr>
 														</tbody>
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="images">
-													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+													<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Image for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_image/' . $patient->vital_id) ?>">
 														<i class="fa fa-plus-circle"></i> Add New
 													</button>
 													<table class="table m-b-0 table-hover">
@@ -716,3 +732,5 @@
 <?php $this->load->view('patient/new_consultation_script'); ?>
 <?php $this->load->view('patient/new_eye_clinic_script'); ?>
 <?php $this->load->view('patient/new_dental_script'); ?>
+<?php $this->load->view('patient/new_med_report_script'); ?>
+<?php $this->load->view('patient/new_radiolody_script'); ?>
