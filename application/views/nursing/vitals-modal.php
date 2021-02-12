@@ -37,7 +37,7 @@
                         <div class="col-lg-8 col-md-6 mb-3">
                             <b>Name</b>
                             <div class="input-group">
-                                <input type="text" class="form-control time12" value="<?php echo $vital_details->patient_name.$vital_details->patient_gender ?>" disabled="">
+                                <input type="text" class="form-control time12" value="<?php echo $vital_details->patient_name; ?>" disabled="">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-3">
@@ -95,9 +95,9 @@
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="nutritional_status"></code>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-3">
-                            <b>BP</b>
+                            <b>BP(Systolic/Diastolic)</b>
                             <div class="input-group">
-                                <input type="text" class="form-control numbersOnly bp_input_tag" maxlength="5" placeholder="10/39" name="BP" id="BP" <?php if ($this->uri->segment(3) && isset($vital_details->BP)) { ?>value="<?php echo $vital_details->BP; ?>" <?php } ?>>
+                                <input type="text" class="form-control numbersOnly bp_input_tag" maxlength="7" name="BP" id="BP" <?php if ($this->uri->segment(3) && isset($vital_details->BP)) { ?>value="<?php echo $vital_details->BP; ?>" <?php } ?>>
                             </div>
                             <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="BP"></code>
                         </div>

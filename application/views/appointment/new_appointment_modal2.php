@@ -3,11 +3,11 @@
 		<div class="card-body">
 
 			<form id="add-appointment1">
-				<div class="form-group col-12">
+				<!-- <div class="form-group col-12">
 					<label for="caseDate">Patient Name</label>
 					<input type="text" name="appointment_id" hidden="">
 					<input type="text" value="<?php echo $patient_details->patient_name ?>" class="form-control" readonly placeholder="Start Typing">
-				</div>
+				</div> -->
 				<div class="form-group col-12">
 					<label for="caseDate">Appointment Date</label>
 					<input type="date" class="form-control" id="appointment_date" name="appointment_date" placeholder="Enter Remark">

@@ -247,4 +247,14 @@ class Nursing extends Base_Controller
         //  header("Content-type:application/json");
         echo json_encode($edd);
     }
+
+
+    ////Get Default Appointment lists for Vitals Page
+    public function get_default_vitals()
+    {
+        $default_vitals = $this->nursing_m->get_appointment_vitals2();
+
+        //  header("Content-type:application/json");
+        echo json_encode($default_vitals);
+    }
 }
