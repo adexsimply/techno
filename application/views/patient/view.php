@@ -117,7 +117,7 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="general">
-													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
 														<i class="fa fa-plus-circle"></i> Add New
 													</button>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
