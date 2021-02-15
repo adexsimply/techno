@@ -136,6 +136,7 @@
 														</thead>
 														<tbody>
 															<?php $i = 1;
+															//var_dump($consultations);
 															foreach ($consultations as $consultation) { ?>
 																<tr>
 																	<td><?php echo $i++ ?></td>

@@ -20,7 +20,8 @@
         <div class="row clearfix">
             <div class="col-md-12">
                 <div class="card patients-list">
-                    <?php var_dump($this->session->userdata('active_user')); ?>
+                    <?php //var_dump($this->session->userdata('active_user')); 
+                    ?>
                     <div class="header">
                         <h2>Vital Signs</h2>
                         <?php //echo $this->session->userdata('active_user')->role_id 
@@ -70,7 +71,7 @@
                                                     </select>
                                                 </div>
 
-                                               <!--  <div class="col-md-3">
+                                                <!--  <div class="col-md-3">
                                                     <label for="status">Doctor</label>
                                                     <select class="form-control select2" onchange="filter_vitals()" name="doctor_id" id="doctor_id">
                                                         <option value="all" selected>All</option>
@@ -106,7 +107,7 @@
                                     </thead>
                                     <tbody id="filtered_vitals">
 
-                                   <!--      <?php
+                                        <?php
 
                                         $i = 1;
                                         foreach ($vitals_list as $appointment) {
@@ -124,23 +125,23 @@
                                                 <td></td>
 
                                                 <td><span class="badge badge-warning">Pending</span></td>
-                                                <td> -->
-                                               <!--      <?php if ($appointment->vital_id) { ?>
+                                                <td>
+                                                    <?php if ($appointment->vital_id) { ?>
                                                         <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Edit Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/edit_vital/' . $appointment->id); ?>" style="cursor: pointer;">Edit Vitals</span>
                                                         <span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/view_vital/' . $appointment->id); ?>" style="cursor: pointer;">View Vitals</span>
                                                         <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->vital_id ?>)" style="cursor: pointer;">Delete Vitals</span>
-                                                    <?php  } else { ?> -->
-                                                       <!--  <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/take_vital/' . $appointment->app_id); ?>">
+                                                    <?php  } else { ?>
+                                                        <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/take_vital/' . $appointment->app_id); ?>">
                                                             <i class="icon wb-plus" aria-hidden="true"></i> Take Vitals
-                                                        </button> -->
+                                                        </button>
 
-                                                    <!-- <?php } ?> -->
-                                   <!--              </td>
+                                                    <?php } ?>
+                                                </td>
                                             </tr>
 
                                         <?php
                                             $i++;
-                                        } ?> -->
+                                        } ?>
                                     </tbody>
                                 </table>
                             </div>

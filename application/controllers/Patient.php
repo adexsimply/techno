@@ -86,7 +86,13 @@ class Patient extends Base_Controller
     public function add_consultation()
     {
         if ($this->uri->segment(3)) {
-            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['vitals_list'] =  $this->nursing_m->get_appointment_vitals2();
+            $this->data['vital_details'] = $h =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['patient'] = $patient = $this->patient_m->get_patient_by_id($h->patient_id);
+            $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
+            $this->data['radiologies'] = $radiology = $this->patient_m->get_radiology_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
+            $this->data['prescriptions'] = $prescription = $this->patient_m->get_prescription_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
+            $this->data['med_reports'] = $med_reports = $this->patient_m->get_med_report_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
             $this->load->view('patient/add-consultation', $this->data);
         } else {
             redirect('/appointment/waiting_list');
