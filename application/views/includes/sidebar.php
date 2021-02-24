@@ -99,6 +99,7 @@
                             <li><a href="javascript:void(0);" class="has-arrow"><i class="fa fa-flask"></i><span>Laboratory</span> </a>
                                 <ul>
                                     <li><a href="<?php echo base_url('setting/tests') ?>">Tests</a></li>
+                                    <li><a href="<?php echo base_url('setting/ranges') ?>">Range</a></li>
                                     <li><a href="<?php echo base_url('laboratory/requests_results') ?>">Requests & Results</a></li>
                                     <li><a href="<?php echo base_url('pharmacy/prescription_requests') ?>">Prescription Requests</a></li>
                                 </ul>

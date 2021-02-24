@@ -1,44 +1,49 @@
-
 <script type="text/javascript">
-  function assign_menu_to_role(id) {
+    function assign_menu_to_role(id) {
 
-            var role_id = document.getElementById('role_id').value;
-            console.log(role_id);
+        var role_id = document.getElementById('role_id').value;
+        console.log(role_id);
 
-       
-            if ($('#menu_child_id'+id).is(":checked"))
-            {
-              console.log('checked');
+
+        if ($('#menu_child_id' + id).is(":checked")) {
+            console.log('checked');
             //var row = datagrid.getRowData(rowIndex);
-            $.post("<?php echo base_url() . 'menu/assign_menu_to_role'; ?>", {role_id : role_id,menu_child_id : id,status : 1}).done(function(data) {
-             //window.location = "<?php echo base_url().'students/manage'; ?>";
+            $.post("<?php echo base_url() . 'menu/assign_menu_to_role'; ?>", {
+                role_id: role_id,
+                menu_child_id: id,
+                status: 1
+            }).done(function(data) {
+                //window.location = "<?php echo base_url() . 'students/manage'; ?>";
             });
-            }
-            else {
+        } else {
             //var row = datagrid.getRowData(rowIndex);
-             console.log('unchecked');
-            $.post("<?php echo base_url() . 'menu/assign_menu_to_role'; ?>", {role_id : role_id,menu_child_id : id,status : 0}).done(function(data) {
-             //window.location = "<?php echo base_url().'students/manage'; ?>";
+            console.log('unchecked');
+            $.post("<?php echo base_url() . 'menu/assign_menu_to_role'; ?>", {
+                role_id: role_id,
+                menu_child_id: id,
+                status: 0
+            }).done(function(data) {
+                //window.location = "<?php echo base_url() . 'students/manage'; ?>";
             });
-            }
+        }
 
-  }
+    }
+
     function get_url() {
 
 
-      var role = document.getElementById('role').value;
-      var role2 = $('#role option:selected').text();
-      if (role !='') {
+        var role = document.getElementById('role').value;
+        var role2 = $('#role option:selected').text();
+        if (role != '') {
 
-      document.getElementById("select_btn").removeAttribute("disabled");
-      document.getElementById("select_btn").setAttribute("href","<?php echo base_url('menu/assign2/'); ?>"+role);
-      document.getElementById("select_btn").setAttribute("data-title","Assign Roles for "+role2);
-      }
-      else {
-        document.getElementById("select_btn").setAttribute("disabled","");
-      }
+            document.getElementById("select_btn").removeAttribute("disabled");
+            document.getElementById("select_btn").setAttribute("href", "<?php echo base_url('menu/assign2/'); ?>" + role);
+            document.getElementById("select_btn").setAttribute("data-title", "Assign Roles for " + role2);
+        } else {
+            document.getElementById("select_btn").setAttribute("disabled", "");
+        }
 
-      console.log(role);
+        console.log(role);
     }
     /////Add Session form begins
     function validate(formData) {
@@ -46,7 +51,10 @@
         $('#add-menu').disable([".action"]);
         $("button[title='add_menu']").html("Validating data, please wait...");
         $.ajax({
-            url: "<?php echo base_url() . 'menu/validate_menu_name'; ?>", async: false, type: 'POST', data: formData,
+            url: "<?php echo base_url() . 'menu/validate_menu_name'; ?>",
+            async: false,
+            type: 'POST',
+            data: formData,
             success: function(data, textStatus, jqXHR) {
                 returnData = data;
             }
@@ -68,7 +76,7 @@
                 }
             });
         } else {
-            return 'success';   
+            return 'success';
         }
         console.log(returnData);
     }
@@ -85,23 +93,23 @@
         if (action == 'add_menu') {
             var formData = $('#add-menu').serialize();
             if (validate(formData) == 'success') {
-                swal({   
-                    title: "Please check your data",   
-                    text: "",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    cancelButtonText: "Cancel",
-                    confirmButtonText: "Save",
-                    closeOnConfirm: true 
-                },
-                function (isConfirm) {
-                if (isConfirm) {
-                    save_menu_name(formData);
+                swal({
+                        title: "Please check your data",
+                        text: "",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        cancelButtonText: "Cancel",
+                        confirmButtonText: "Save",
+                        closeOnConfirm: true
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            save_menu_name(formData);
 
-                  }
-                }
-                ); 
+                        }
+                    }
+                );
             }
         } else {
             cancel();
@@ -115,7 +123,10 @@
         $('#add-submenu').disable([".action"]);
         $("button[title='add_submenu']").html("Validating data, please wait...");
         $.ajax({
-            url: "<?php echo base_url() . 'menu/validate_submenu_name'; ?>", async: false, type: 'POST', data: formData,
+            url: "<?php echo base_url() . 'menu/validate_submenu_name'; ?>",
+            async: false,
+            type: 'POST',
+            data: formData,
             success: function(data, textStatus, jqXHR) {
                 returnData = data;
             }
@@ -137,7 +148,7 @@
                 }
             });
         } else {
-            return 'success';   
+            return 'success';
         }
         console.log(returnData);
     }
@@ -154,23 +165,23 @@
         if (action == 'add_submenu') {
             var formData = $('#add-submenu').serialize();
             if (validate_submenu(formData) == 'success') {
-                swal({   
-                    title: "Please check your data",   
-                    text: "",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    cancelButtonText: "Cancel",
-                    confirmButtonText: "Save",
-                    closeOnConfirm: true 
-                },
-                function (isConfirm) {
-                if (isConfirm) {
-                    save_submenu_name(formData);
+                swal({
+                        title: "Please check your data",
+                        text: "",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        cancelButtonText: "Cancel",
+                        confirmButtonText: "Save",
+                        closeOnConfirm: true
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            save_submenu_name(formData);
 
-                  }
-                }
-                ); 
+                        }
+                    }
+                );
             }
         } else {
             cancel();
@@ -181,91 +192,100 @@
 
 
     function delete_menu_name(rowIndex) {
-      swal({   
-        title: "Are you sure want to delete this data?",   
-        text: "Deleted data can not be restored!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        cancelButtonText: "Cancel",
-        confirmButtonText: "Proceed",
-        closeOnConfirm: true 
-      },
-                function (isConfirm) {
+        swal({
+                title: "Are you sure want to delete this data?",
+                text: "Deleted data can not be restored!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                cancelButtonText: "Cancel",
+                confirmButtonText: "Proceed",
+                closeOnConfirm: true
+            },
+            function(isConfirm) {
                 if (isConfirm) {
-        $.post("<?php echo base_url() . 'menu/delete_menu_name'; ?>", {id : rowIndex}).done(function(data) {
-         location.reload();
-        });
+                    $.post("<?php echo base_url() . 'menu/delete_menu_name'; ?>", {
+                        id: rowIndex
+                    }).done(function(data) {
+                        location.reload();
+                    });
 
-      }
-      });
+                }
+            });
     }
 
 
     function delete_menu_child_name(rowIndex) {
-      swal({   
-        title: "Are you sure want to delete this data?",   
-        text: "Deleted data can not be restored!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        cancelButtonText: "Cancel",
-        confirmButtonText: "Proceed",
-        closeOnConfirm: true 
-      },
-                function (isConfirm) {
+        swal({
+                title: "Are you sure want to delete this data?",
+                text: "Deleted data can not be restored!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                cancelButtonText: "Cancel",
+                confirmButtonText: "Proceed",
+                closeOnConfirm: true
+            },
+            function(isConfirm) {
                 if (isConfirm) {
-        $.post("<?php echo base_url() . 'menu/delete_submenu_name'; ?>", {id : rowIndex}).done(function(data) {
-         location.reload();
-        });
+                    $.post("<?php echo base_url() . 'menu/delete_submenu_name'; ?>", {
+                        id: rowIndex
+                    }).done(function(data) {
+                        location.reload();
+                    });
 
-      }
-      });
+                }
+            });
     }
 
-      ////Function to show form for session editing
-          function get_menu_data(idr) {
-          $.ajax({
-          type: "POST",
-          url: '<?php echo base_url('menu/get_menu_details')?>',
-          dataType : 'json',
-          data: {id: idr},
-          success: function(data){
-
-                  var menu_parnet_name = data[0].menu_parent_name;
-                 // var class_id = data[0].id;
-                  $('[name="menu_parent_name"]').val(menu_parent_name);
-                  $('[name="menu_id"]').val(idr);
-          }
+    ////Function to show form for session editing
+    function get_menu_data(idr) {
+        $.ajax({
+            type: "POST",
+            url: '<?php echo base_url('menu/get_menu_details') ?>',
+            dataType: 'json',
+            data: {
+                id: idr
+            },
+            success: function(data) {
+                console.log(data)
+                var menu_parnet_name = data[0].menu_parent_name;
+                var class_id = data[0].id;
+                //console.log(class_id)
+                $('[name="menu_parent_name"]').val(menu_parent_name);
+                $('[name="menu_id"]').val(idr);
+            }
         });
-          }
+    }
 
-      ////Function to show form for session editing
-          function get_submenu_data(idr) {
-          $.ajax({
-          type: "POST",
-          url: '<?php echo base_url('menu/get_submenu_details')?>',
-          dataType : 'json',
-          data: {id: idr},
-          success: function(data){
+    ////Function to show form for session editing
+    function get_submenu_data(idr) {
+        $.ajax({
+            type: "POST",
+            url: '<?php echo base_url('menu/get_submenu_details') ?>',
+            dataType: 'json',
+            data: {
+                id: idr
+            },
+            success: function(data) {
 
-                  var sub_menu_name = data[0].menu_child_name;
-                 // var class_id = data[0].id;
-                  $('[name="menu_child_name"]').val(menu_child_name);
-                  $('[name="menu_child_id"]').val(idr);
-          }
+                var sub_menu_name = data[0].menu_child_name;
+                // var class_id = data[0].id;
+                $('[name="menu_child_name"]').val(menu_child_name);
+                $('[name="menu_child_id"]').val(idr);
+            }
         });
-          }
+    }
 
-         ///This clears textbox on modal toggle
-          function clear_textbox() {
-            $('input[type=text]').each(function() {
-                $(this).val('');
-            });
-          }
-          function get_menu_id(m_id) {
+    ///This clears textbox on modal toggle
+    function clear_textbox() {
+        $('input[type=text]').each(function() {
+            $(this).val('');
+        });
+    }
 
-              $('[name="menu_id"]').val(m_id);
-          }
+    function get_menu_id(m_id) {
 
+        $('[name="menu_id"]').val(m_id);
+    }
 </script>

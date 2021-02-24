@@ -8,7 +8,30 @@ class Setting_m extends CI_Model
         $lab_tests_list = $get_lab_tests_list->result();
         return $lab_tests_list;
     }
-
+    public function get_lab_test_by_id($id)
+    {
+        $get_lab_tests_list = $this->db->select('lt.*,lg.lab_group_name')->from('lab_tests lt')->join('lab_group as lg', 'lg.id=lt.lab_group_id')->where('lt.lab_test_name IS NOT NULL')->where('lt.id', $id)->get();
+        $lab_tests_list = $get_lab_tests_list->row();
+        return $lab_tests_list;
+    }
+    public function get_lab_test_range()
+    {
+        $get_drug_groups_list = $this->db->select('*')->from('lab_test_range')->order_by('id', 'DESC')->get();
+        $drug_groups_list = $get_drug_groups_list->result();
+        return $drug_groups_list;
+    }
+    public function get_lab_test_range_by_lab_id($id)
+    {
+        $get_get_lab_test_range_by_id = $this->db->select('*')->from('lab_test_range_by_test')->where('lab_test_id', $id)->get();
+        $details = $get_get_lab_test_range_by_id->result();
+        return $details;
+    }
+    public function get_lab_test_parameter_by_lab_id($id)
+    {
+        $get_get_lab_test_range_by_id = $this->db->select('*')->from('lab_test_parameters')->where('lab_test_id', $id)->get();
+        $details = $get_get_lab_test_range_by_id->result();
+        return $details;
+    }
     public function get_drug_groups()
     {
         $get_drug_groups_list = $this->db->select('*')->from('drug_group')->get();
@@ -64,6 +87,12 @@ class Setting_m extends CI_Model
         $drug_details = $get_drug_by_id->row();
         return $drug_details;
     }
+    function get_lab_test_range_by_id($id)
+    {
+        $get_get_lab_test_range_by_id = $this->db->select('*')->from('lab_test_range')->where('id', $id)->get();
+        $details = $get_get_lab_test_range_by_id->row();
+        return $details;
+    }
 
     function qty_update()
     {
@@ -101,6 +130,85 @@ class Setting_m extends CI_Model
             );
             $insert = $this->db->insert('drug_batches', $data);
             return $insert;
+        }
+    }
+    function save_range()
+    {
+        if ($this->input->post('id')) {
+            $data = array(
+                'name' => $this->input->post('name'),
+            );
+            $this->db->where('id', $this->input->post('id'));
+            $update = $this->db->update('lab_test_range', $data);
+        } else {
+            $data = array(
+                'name' => $this->input->post('name'),
+            );
+            $insert = $this->db->insert('lab_test_range', $data);
+            return $insert;
+        }
+    }
+    function save_test()
+    {
+        if ($this->input->post('id')) {
+            $data = array(
+                'lab_test_name' => $this->input->post('name'),
+                'lab_group_id' => $this->input->post('group'),
+                'measure' => $this->input->post('measure'),
+                'cost' => $this->input->post('cost'),
+            );
+            $this->db->where('id', $this->input->post('id'));
+            $update = $this->db->update('lab_tests', $data);
+
+            // if ($this->input->post('range_id') && $this->input->post('range_id') != null) {
+            //     foreach ($this->input->post('range_id') as $range) {
+            //         $array = explode(',', $range);
+            //         //print_r($array);
+            //         $data = array(
+            //             'lab_test_id' => $lab_test_id,
+            //             'name' => $array[0],
+            //             'low' => $array[1],
+            //             'high' => $array[2],
+            //         );
+            //         $insert = $this->db->insert('lab_test_range_by_test', $data);
+            //     }
+            // }
+        } else {
+            $data = array(
+                'lab_test_name' => $this->input->post('name'),
+                'lab_group_id' => $this->input->post('group'),
+                'measure' => $this->input->post('measure'),
+                'cost' => $this->input->post('cost'),
+            );
+            $insert = $this->db->insert('lab_tests', $data);
+            $lab_test_id = $this->db->insert_id();
+            if ($this->input->post('range_id') && $this->input->post('range_id') != null) {
+                foreach ($this->input->post('range_id') as $range) {
+                    $array = explode(',', $range);
+                    //print_r($array);
+                    $data = array(
+                        'lab_test_id' => $lab_test_id,
+                        'name' => $array[0],
+                        'low' => $array[1],
+                        'high' => $array[2],
+                    );
+                    $insert = $this->db->insert('lab_test_range_by_test', $data);
+                }
+            }
+
+            if ($this->input->post('parameter_id') && $this->input->post('parameter_id') != null) {
+                foreach ($this->input->post('parameter_id') as $parameter) {
+                    $array = explode(',', $parameter);
+                    //print_r($array);
+                    $data = array(
+                        'lab_test_id' => $lab_test_id,
+                        'name' => $array[0],
+                        'measure' => $array[1],
+                        'range_value' => $array[2],
+                    );
+                    $insert = $this->db->insert('lab_test_parameters', $data);
+                }
+            }
         }
     }
 }

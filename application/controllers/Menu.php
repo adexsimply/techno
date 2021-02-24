@@ -29,8 +29,9 @@ class Menu extends Base_Controller {
 	}
 	public function index ()
 	{	
-        $this->data['title'] = 'Menu';  
+        $this->data['title'] = 'Menu';
 		$this->data['menu_list'] =  $this->menu_m->get_menu_list();
+		$this->data['menu_child_list'] =  $this->menu_m->get_all_menu_child_list();
 		$this->load->view('menu/main', $this->data);
 
 	}

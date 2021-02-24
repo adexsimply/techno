@@ -16,6 +16,18 @@ class Patient_m extends CI_Model
         $enrollee_type_list = $get_enrollee_type->result();
         return $enrollee_type_list;
     }
+    public function states()
+    {
+        $states = $this->db->select('*')->from('states')->order_by('id', 'ASC')->get();
+        $states_list = $states->result();
+        return $states_list;
+    }
+    public function countries()
+    {
+        $countries = $this->db->select('*')->from('countries')->order_by('id', 'ASC')->get();
+        $countries_list = $countries->result();
+        return $countries_list;
+    }
     public function get_edit_vitals_request_by_id($id)
     {
         $get_vitals_request = $this->db->select('pv.*,p.*,a.id as appointment_id,s.user_id as doctor_id,s.staff_firstname,s.staff_middlename,s.staff_lastname,c.*,pv.date_added as date,pv.id as vital_id')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->where('pv.id', $id)->get();

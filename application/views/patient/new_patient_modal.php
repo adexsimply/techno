@@ -5,11 +5,13 @@
 				<div class="row clearfix">
 					<div class="col-lg-10 col-md-12" style="border-right: 1px solid #ced4da;">
 						<fieldset style="border: 1px solid #01b2c6; padding: 20px;">
+							<input type="hidden" name="patient_id" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->p_id; ?>" <?php } ?> class="form-control" id="patient_id" placeholder="">
 							<div class="form-row mt-2">
 								<div class="form-group col-md-3">
 									<label for="docEmail">Hospital Number</label><span style="color: red">*</span>
 									<input type="text" name="patient_id_num" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_id_num; ?>" <?php } ?> class="form-control" id="patient_id_num" placeholder="HMS/0001/005">
 									<span style="color:#ff0000;" class="error patient_id_num"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_id_num"></code>
 								</div>
 								<div class="form-group col-md-3">
 									<label for="docEmail">Reg Date</label>
@@ -43,6 +45,7 @@
 																															} ?>>Female</option>
 									</select>
 									<span style="color:#ff0000;" class="error patient_gender"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_gender"></code>
 								</div>
 							</div>
 
@@ -62,11 +65,13 @@
 																															} ?>>Miss</option>
 									</select>
 									<span style="color:#ff0000;" class="error patient_title"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_title"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docName">SurnName</label><span style="color: red">*</span>
 									<input type="text" class="form-control" id="patient_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_name; ?>" <?php } ?> name="patient_name" placeholder="Enter Name">
 									<span style="color:#ff0000;" class="error patient_name"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_name"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docEmail">Marital Status</label>
@@ -76,6 +81,7 @@
 										<option value="Married">Married</option>
 									</select>
 									<span style="color:#ff0000;" class="error marital_status"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="marital_status"></code>
 								</div>
 							</div>
 							<div class="form-row mt-2">
@@ -83,6 +89,7 @@
 									<label for="docEmail">Other Names</label><span style="color: red">*</span>
 									<input type="text" class="form-control" id="patient_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_name; ?>" <?php } ?> name="patient_other_names" placeholder="Enter Name">
 									<span style="color:#ff0000;" class="error patient_other_names"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_other_names"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docName">Tribe</label>
@@ -96,6 +103,7 @@
 																															} ?>>Igbo</option>
 									</select>
 									<span style="color:#ff0000;" class="error patient_tribe"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_tribe"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docpassword">Date of Birth</label>
@@ -106,10 +114,12 @@
 										<input type="date" name="patient_dob" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_dob; ?>" <?php } ?> class="form-control datetimepicker-input" />
 									</div>
 									<span style="color:#ff0000;" class="error patient_dob"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_dob"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docEmail">Email Address</label>
 									<input type="email" class="form-control" id="patient_email" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_email; ?>" <?php } ?> name="patient_email" placeholder="Enter Email Address">
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_email"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docName">Religion</label>
@@ -123,6 +133,7 @@
 																																} ?>>Islam</option>
 									</select>
 									<span style="color:#ff0000;" class="error patient_religion"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_religion"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docName">Reg Type</label>
@@ -136,14 +147,17 @@
 																																		} ?>>Outpatient</option>
 									</select>
 									<span style="color:#ff0000;" class="error patient_regtype"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_regtype"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docEmail">Blood Group</label>
 									<input type="text" class="form-control" id="patient_blood_group" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_blood_group; ?>" <?php } ?> name="patient_blood_group" placeholder="Enter Patient Blood Group">
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_blood_group"></code>
 								</div>
 								<div class="form-group col-md-4">
 									<label for="docEmail">Occupation</label>
 									<input type="text" class="form-control" id="patient_occupation" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_occupation; ?>" <?php } ?> name="patient_occupation" placeholder="Enter Patient Occupation">
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_occupation"></code>
 								</div>
 							</div>
 						</fieldset>
@@ -163,16 +177,19 @@
 																														} ?>>Miss</option>
 									</select>
 									<span style="color:#ff0000;" class="error nok_title"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="nok_title"></code>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">Phone Number</label>
 									<input type="text" class="form-control" id="patient_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_phone; ?>" <?php } ?> name="patient_phone" placeholder="Enter Number">
 									<span style="color:#ff0000;" class="error patient_phone"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_phone"></code>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docName">Next of Kin Name</label><span style="color: red">*</span>
 									<input type="text" class="form-control" id="nok_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_name; ?>" <?php } ?> name="nok_name" placeholder="Enter Name">
 									<span style="color:#ff0000;" class="error nok_name"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="nok_name"></code>
 								</div>
 								<!-- <div class="form-group col-md-6">
 									<label for="docEmail">Occupation</label>
@@ -197,24 +214,32 @@
 									<label for="docEmail">Next of Kin Relationship</label><span style="color: red">*</span>
 									<input type="text" name="nok_relationship" class="form-control" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_relationship; ?>" <?php } ?> id="nok_relationship" placeholder="Enter Relationship">
 									<span style="color:#ff0000;" class="error nok_relationship"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="nok_relationship"></code>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">City Area</label>
 									<input type="text" class="form-control" id="patient_city" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_city; ?>" <?php } ?> name="patient_city" placeholder="Area">
 									<span style="color:#ff0000;" class="error patient_city"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_city"></code>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docName">Next of Kin Number</label><span style="color: red">*</span>
 									<input type="text" class="form-control" id="nok_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_phone; ?>" <?php } ?> name="nok_phone" placeholder="Enter Number">
 									<span style="color:#ff0000;" class="error nok_phone"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="nok_phone"></code>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">State</label>
-									<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
+									<select class="form-control" name="patient_state" id="exampleFormControlSelect6">
 										<option value="">Select State</option>
-										<option value="A">Lawyer</option>
+										<?php foreach ($states as $state) { ?>
+											<option value="<?php echo $state->id; ?>" <?php if ($this->uri->segment(3)) {
+																							if ($patient_details->patient_state == $state->id) { ?> selected <?php }
+																																						} ?>><?php echo $state->name; ?></option>
+										<?php } ?>
 									</select>
-									<span style="color:#ff0000;" class="error patient_occupation"></span>
+									<span style="color:#ff0000;" class="error patient_state"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_state"></code>
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">Next of Kin Address</label><span style="color: red">*</span>
@@ -223,17 +248,23 @@
 								</div>
 								<div class="form-group col-md-6">
 									<label for="docEmail">Country</label>
-									<select class="form-control" name="patient_occupation" id="exampleFormControlSelect6">
+									<select class="form-control" name="patient_country" id="exampleFormControlSelect6">
 										<option value="">Select Country</option>
-										<option value="A">Lawyer</option>
+										<?php foreach ($countries as $country) { ?>
+											<option value="<?php echo $country->id; ?>" <?php if ($this->uri->segment(3)) {
+																							if ($patient_details->patient_country == $country->id) { ?> selected <?php }
+																																							} ?>><?php echo $country->name; ?></option>
+										<?php } ?>
 									</select>
-									<span style="color:#ff0000;" class="error patient_occupation"></span>
+									<span style="color:#ff0000;" class="error patient_country"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_country"></code>
 								</div>
 								<div class="form-group col-md-12">
 									<label for="docEmail">Address</label>
 									<textarea class="form-control" id="patient_address" name="patient_address"><?php if ($this->uri->segment(3)) { ?><?php echo $patient_details->patient_address; ?> <?php } ?></textarea>
 									<!-- <input type="text" class="form-control" id="patient_address" name="patient_address" placeholder="Enter Address"> -->
 									<span style="color:#ff0000;" class="error patient_address"></span>
+									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_address"></code>
 								</div>
 							</div>
 						</fieldset>
@@ -289,9 +320,9 @@
 						</fieldset>
 
 						<div class="d-flex justify-content-end">
-							<input type="submit" title="add_patient" class="btn btn-primary px-4 m-2" value="Register">
+							<!-- <input type="submit" title="add_patient" class="btn btn-primary px-4 m-2" value="Save"> -->
+							<button type="button" class="btn btn-primary px-4 m-2" onclick="form_routes_patient('add_patient')" title="add_patient">Save</button>
 						</div>
-
 					</div>
 					<div class="col-lg-2 col-md-12">
 						<div id="results">Your captured image will appear here...</div>
@@ -305,7 +336,11 @@
 						<h2>OR</h2>
 						<hr>
 						<input type='file' class="form-control" name="image" id="user_image" onchange="readURL(this);" />
-						<img id="blah" src="#" alt="your image" />
+						<img id="blah" src="<?php if ($this->uri->segment(3)) {
+												if (isset($patient_details->patient_photo)) {
+													echo base_url('uploads/' . $patient_details->patient_photo);
+												}
+											} ?>" alt="" class="mt-3" />
 					</div>
 			</form>
 		</div>
@@ -313,6 +348,7 @@
 </div>
 
 
+<?php $this->load->view('patient/script2'); ?>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/webcam.js"></script>
 <!-- Configure a few settings and attach camera -->
 <script language="JavaScript">

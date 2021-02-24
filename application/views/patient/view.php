@@ -91,6 +91,10 @@
 		</div>
 		<div class="col-lg-9 col-md-12">
 			<div class="card">
+
+
+				<?php //var_dump($patient); 
+				?>
 				<div class="body">
 					<ul class="nav nav-tabs-new2">
 						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#billings">Billings</a></li>
@@ -117,9 +121,11 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="general">
-													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-dark">
 															<tr>
@@ -166,9 +172,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="eye">
-													<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="<?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_eye_clinic/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="<?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_eye_clinic/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-success">
 															<tr>
@@ -206,9 +214,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="anc">
-													<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-warning">
 															<tr>
@@ -237,9 +247,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="dental">
-													<button class="btn btn-primary m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-primary m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-primary">
 															<tr>
@@ -312,9 +324,11 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="laboratory">
-													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Laboratory for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_lab/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Laboratory for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_lab/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<?php //var_dump($lab_tests)
 													?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -354,9 +368,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="radiology">
-													<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Radiology for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_radiology/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Radiology for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_radiology/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-success">
 															<tr>
@@ -390,9 +406,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="prescriptions">
-													<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_prescription/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_prescription/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
@@ -430,6 +448,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="admission">
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
@@ -458,6 +481,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="procedures">
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
@@ -509,9 +537,11 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="med">
-													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Medical Report for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_med_report/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Medical Report for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_med_report/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
 														<thead class="thead-dark">
 															<tr>
@@ -553,9 +583,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="pdf">
-													<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add PDF for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_pdf/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add PDF for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_pdf/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-success">
 															<tr>
@@ -580,9 +612,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="images">
-													<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Image for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_image/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Image for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_image/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
@@ -611,9 +645,11 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="indexing">
-													<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
-														<i class="fa fa-plus-circle"></i> Add New
-													</button>
+													<?php if ($patient->appointment_id != NULL) { ?>
+														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
@@ -659,7 +695,7 @@
 				                                            <em class="text-muted">Autopay on May 12, 2018</em>
 				                                            <a href="javascript:void(0);" class="edit-payment-info">Edit Payment Info</a>
 				                                        </div> -->
-								<p class="margin-top-30"><a data-toggle="modal" data-target="#addPayment"><i class="fa fa-plus-circle"></i> Add Payment</a></p>
+								<!-- <p class="margin-top-30"><a data-toggle="modal" data-target="#addPayment"><i class="fa fa-plus-circle"></i> Add Payment</a></p> -->
 							</div>
 							<div class="row clearfix">
 								<div class="col-lg-12">

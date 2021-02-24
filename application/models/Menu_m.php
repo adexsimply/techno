@@ -1,10 +1,16 @@
 <?php
 class Menu_m extends CI_Model {
-
+    
     public function get_menu_list() {
         $get_menus = $this->db->select('*')->from('menu_parents')->get();
         $menu_list = $get_menus->result();
         return $menu_list;  
+        
+    }
+    public function get_all_menu_child_list() {
+        $get_menu_child = $this->db->select('*')->from('menu_children')->order_by('id', 'DESC')->get();
+        $menu_child_list = $get_menu_child->result();
+        return $menu_child_list;  
         
     }
     public function get_menu_child_list($id) {
