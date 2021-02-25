@@ -57,6 +57,7 @@ class Setting extends Base_Controller
         if ($this->uri->segment(3)) {
             $this->data['lab_groups_list'] =  $this->setting_m->get_lab_groups();
             $this->data['lab_test'] =  $this->setting_m->get_lab_test_by_id($this->uri->segment(3));
+            $this->data['range_list'] =  $this->setting_m->get_lab_test_range();
             $this->data['lab_test_range'] =  $this->setting_m->get_lab_test_range_by_lab_id($this->uri->segment(3));
             $this->data['lab_test_parameter'] =  $this->setting_m->get_lab_test_parameter_by_lab_id($this->uri->segment(3));
             $this->load->view('setting/test-modal', $this->data);
@@ -230,6 +231,16 @@ class Setting extends Base_Controller
     {
         $id = $this->input->post('id');
         $this->db->delete('lab_test_range', array('id' => $id));
+    }
+    public function delete_lab_range_test()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('lab_test_range_by_test', array('id' => $id));
+    }
+    public function delete_lab_parameter_test()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('lab_test_parameters', array('id' => $id));
     }
     public function validate_test()
     {

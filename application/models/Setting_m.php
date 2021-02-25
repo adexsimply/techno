@@ -151,6 +151,7 @@ class Setting_m extends CI_Model
     function save_test()
     {
         if ($this->input->post('id')) {
+            $lab_test_id = $this->input->post('id');
             $data = array(
                 'lab_test_name' => $this->input->post('name'),
                 'lab_group_id' => $this->input->post('group'),
@@ -160,19 +161,33 @@ class Setting_m extends CI_Model
             $this->db->where('id', $this->input->post('id'));
             $update = $this->db->update('lab_tests', $data);
 
-            // if ($this->input->post('range_id') && $this->input->post('range_id') != null) {
-            //     foreach ($this->input->post('range_id') as $range) {
-            //         $array = explode(',', $range);
-            //         //print_r($array);
-            //         $data = array(
-            //             'lab_test_id' => $lab_test_id,
-            //             'name' => $array[0],
-            //             'low' => $array[1],
-            //             'high' => $array[2],
-            //         );
-            //         $insert = $this->db->insert('lab_test_range_by_test', $data);
-            //     }
-            // }
+            if ($this->input->post('range_id') && $this->input->post('range_id') != null) {
+                foreach ($this->input->post('range_id') as $range) {
+                    $array = explode(',', $range);
+                    //print_r($array);
+                    $data = array(
+                        'lab_test_id' => $lab_test_id,
+                        'name' => $array[0],
+                        'low' => $array[1],
+                        'high' => $array[2],
+                    );
+                    $insert = $this->db->insert('lab_test_range_by_test', $data);
+                }
+            }
+
+            if ($this->input->post('parameter_id') && $this->input->post('parameter_id') != null) {
+                foreach ($this->input->post('parameter_id') as $parameter) {
+                    $array = explode(',', $parameter);
+                    //print_r($array);
+                    $data = array(
+                        'lab_test_id' => $lab_test_id,
+                        'name' => $array[0],
+                        'measure' => $array[1],
+                        'range_value' => $array[2],
+                    );
+                    $insert = $this->db->insert('lab_test_parameters', $data);
+                }
+            }
         } else {
             $data = array(
                 'lab_test_name' => $this->input->post('name'),

@@ -29,21 +29,9 @@
             <form id="add-test">
                 <div class="col-lg-12 col-md-12 mb-3 mt-2" id="footer-links">
                     <div class="card">
-                        <?php if ($lab_test->id) { ?>
+                        <?php if (isset($lab_test->id)) { ?>
                             <input type="hidden" class="form-control time12" name="id" value="<?php echo $lab_test->id; ?>">
                         <?php  } ?>
-                        <?php if ($lab_test_range != null) {
-                            foreach ($lab_test_range as $range) {
-                        ?>
-                                <input type="hidden" class="form-control" name="edit_range_id" value="<?php echo $range->id; ?>">
-                        <?php   }
-                        } ?>
-                        <?php if ($lab_test_parameter != null) {
-                            foreach ($lab_test_parameter as $parameter) {
-                        ?>
-                                <input type="hidden" class="form-control" name="edit_parameter_id" value="<?php echo $parameter->id; ?>">
-                        <?php   }
-                        } ?>
                         <div class="">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#new">Add New</a></li>
@@ -56,7 +44,7 @@
                                         <div class="col-lg-12 col-md-12 mb-4 row">
                                             <label for="inputPassword" class="col-sm-2 col-form-label">Name:</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control time12" name="name" placeholder="CHLORIDE CL" value="<?php if ($lab_test->lab_test_name) {
+                                                <input type="text" class="form-control time12" name="name" placeholder="CHLORIDE CL" value="<?php if (isset($lab_test->lab_test_name)) {
                                                                                                                                                 echo $lab_test->lab_test_name;
                                                                                                                                             } ?>">
                                                 <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="name"></code>
@@ -68,7 +56,7 @@
                                                 <select class="form-control" name="group" id="group">
                                                     <option value="">Select Group</option>
                                                     <?php foreach ($lab_groups_list as $lab_group) { ?>
-                                                        <option value="<?php echo $lab_group->id; ?>" <?php if ($lab_test->lab_group_id == $lab_group->id) {
+                                                        <option value="<?php echo $lab_group->id; ?>" <?php if (isset($lab_test->lab_group_id) && $lab_test->lab_group_id == $lab_group->id) {
                                                                                                             echo "selected";
                                                                                                         } ?>><?php echo $lab_group->lab_group_name; ?></option>
                                                     <?php } ?>
@@ -79,7 +67,7 @@
                                         <div class="col-lg-12 col-md-12 mb-4 row">
                                             <label for="inputPassword" class="col-sm-2 col-form-label">Measure:</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="measure" placeholder="mmol/L" value="<?php if ($lab_test->measure) {
+                                                <input type="text" class="form-control" name="measure" placeholder="mmol/L" value="<?php if (isset($lab_test->measure)) {
                                                                                                                                         echo $lab_test->measure;
                                                                                                                                     } ?>">
                                                 <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="measure"></code>
@@ -88,7 +76,7 @@
                                         <div class="col-lg-12 col-md-12 mb-3 row">
                                             <label for="inputPassword" class="col-sm-2 col-form-label">Cost:</label>
                                             <div class="col-sm-10">
-                                                <input type="number" name="cost" class="form-control" placeholder="5000" value="<?php if ($lab_test->cost) {
+                                                <input type="number" name="cost" class="form-control" placeholder="5000" value="<?php if (isset($lab_test->cost)) {
                                                                                                                                     echo $lab_test->cost;
                                                                                                                                 } ?>">
                                                 <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="cost"></code>
@@ -104,7 +92,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="m-2" name="range" type="radio" onclick="toggleRange(true)" <?php if ($lab_test_parameter != null) {
+                                        <input class="m-2" name="range" type="radio" onclick="toggleRange(true)" <?php if (isset($lab_test_range) && $lab_test_range != null) {
                                                                                                                         echo "checked";
                                                                                                                     } ?>>
                                         <label class="form-check-label" style="font-size: 20px;">
@@ -151,7 +139,7 @@
                                                         </td>
                                                         <td contenteditable="true" style="background-color: #fff; font-size: 20px; font-family: cursive;"></td>
                                                         <td contenteditable="true" style="background-color: #fff; font-size: 20px; font-family: cursive;"></td>
-                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="AddLabTest(this)">Add</button></td>
+                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="AddLabTest(this, <?php echo $range->id; ?>)">Add</button></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -172,7 +160,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    if ($lab_test_range != null) {
+                                                    //var_dump($lab_test_range);
+                                                    if (isset($lab_test_range) && $lab_test_range != null) {
                                                         $i = 1;
                                                         foreach ($lab_test_range as $range) {
                                                     ?>
@@ -181,7 +170,7 @@
                                                                 <td><?php echo $range->name; ?></td>
                                                                 <td><?php echo $range->low; ?></td>
                                                                 <td><?php echo $range->high; ?></td>
-                                                                <td width='10%'><button type='button' onclick='testDelete(this, <?php echo $range->id; ?>)' class='btn btn-sm btn-danger'>Remove</button></td>
+                                                                <td width='10%'><button type='button' onclick='testDelete(this, <?php echo $range->id; ?>, "edit")' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </tr>
                                                     <?php $i++;
                                                         }
@@ -212,7 +201,7 @@
                                                 <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="measure"></code>
                                             </div> -->
                                     </div>
-                                    <div class="body" style="height: 300px; overflow: scroll;">
+                                    <div class="body" style="height: 500px; overflow: scroll;">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped table-hover dataTable parameterTable" id="parameterTable">
                                                 <thead class="thead-dark">
@@ -226,7 +215,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    if ($lab_test_parameter != null) {
+                                                    if (isset($lab_test_parameter) && $lab_test_parameter != null) {
                                                         $i = 1;
                                                         //var_dump($lab_test_parameter);
                                                         foreach ($lab_test_parameter as $parameter) {
@@ -236,7 +225,7 @@
                                                                 <td><?php echo $parameter->name; ?></td>
                                                                 <td><?php echo $parameter->measure; ?></td>
                                                                 <td><?php echo $parameter->range_value; ?></td>
-                                                                <td width='10%'><button type='button' onclick='deleteParameter(this, <?php echo $parameter->id; ?>)' class='btn btn-sm btn-danger'>Remove</button></td>
+                                                                <td width='10%'><button type='button' onclick='deleteParameter(this, <?php echo $parameter->id; ?>, "edit")' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </tr>
                                                     <?php $i++;
                                                         }
@@ -263,7 +252,7 @@
 <script>
     var _row = null;
     $(document).ready(function() {
-            <?php if ($lab_test_parameter != null) { ?>
+            <?php if (isset($lab_test_range) && $lab_test_range != null) { ?>
                 $("#noRange").hide();
                 $("#valueRange").show();
                 $("#valueRangeSummary").show();
@@ -295,6 +284,7 @@
     //Lab Test
     function AddLabTest(ctl, id) {
         _row = $(ctl).parents("tr");
+        var create = 'create';
         var cols = _row.children("td");
         var value = $('#range_idd option:selected').text();
         console.log(value);
@@ -313,9 +303,45 @@
         $(cols[2]).text("");
     }
 
-    function testDelete(ctl, id) {
-        $(".test" + id + "").remove();
-        $(ctl).parents("tr").remove();
+    function testDelete(ctl, id, mode) {
+        if (mode == "edit") {
+            $.confirm({
+                title: 'Remove Range',
+                content: 'Are you sure you want to Remove Range?',
+                icon: 'fa fa-check-circle',
+                type: 'red',
+                buttons: {
+                    yes: function() {
+                        $(".test" + id + "").remove();
+                        $(ctl).parents("tr").remove();
+                        delete_range_by_id(id)
+                    },
+                    no: function() {
+
+                    }
+                }
+            });
+        } else {
+            $(".test" + id + "").remove();
+            $(ctl).parents("tr").remove();
+            console.log(mode);
+
+        }
+
+
+    }
+
+    function delete_range_by_id(id) {
+        $.ajax({
+            type: "post",
+            url: "<?php echo base_url() . 'setting/delete_lab_range_test'; ?>",
+            data: {
+                id: id
+            },
+            success: function(response) {
+
+            }
+        });
     }
 
 
@@ -341,9 +367,44 @@
         $("#paramenter_range_value").val("");
     }
 
-    function deleteParameter(ctl, id) {
-        $(".parameter" + id + "").remove();
-        $(ctl).parents("tr").remove();
+    function deleteParameter(ctl, id, mode) {
+        if (mode == "edit") {
+            $.confirm({
+                title: 'Remove Parameter',
+                content: 'Are you sure you want to Remove Parameter?',
+                icon: 'fa fa-check-circle',
+                type: 'red',
+                buttons: {
+                    yes: function() {
+                        $(".parameter" + id + "").remove();
+                        $(ctl).parents("tr").remove();
+                        delete_parameter_by_id(id)
+                    },
+                    no: function() {
+
+                    }
+                }
+            });
+        } else {
+            $(".parameter" + id + "").remove();
+            $(ctl).parents("tr").remove();
+            console.log(mode);
+
+        }
+
+    }
+
+    function delete_parameter_by_id(id) {
+        $.ajax({
+            type: "post",
+            url: "<?php echo base_url() . 'setting/delete_lab_parameter_test'; ?>",
+            data: {
+                id: id
+            },
+            success: function(response) {
+
+            }
+        });
     }
 </script>
 <?php $this->load->view('setting/script'); ?>
