@@ -237,8 +237,8 @@
                     buttons: {
                         yes: function() {
                             $.post("<?php echo base_url() .  'patient/save_billing'; ?>", formData).done(function(data) {
-                                console.log(data);
-                                // window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
+                                //console.log(data);
+                                window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
                             });
                         },
                         no: function() {
@@ -263,8 +263,8 @@
                 buttons: {
                     yes: function() {
                         $.post("<?php echo base_url() .  'patient/save_billing'; ?>", formData).done(function(data) {
-                            console.log(data);
-                            // window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
+                            //console.log(data);
+                            window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
                         });
                     },
                     no: function() {
