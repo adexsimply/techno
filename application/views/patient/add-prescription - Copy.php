@@ -102,7 +102,7 @@
                                 <legend><b>Choose Drug For Prescription</b></legend>
                                 <div class="body" style="height: 300px; overflow: scroll;">
 
-                                    <!--                    <div class="container">
+                    <!--                    <div class="container">
                                               <input type="text" id="mySearch" placeholder="custom search">
 
                                               <div id="example_wrapper" style="display: none;">
@@ -145,15 +145,15 @@
                                             </div>
                                         </div> -->
 
-                                    <input type="text" class="form-control" id="mySearch" placeholder="custom search">
+                <input type="text" class="form-control" id="mySearch" placeholder="custom search">
 
-                                    <div class="dataTables_wrapper no-footer" id="example_wrapper">
-                                        <style type="text/css">
-                                            #example_prescription_filter td {
-                                                padding: .2rem;
+                            <div class="dataTables_wrapper no-footer" id="example_wrapper">
+                                <style type="text/css">
+                                    #example_prescription_filter td {
+                                        padding: .2rem;
 
-                                            }
-                                        </style>
+                                    }
+                                </style>
                                         <table style="font-size: 13px;padding: 0;" cellpadding="0" cellspacing="0" class="table table-bordered" id="example_prescription_filter">
                                             <thead class="thead-dark">
                                                 <tr>
@@ -168,11 +168,11 @@
                                                 foreach ($drugs as $drug) {
 
                                                 ?>
-                                                    <tr <?php if ($drug->quantity_in_stock == 0) { ?> style="background-color:#FF0000" <?php } ?>>
+                                                    <tr <?php if($drug->quantity_in_stock==0) {?> style="background-color:#FF0000" <?php } ?>>
                                                         <td><?php echo $drug->drug_item_name; ?></td>
-                                                        <td><?php echo $drug->quantity_in_stock; ?></td>
-                                                        <td><button type="button" data-app="<?php echo $vital_details->appointment_id ?>" class="btn btn-outline-success" <?php if ($drug->quantity_in_stock == 0) { ?> disabled <?php } ?> onclick="add_prescription(this, <?php echo $drug->id; ?>)">
-                                                                <span class="sr-only">Add</span><i class="fa fa-plus"></i></button></td>
+                                                        <td ><?php echo $drug->quantity_in_stock; ?></td>
+                                                        <td><button type="button" data-app="<?php echo $vital_details->appointment_id ?>" class="btn btn-outline-success" <?php if($drug->quantity_in_stock==0) {?> disabled <?php } ?> onclick="add_prescription(this, <?php echo $drug->id; ?>)">
+                                                            <span class="sr-only">Add</span><i class="fa fa-plus"></i></button></td>
                                                     </tr>
                                                 <?php $i++;
                                                 } ?>
@@ -205,7 +205,7 @@
                                                         <tr>
                                                             <td><?php echo $patient_prescription_test->drug_item_name; ?></td>
                                                             <td></td>
-                                                            <!--  <td><?php echo $patient_prescription_test->drug_expiry_date; ?></td>
+                                                           <!--  <td><?php echo $patient_prescription_test->drug_expiry_date; ?></td>
                                                             <td><span class='text-success'>₦<?php echo $drug->drug_cost; ?></span></td> -->
                                                             <td><button type='button' onclick='testDelete_prescription(this, <?php echo $patient_prescription_test->prescription_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </td>
@@ -219,7 +219,7 @@
                             </fieldset>
                         </div>
 
-                        <!--  <div class="col-lg-12 col-md-12 mb-3 mt-2">
+                       <!--  <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <fieldset>
                                 <legend><b>My Prescription</b></legend>
                                 <textarea class="form-control" id="textarea" name="prescription" rows="7"><?php if ($this->uri->segment(3) && isset($patient_prescriptions)) {
@@ -240,31 +240,33 @@
 
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script>
-    $(document).ready(function() {
+$(document).ready( function () {
+  
+  
+  var table = $('#example_prescription_filter').DataTable({
+    dom: 'lrtip'
+  });
+  if($('#example_wrapper').is(':visible'))
+  {
+    $('#example_wrapper').hide();
+  }
+ //$('#example_wrapper').hide();
+  
+  
+  $('#mySearch').keyup( function() {
 
+    if (document.getElementById('mySearch').value !=''){
+    //$('#example_wrapper').removeAttr("style");
+    $('#example_wrapper').show();
+     table.search($(this).val()).draw();
+    }
+    else {
+      $('#example_wrapper').hide();
 
-        var table = $('#example_prescription_filter').DataTable({
-            dom: 'lrtip'
-        });
-        if ($('#example_wrapper').is(':visible')) {
-            $('#example_wrapper').hide();
-        }
-        //$('#example_wrapper').hide();
+    }
+  } );
 
-
-        $('#mySearch').keyup(function() {
-
-            if (document.getElementById('mySearch').value != '') {
-                //$('#example_wrapper').removeAttr("style");
-                $('#example_wrapper').show();
-                table.search($(this).val()).draw();
-            } else {
-                $('#example_wrapper').hide();
-
-            }
-        });
-
-    });
+} );
 
 
     var _row = null;
@@ -305,77 +307,78 @@
         $(ctl).parents("tr").remove();
     }
     //////
-    /////Popup for prescription
+/////Popup for prescription
 
 
-    function add_prescription(condi, id) {
+  function add_prescription(condi,id) {
 
-        _row = $(condi).parents("tr");
-        var cols = _row.children("td");
+    _row = $(condi).parents("tr");
+    var cols = _row.children("td");
 
-        console.log(cols)
-        event.preventDefault();
-        /*var element = $(event.target).is('a') ? $(event.target) : $(event.target).parents('a');*/
-        var element = $(event.currentTarget);
-        var title = $(cols[0]).text();
-        // var retainer_id = element.data('retainer');
-        // var item_id = element.data('item1');
-        // var item_type_id = element.data('item2');
-        $.confirm({
-            title: title,
-            content: '' +
-                '<form action="" class="formName">' +
-                '<div class="form-group">' +
-                '<label>My Prescription</label>' +
-                '<input type="text" placeholder="Price" class="price form-control" required />' +
-                '</div>' +
-                '</form>',
-            buttons: {
-                formSubmit: {
-                    text: 'Submit',
-                    btnClass: 'btn-blue',
-                    action: function() {
-                        var price = this.$content.find('.price').val();
-                        if (!price) {
-                            $.alert('Enter Prescription');
-                            return false;
-                        }
+    console.log(cols) 
+    event.preventDefault();
+    /*var element = $(event.target).is('a') ? $(event.target) : $(event.target).parents('a');*/
+    var element = $(event.currentTarget);
+    var title = $(cols[0]).text();
+    // var retainer_id = element.data('retainer');
+    // var item_id = element.data('item1');
+    // var item_type_id = element.data('item2');
+    $.confirm({
+    title: title,
+    content: '' +
+    '<form action="" class="formName">' +
+    '<div class="form-group">' +
+    '<label>My Prescription</label>' +
+    '<input type="text" placeholder="Price" class="price form-control" required />' +
+    '</div>' +
+    '</form>',
+    buttons: {
+        formSubmit: {
+            text: 'Submit',
+            btnClass: 'btn-blue',
+            action: function () {
+                var price = this.$content.find('.price').val();
+                if(!price){
+                    $.alert('Enter Prescription');
+                    return false;
+                }
 
-                        $.alert('Your name is ' + price);
+                $.alert('Your name is ' + price);
 
-                        $("#items_prescription").append("<input type='' value='1' name='food_id[]'>");
-                        $("#items_prescription").append("<input name='prescription_id[]' value='" + id + "' id='test_prescription" + id + "'>");
-                        $("#items_prescription").append("<input name='prescription_value[]' value='" + price + "' id='test_prescription2" + price + "'>");
-
-
-                        $("#testTable_prescription tbody").append("<tr>" +
-                            "<td width='25%'>" + $(cols[0]).text() + "</td>" +
-                            "<td width='25%'>" + price + "</td>" +
-                            "<td width='10%'><button type='button' onclick='testDelete_prescription(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
-                            "</tr>");
+        $("#items_prescription").append("<input type='' value='1' name='food_id[]'>");
+        $("#items_prescription").append("<input name='prescription_id[]' value='" + id + "' id='test_prescription" + id + "'>");
+        $("#items_prescription").append("<input name='prescription_value[]' value='" + price+ "' id='test_prescription2" + price + "'>");
 
 
-
+                 $("#testTable_prescription tbody").append("<tr>" +
+            "<td width='25%'>" + $(cols[0]).text() + "</td>" +
+            "<td width='25%'>" + price + "</td>" +
+            "<td width='10%'><button type='button' onclick='testDelete_prescription(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
+            "</tr>");
 
 
 
 
-                    }
-                },
-                cancel: function() {
-                    //close
-                },
-            },
-            onContentReady: function() {
-                // bind to events
-                var jc = this;
-                this.$content.find('form').on('submit', function(e) {
-                    // if the user submits the form by pressing enter in the field.
-                    e.preventDefault();
-                    jc.$$formSubmit.trigger('click'); // reference the button and click it
-                });
+
+
+
             }
+        },
+        cancel: function () {
+            //close
+        },
+    },
+    onContentReady: function () {
+        // bind to events
+        var jc = this;
+        this.$content.find('form').on('submit', function (e) {
+            // if the user submits the form by pressing enter in the field.
+            e.preventDefault();
+            jc.$$formSubmit.trigger('click'); // reference the button and click it
         });
     }
+});
+  }
+
 </script>
 <?php $this->load->view('patient/new_prescription_script'); ?>

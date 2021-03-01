@@ -40,6 +40,7 @@
             //console.log(data);
 
             window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
+            $("button[title='add_prescription']").html("Prescription Added");
         });
     }
 
@@ -55,6 +56,7 @@
                     buttons: {
                         yes: function() {
                             save_prescription_test(formData);
+
                         },
                         no: function() {
 

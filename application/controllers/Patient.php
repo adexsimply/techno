@@ -396,81 +396,92 @@ class Patient extends Base_Controller
 
     function upload_patient()
     {
-        $this->load->helper('string');
-        // if ($_FILES['image']['error'] == 0) {
-        //     $unique = random_string('numeric', 4);
-        //     $file_name = date('now') . $unique;
-        //     $config['upload_path']       = './uploads/';
-        //     $config['allowed_types']     = 'gif|jpg|jpeg|png';
-        //     $config['file_name']       = $file_name;
-        //     $this->load->library('upload', $config);
-        //     $this->upload->initialize($config);
-        //     if ($this->upload->do_upload('image')) {
-        //         $data['upload_data'] = $file_name;
-        //         $image_name = $data['upload_data'];
-        //     } else {
-        //         $image_name = '';
-        //     }
-        // }
-        $image_name = '';
-        if (($this->input->post('patient_status') == 'private')) {
-            $patient_status = 'Private';
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('patient_title', 'Title', 'required', array('required' => 'Please select %s.'));
+        $this->form_validation->set_rules('patient_name', 'Patient Name', 'required');
+        $this->form_validation->set_rules('patient_id_num', 'Patient ID', 'required');
+        $this->form_validation->set_rules('patient_gender', 'Gender', 'required');
+        $this->form_validation->set_rules('patient_dob', 'Date of Birth', 'required');
+        $this->form_validation->set_rules('patient_phone', 'Patient Phone Number', 'required');
+        $this->form_validation->set_rules('patient_blood_group', 'Blood Group', 'required');
+        $this->form_validation->set_rules('patient_address', 'Address', 'required');
+        // $this->form_validation->set_rules('patient_occupation', 'Patient Occupation', 'required');
+        $this->form_validation->set_rules('patient_regtype', 'Registration Type', 'required');
+        $this->form_validation->set_rules('nok_title', 'Title', 'required');
+        $this->form_validation->set_rules('nok_name', 'Name', 'required');
+        $this->form_validation->set_rules('nok_phone', 'Phone Number', 'required');
+        $this->form_validation->set_rules('nok_relationship', 'Relationship', 'required');
+        $this->form_validation->set_rules('nok_address', 'Address', 'required');
+        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
+        if ($this->form_validation->run() == TRUE) {
+            if ($_FILES['image']['error'] != 0) {
+                $result['status'] = false;
+                $result['message'] = array("image" => "Select image to upload");
+            } else {
+                $config['upload_path']       = './uploads/';
+                $config['allowed_types']     = 'gif|jpg|jpeg|png';
+                $this->load->library('upload', $config);
+                $this->upload->initialize($config);
+                if ($this->upload->do_upload('image')) {
+                    $data['upload_data'] = $this->upload->data('file_name');
+                    $image_name = $data['upload_data'];
+                } else {
+                    $image_name = '';
+                }
+                if (($this->input->post('patient_status') == 'private')) {
+                    $patient_status = 'Private';
+                } else {
+                    $patient_status = $this->input->post('patient_status2');
+                }
+
+                $data = array(
+
+                    'patient_name'         => $this->input->post('patient_name'),
+                    'patient_id_num'    => $this->input->post('patient_id_num'),
+                    'patient_photo'         => $image_name,
+                    'patient_title'   => $this->input->post('patient_title'),
+                    'patient_address'   => $this->input->post('patient_address'),
+                    'patient_status'   => $patient_status,
+                    'patient_occupation'   => $this->input->post('patient_occupation'),
+                    'patient_religion'   => $this->input->post('patient_religion'),
+                    'patient_tribe'   => $this->input->post('patient_tribe'),
+                    'patient_origin'   => $this->input->post('patient_origin'),
+                    'patient_regtype'   => $this->input->post('patient_regtype'),
+                    'patient_blood_group'   => $this->input->post('patient_blood_group'),
+                    'patient_phone'   => $this->input->post('patient_phone'),
+                    'patient_dob'   => $this->input->post('patient_dob'),
+                    'patient_gender'   => $this->input->post('patient_gender'),
+                    'enrollee_type'   => $this->input->post('enrollee_type'),
+                    'company'   => $this->input->post('company'),
+                    'enrollee_no'   => $this->input->post('enrollee_no'),
+                    'patient_email'   => $this->input->post('patient_email'),
+                );
+
+
+                $result['status'] = true;
+
+                $this->db->insert('patient_details', $data);
+                $last_id = $this->db->insert_id();
+
+                $data2 = array(
+
+                    'nok_title'         => $this->input->post('nok_title'),
+                    'nok_name'    => $this->input->post('nok_name'),
+                    'nok_address'   => $this->input->post('nok_address'),
+                    'nok_relationship'   => $this->input->post('nok_relationship'),
+                    'nok_phone'   => $this->input->post('nok_phone'),
+                    'patient_id'   => $last_id,
+                );
+                $this->db->insert('patient_nok', $data2);
+
+                $result['message'] = "Data inserted successfully.";
+            }
         } else {
-            $patient_status = $this->input->post('patient_status2');
+            $result['status'] = false;
+            // $result['message'] = validation_errors();
+            $result['message'] = $this->form_validation->error_array();
         }
-
-        $data = array(
-            'patient_name'         => $this->input->post('patient_name'),
-            'patient_id_num'    => $this->input->post('patient_id_num'),
-            'patient_photo'         => $image_name,
-            'patient_title'   => $this->input->post('patient_title'),
-            'patient_address'   => $this->input->post('patient_address'),
-            'patient_status'   => $patient_status,
-            'patient_occupation'   => $this->input->post('patient_occupation'),
-            'patient_religion'   => $this->input->post('patient_religion'),
-            'patient_tribe'   => $this->input->post('patient_tribe'),
-            'patient_origin'   => $this->input->post('patient_origin'),
-            'patient_regtype'   => $this->input->post('patient_regtype'),
-            'patient_blood_group'   => $this->input->post('patient_blood_group'),
-            'patient_phone'   => $this->input->post('patient_phone'),
-            'patient_dob'   => $this->input->post('patient_dob'),
-            'patient_gender'   => $this->input->post('patient_gender'),
-            'enrollee_type'   => $this->input->post('enrollee_type'),
-            'company'   => $this->input->post('company'),
-            'enrollee_no'   => $this->input->post('enrollee_no'),
-            'patient_email'   => $this->input->post('patient_email'),
-        );
-
-        if ($this->input->post('patient_id')) {
-
-            $this->db->where('id', $this->input->post('patient_id'));
-            $update = $this->db->update('patient_details', $data);
-
-            //return $update;
-            $data2 = array(
-                'nok_title'   => $this->input->post('nok_title'),
-                'nok_name'    => $this->input->post('nok_name'),
-                'nok_address' => $this->input->post('nok_address'),
-                'nok_relationship'  => $this->input->post('nok_relationship'),
-                'nok_phone'   => $this->input->post('nok_phone'),
-            );
-
-            $this->db->where('patient_id', $this->input->post('patient_id'));
-            $update = $this->db->update('patient_nok', $data2);
-        } else {
-
-            $this->db->insert('patient_details', $data);
-            $last_id = $this->db->insert_id();
-            $data2 = array(
-                'nok_title'   => $this->input->post('nok_title'),
-                'nok_name'    => $this->input->post('nok_name'),
-                'nok_address' => $this->input->post('nok_address'),
-                'nok_relationship'  => $this->input->post('nok_relationship'),
-                'nok_phone'   => $this->input->post('nok_phone'),
-                'patient_id'  => $last_id,
-            );
-            $this->db->insert('patient_nok', $data2);
-        }
+        echo json_encode($result);
     }
 
     function delete_patient()
@@ -504,6 +515,10 @@ class Patient extends Base_Controller
         }
     }
 
+    function save_billing()
+    {
+        echo json_encode($this->patient_m->save_billing());
+    }
 
     function add_history()
     {
@@ -729,11 +744,6 @@ class Patient extends Base_Controller
                 'field' => 'prescription_id[]',
                 'label' => 'Prescription Drugs',
                 'rules' => 'trim|required'
-            ],
-            [
-                'field' => 'prescription',
-                'label' => 'Prescription',
-                'rules' => 'trim|required'
             ]
         ];
 
@@ -776,5 +786,23 @@ class Patient extends Base_Controller
         } else {
             redirect('/appointment/waiting_list');
         }
+    }
+    function edit_prescription2()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
+            $this->data['patient_prescriptions'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+            $this->data['drugs'] = $this->patient_m->drugs();
+            $this->load->view('patient/prescription/edit', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function get_prescription_by_vital_id()
+    {
+        $patient_id = $this->input->post('patient_id');
+        $vital_id = $this->input->post('vital_id');
+        $prescription_list = $this->patient_m->get_prescription_by_patient_id_and_vital_id($patient_id, $vital_id);
+        echo json_encode($prescription_list);
     }
 }

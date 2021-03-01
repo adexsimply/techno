@@ -16,18 +16,6 @@ class Patient_m extends CI_Model
         $enrollee_type_list = $get_enrollee_type->result();
         return $enrollee_type_list;
     }
-    public function states()
-    {
-        $states = $this->db->select('*')->from('states')->order_by('id', 'ASC')->get();
-        $states_list = $states->result();
-        return $states_list;
-    }
-    public function countries()
-    {
-        $countries = $this->db->select('*')->from('countries')->order_by('id', 'ASC')->get();
-        $countries_list = $countries->result();
-        return $countries_list;
-    }
     public function get_edit_vitals_request_by_id($id)
     {
         $get_vitals_request = $this->db->select('pv.*,p.*,a.id as appointment_id,s.user_id as doctor_id,s.staff_firstname,s.staff_middlename,s.staff_lastname,c.*,pv.date_added as date,pv.id as vital_id')->from('patient_vitals pv')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('patient_appointments as a', 'a.id=pv.appointment_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->where('pv.id', $id)->get();
@@ -413,55 +401,6 @@ class Patient_m extends CI_Model
         return $consultation;
     }
 
-    function save_billing()
-    {
-        if ($this->input->post('Pending')) {
-            echo json_encode($this->input->post('Pending'));
-            $drug_id = $this->input->post('drug_ids[]');
-
-            foreach ($this->input->post('drug_ids[]') as $drug_id) {
-                $array = explode(',', $drug_id);
-                $get = $this->db->select('*')->from('drug_items')->where('id', $array[0])->get();
-                $result = $get->row();
-                $data3 = array(
-                    'quantity_in_stock' => $result->quantity_in_stock - $array[1],
-                );
-                $this->db->where('id', $array[0]);
-                $this->db->update('drug_items', $data3);
-
-                $this->db->where('patient_id', $this->input->post('patient_id'));
-                $this->db->where('prescription_unique_id', $this->input->post('prescription_unique_id'));
-                $this->db->where('prescription_id', $array[0]);
-                $this->db->update('patient_prescriptions2', array('qty_given' => $array[1]));
-            }
-            $data = array(
-                'patient_id'   => $this->input->post('patient_id'),
-                'category'     => "Prescription",
-                'billing_type' => "Debit",
-                'amount'       => $this->input->post('main_amount'),
-                'billed_by'    => $this->session->userdata('active_user')->id,
-            );
-
-            //echo json_encode($this->input->post('prescription_unique_id'));
-
-            $this->db->insert('billings', $data);
-
-            $data_update = array(
-                'status' => "Prescription",
-            );
-            $this->db->where('prescription_unique_id', $this->input->post('prescription_unique_id'));
-            $this->db->update('patient_prescriptions2', $data_update);
-        }
-
-        if ($this->input->post('Prescription')) {
-            $data_update = array(
-                'status' => "Treated",
-            );
-            echo json_encode($data_update);
-            $this->db->where('prescription_unique_id', $this->input->post('prescription_unique_id'));
-            $this->db->update('patient_prescriptions2', $data_update);
-        }
-    }
 
     //Prescription
     public function save_prescription()
@@ -517,8 +456,8 @@ class Patient_m extends CI_Model
                     $data[$i]['prescription'] = $prescription[$key];
                     $i++;
                 }
-                $this->db->insert_batch('patient_prescriptions2', $data);
             }
+            $this->db->insert_batch('patient_prescriptions2', $data);
         }
     }
 
