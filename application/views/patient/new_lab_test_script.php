@@ -31,7 +31,7 @@
         $("button[title='add_lab']").html("Saving data, please wait...");
         //console.log(formData)
         $.post("<?php echo base_url() . 'patient/save_lab'; ?>", formData).done(function(data) {
-            //console.log(data);
+            console.log(data);
 
             window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
         });

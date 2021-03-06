@@ -119,7 +119,7 @@
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
                                                         <td><?php echo $lab_test->lab_test_name; ?></td>
-                                                        <td><span class='text-success'>₦5000</span></td>
+                                                        <td><span class='text-success'>₦<?php echo $lab_test->cost; ?></span></td>
                                                         <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $lab_test->id; ?>)">Add</button></td>
                                                     </tr>
                                                 <?php $i++;

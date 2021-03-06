@@ -332,6 +332,22 @@ class Patient_m extends CI_Model
                     'lab_test_id' =>  $e_id,
                 );
                 $insert = $this->db->insert('patient_lab_tests', $data);
+                // echo json_encode($this->db->insert_id());
+
+                $lab_test = $this->db->select('*')->from('consultations')->where('patient_id', $this->input->post('patient_id'))->get();;
+                $lab_test_result = $lab_test->row();
+
+                $data2 = array(
+                    'appointment_id' => $this->input->post('appointment_id'),
+                    'patient_id' => $this->input->post('patient_id'),
+                    'doctor_id' => $this->input->post('doctor_id'),
+                    'vital_id' => $this->input->post('vital_id'),
+                    'lab_test_id' => $unique,
+                    'sender_id' => $this->session->userdata('active_user')->id,
+                    'diagnosis' => $lab_test_result->assignment,
+                    'lab_test_unique_id' =>  $e_id,
+                );
+                $insert = $this->db->insert('lab_requests', $data2);
             }
         }
     }

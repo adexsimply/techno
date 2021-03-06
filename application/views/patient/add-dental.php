@@ -1,7 +1,6 @@
 <div class="col-12">
     <div class="card box-margin">
         <div class="card-body">
-
             <form id="add-dental">
                 <div class="modal-body edit-doc-profile">
                     <div class="row clearfix">

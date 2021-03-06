@@ -121,7 +121,7 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="general">
-													<?php if ($patient->appointment_id != NULL) { ?>
+													<?php if ($patient->appointment_id != NULL && $consultations == Null) { ?>
 														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
@@ -172,7 +172,7 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="eye">
-													<?php if ($patient->appointment_id != NULL) { ?>
+													<?php if ($patient->appointment_id != NULL && $eye_clinics == Null) { ?>
 														<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="<?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_eye_clinic/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
@@ -247,7 +247,7 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="dental">
-													<?php if ($patient->appointment_id != NULL) { ?>
+													<?php if ($patient->appointment_id != NULL && $dental_clinics == Null) { ?>
 														<button class="btn btn-primary m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
@@ -324,7 +324,7 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="laboratory">
-													<?php if ($patient->appointment_id != NULL) { ?>
+													<?php if ($patient->appointment_id != NULL && $lab_tests == Null) { ?>
 														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Laboratory for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_lab/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
@@ -337,8 +337,8 @@
 																<th>S/N</th>
 																<th>Date</th>
 																<th>Time</th>
-																<!-- <th>Test</th>
-																<th>Price</th> -->
+																<th>Status</th>
+																<!-- <th>Price</th> -->
 																<th>Action</th>
 															</tr>
 														</thead>
@@ -349,8 +349,20 @@
 																	<td><?php echo $i++ ?></td>
 																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($lab_test->date_added)) ?></span></td>
 																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($lab_test->date_added)) ?></span></td>
-																	<!-- <td><?php echo $lab_test->lab_test_name;  ?></td>
-																	<td><span class="text-success">₦5000</span></td> -->
+																	<!-- <td><?php echo $lab_test->lab_test_name;  ?></td> -->
+																	<td>
+																		<?php if ($lab_test->status == "Pending") { ?>
+																			<span class="badge badge-warning"><?php echo $lab_test->status ?></span>
+																		<?php } else if ($lab_test->status == "Treated") { ?>
+																			<span class="badge badge-success"><?php echo $lab_test->status ?></span>
+																		<?php } else if ($lab_test->status == "Specimen") { ?>
+																			<span class="badge badge-primary"><?php echo $lab_test->status ?></span>
+																		<?php } else if ($lab_test->status == "Review") { ?>
+																			<span class="badge badge-primary"><?php echo $lab_test->status ?></span>
+																		<?php } else if ($lab_test->status == "Incomplete") { ?>
+																			<span class="badge badge-primary"><?php echo $lab_test->status ?></span>
+																		<?php } ?>
+																	</td>
 																	<td>
 																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_lab_test/' . $lab_test->lab_test_unique_id) ?>">
 																			<i class="fa fa-pencil"></i>
@@ -368,7 +380,7 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="radiology">
-													<?php if ($patient->appointment_id != NULL) { ?>
+													<?php if ($patient->appointment_id != NULL && $radiologies == Null) { ?>
 														<button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Radiology for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_radiology/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
@@ -406,7 +418,7 @@
 													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="prescriptions">
-													<?php if ($patient->appointment_id != NULL) { ?>
+													<?php if ($patient->appointment_id != NULL && $prescriptions == Null) { ?>
 														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_prescription/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
@@ -548,7 +560,7 @@
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="med">
-													<?php if ($patient->appointment_id != NULL) { ?>
+													<?php if ($patient->appointment_id != NULL && $med_reports == Null) { ?>
 														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Medical Report for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_med_report/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
@@ -792,3 +804,4 @@
 <?php $this->load->view('patient/new_med_report_script'); ?>
 <?php $this->load->view('patient/new_radiolody_script'); ?>
 <?php $this->load->view('patient/new_prescription_script'); ?>
+<?php $this->load->view('patient/new_lab_test_script'); ?>
