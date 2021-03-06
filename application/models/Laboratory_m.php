@@ -14,6 +14,7 @@ class Laboratory_m extends CI_Model
         $specimen_list = $get_specimen->row();
         return $specimen_list;
     }
+    
     public function save_specimen()
     {
         if ($this->input->post('specimen_id')) {
