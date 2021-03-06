@@ -85,7 +85,7 @@
                         <h5>Tests</h5>
                         <hr>
                         <div class="table-responsive mb-3">
-                            <table class="table table-hover js-basic-example dataTable table-custom">
+                            <table class="table table-hover js-basic-example dataTable table-custom" id="mprDetailDataTable">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>S/N</th>
@@ -100,13 +100,13 @@
                                     <?php $i = 1;
                                     //var_dump($tests);
                                     foreach ($tests as $test) { ?>
-                                        <tr>
+                                        <tr class="data">
                                             <td><?php echo $i++ ?></td>
                                             <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($test->date_created)) ?></span></td>
                                             <td>
                                                 <?php echo $test->lab_test_name ?>
                                             </td>
-                                            <td width="15%"><input type="checkbox" name=""></td>
+                                            <td width="15%"><input type="checkbox" name="sample"></td>
                                             <td><?php echo $test->status ?></td>
                                             <td width="20%">
                                                 <select class="form-control">
@@ -193,9 +193,21 @@
 
                 </div>
                 <div class="text-right">
-                    <input type="submit" title="add_appointment" class="btn btn-primary px-4 m-2" value="Save">
+                    <button type="button" class="btn btn-primary px-4 m-2" onclick="get()">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    function get() {
+        //alert()
+        $("#mprDetailDataTable tr:gt(0)").each(function() {
+            var this_row = $(this);
+            var productId = $.trim(this_row.find('td:eq(0)').html()); //td:eq(0) means first td of this row
+            var product = $.trim(this_row.find('td:eq(1)').html())
+            var Quantity = $(this).parent('td:eq(1)').find('input').val();
+            console.log(Quantity)
+        });
+    }
+</script>
