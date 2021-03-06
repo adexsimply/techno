@@ -1,7 +1,6 @@
 <?php
 class Request_m extends CI_Model
 {
-
     public function get_request_destinations_list()
     {
         $get_request_destinations = $this->db->select('*')->from('request_destinations')->get();
@@ -42,5 +41,22 @@ class Request_m extends CI_Model
         $get_lab_request = $this->db->select('lr.*, t.lab_test_name,t.id as test_id')->from('lab_requests lr')->join('lab_tests as lt', 'lt.id=lr.lab_test_unique_id', 'left')->join('lab_tests as t', 't.id=lr.lab_test_unique_id', 'left')->where('lr.patient_id', $p_id)->where('lr.lab_test_id', $test_id)->get();
         $lab_request_list = $get_lab_request->result();
         return $lab_request_list;
+    }
+    public function update_request()
+    {
+        $id = $this->input->post('id');
+        $sample = $this->input->post('sample[]');
+        $specimen = $this->input->post('specimen[]');
+        $spec = $this->input->post('special_instuction[]');
+        foreach ($id as $key => $val) {
+            $data = array(
+                'collect_sample' => $sample[$key] ?? "",
+                'sample_type' => $specimen[$key] ?? "",
+                'special_instuction' => $spec,
+            );
+            $this->db->where('id', $val);
+            $this->db->update('lab_requests', $data);
+            // echo json_encode($val);
+        }
     }
 }

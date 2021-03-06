@@ -2,7 +2,7 @@
 <div class="col-12">
     <div class="card">
         <div class="card-body">
-            <form id="add-appointment" action="<?php echo base_url('appointment/add_appointment'); ?>" method="post">
+            <form id="update-request" method="post">
                 <div class="modal-body edit-doc-profile">
                     <?php //var_dump($lab_requests);
                     ?>
@@ -97,22 +97,27 @@
                                     </tr>
                                 <tbody>
 
-                                    <?php $i = 1;
+                                    <?php $j = 1;
                                     //var_dump($tests);
                                     foreach ($tests as $test) { ?>
-                                        <tr class="data">
-                                            <td><?php echo $i++ ?></td>
+                                        <tr class="request">
+                                            <td><input type="text" name="id[]" value="<?php echo $test->id ?>"></td>
+                                            <td><?php echo $j++ ?></td>
                                             <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($test->date_created)) ?></span></td>
                                             <td>
                                                 <?php echo $test->lab_test_name ?>
                                             </td>
-                                            <td width="15%"><input type="checkbox" name="sample"></td>
+                                            <td width="15%"><input type="checkbox" <?php if ($test->collect_sample != Null && $test->collect_sample == "on") {
+                                                                                        echo "checked";
+                                                                                    } ?> name="sample[]"></td>
                                             <td><?php echo $test->status ?></td>
                                             <td width="20%">
-                                                <select class="form-control">
+                                                <select class="form-control" name="specimen[]">
                                                     <option value="">Select</option>
                                                     <?php foreach ($lab_specimens_list as $specimen) { ?>
-                                                        <option value="<?php echo $specimen->id; ?>"><?php echo $specimen->specimen_name; ?></option>
+                                                        <option value="<?php echo $specimen->id; ?>" <?php if ($specimen->id == $test->sample_type) {
+                                                                                                            echo "selected";
+                                                                                                        } ?>><?php echo $specimen->specimen_name; ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </td>
@@ -128,7 +133,7 @@
                         <div class="col-lg-12 col-md-12">
                             <b>Special Instruction</b>
                             <div class="input-group mb-3">
-                                <textarea rows="3" class="form-control"></textarea>
+                                <textarea rows="3" class="form-control" name="special_instuction"><?php echo $lab_requests->special_instuction; ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -193,21 +198,14 @@
 
                 </div>
                 <div class="text-right">
-                    <button type="button" class="btn btn-primary px-4 m-2" onclick="get()">Save</button>
+                    <button type="button" onclick="form_routes_request('update_request')" title="update_request" class="btn btn-primary px-4 m-2">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script>
-    function get() {
-        //alert()
-        $("#mprDetailDataTable tr:gt(0)").each(function() {
-            var this_row = $(this);
-            var productId = $.trim(this_row.find('td:eq(0)').html()); //td:eq(0) means first td of this row
-            var product = $.trim(this_row.find('td:eq(1)').html())
-            var Quantity = $(this).parent('td:eq(1)').find('input').val();
-            console.log(Quantity)
-        });
-    }
+    $(document).ready(function() {
+        $('tr.request td:nth-child(1)').hide();
+    });
 </script>

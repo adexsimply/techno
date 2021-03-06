@@ -129,4 +129,10 @@ class Laboratory extends Base_Controller
         $id = $this->input->post('id');
         $this->db->delete('lab_specimens', array('id' => $id));
     }
+
+    public function update_request()
+    {
+        echo json_encode($this->request_m->update_request());
+        //echo json_encode($this->input->post('sample[collect]'));
+    }
 }
