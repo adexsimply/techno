@@ -327,7 +327,7 @@
                 '<form action="" class="formName">' +
                 '<div class="form-group">' +
                 '<label>My Prescription</label>' +
-                '<input type="text" placeholder="Price" class="price form-control" required />' +
+                '<input type="text" placeholder="Prescription" class="price form-control" required />' +
                 '</div>' +
                 '</form>',
             buttons: {
@@ -341,11 +341,11 @@
                             return false;
                         }
 
-                        $.alert('Your name is ' + price);
+                        //$.alert('Your name is ' + price);
 
-                        $("#items_prescription").append("<input type='' value='1' name='food_id[]'>");
-                        $("#items_prescription").append("<input name='prescription_id[]' value='" + id + "' id='test_prescription" + id + "'>");
-                        $("#items_prescription").append("<input name='prescription_value[]' value='" + price + "' id='test_prescription2" + price + "'>");
+                        $("#items_prescription").append("<input type='' hidden value='1' name='food_id[]'>");
+                        $("#items_prescription").append("<input hidden name='prescription_id[]' value='" + id + "' id='test_prescription" + id + "'>");
+                        $("#items_prescription").append("<input hidden name='prescription_value[]' value='" + price + "' id='test_prescription2" + price + "'>");
 
 
                         $("#testTable_prescription tbody").append("<tr>" +

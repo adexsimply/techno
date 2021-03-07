@@ -277,6 +277,10 @@
 										<input type="radio" name="patient_status" onclick="toggleRadio(false)" value="private">
 										<span><i></i>Private</span>
 									</label>
+								</div>
+							</div>
+							<div class="form-row mt-2">
+								<div class="form-group col-md-3">
 									<label class="fancy-radio">
 										<input type="radio" name="patient_status" onclick="toggleRadio(true)" value="Retainer/HMO">
 										<span><i></i>Retainer/HMO</span>
