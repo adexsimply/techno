@@ -22,7 +22,7 @@ function listDefaultPatients() {
         var html = '';
         var i;
         var sn =1;
-        for(i=1; i<response.length; i++){
+        for(i=0; i<response.length; i++){
 
 
             if (response[i].vital_id != null) {
@@ -252,8 +252,9 @@ function listDefaultPatients() {
     var status = document.getElementById('status').value;
    // var doctor_id = document.getElementById('doctor_id').value;
     var clinic_id = document.getElementById('clinic_id').value;
-    var date_range = document.getElementById('date_range').value;
-    console.log(date_range);
+    var date_range_to = document.getElementById('date_range_to').value;
+    var date_range_from = document.getElementById('date_range_from').value;
+    console.log(date_range_to);
 
     listPatients();
 
@@ -270,16 +271,18 @@ function listDefaultPatients() {
       data: {
           status: status,
           //doctor_id: doctor_id,
-          clinic_id: clinic_id,
-          date_range: date_range
+          date_range_from: date_range_from,
+          date_range_to: date_range_to,
+          clinic_id: clinic_id
         },
       async : false,
       dataType : 'json',
       success : function(response){
+        console.log(response);
         var html = '';
         var i;
         var sn =1;
-        for(i=1; i<response.length; i++){
+        for(i=0; i<response.length; i++){
 
 
             if (response[i].vital_id != null) {

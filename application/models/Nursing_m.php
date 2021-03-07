@@ -170,19 +170,26 @@ class Nursing_m extends CI_Model
             }
         }
 
-        if ($this->input->post('date_range')) {
-            $date_range = explode('-', $this->input->post('date_range'));
+        $today_date = date('Y-m-d');
+
+        if ($this->input->post('date_range_from') != $today_date) {
+            //$date_range = explode('-', $this->input->post('date_range'));
 
 
-            $date1 = date_create($date_range[0]);
-            $date2 = date_create($date_range[1]);
+            // $date1 = date_create($date_range[0]);
+            // $date2 = date_create($date_range[1]);
             //echo date_format($date,"Y/m/d H:i:s");
-            $first_date = date_format($date1, "Y-m-d");
-            $second_date =  date_format($date2, "Y-m-d");
+            $first_date = $this->input->post('date_range_from');
+            $second_date =  $this->input->post('date_range_to');
 
             $date_range = array('appointment_date >=' => $first_date, 'appointment_date <=' => $second_date);
         } else {
-            $date_range = '1=1';
+            // $date = new DateTime("now");
+            // $curr_date = $date->format('Y-m-d ');
+           $date_range = array('appointment_date' => '2021-03-07');
+           //$date_range = 'pa.appointment_date IN (SELECT appointment_date FROM patient_appointments WHERE appointment_date=' . $today_date . ')';
+            //$date_range = 'appointment_date='.$today_date .'';
+           // $date_range = '1=1';
         }
 
         // $doctor_cond = '1=1';
@@ -195,6 +202,7 @@ class Nursing_m extends CI_Model
         $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->join('patient_vitals as pv', 'pv.appointment_id=pa.id', 'left')->where($cond)->where($clinic_cond)->where($date_range)->order_by('pa.id', 'DESC')->get();
         // print_r($this->db->last_query());
         $appointment_list = $get_appointments->result();
+      //  return $this->db->last_query();
         return $appointment_list;
     }
 

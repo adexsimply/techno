@@ -100,52 +100,9 @@
                                     <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="prescription_id[]"></code>
                                 </div>
                                 <legend><b>Choose Drug For Prescription</b></legend>
-                                <div class="body" style="height: 300px; overflow: scroll;">
+                                <div class="body" style="max-height: 200px; overflow: scroll;">
 
-                                    <!--                    <div class="container">
-                                              <input type="text" id="mySearch" placeholder="custom search">
-
-                                              <div id="example_wrapper" style="display: none;">
-                                                <table border="1" id="example_prescription_filter" >
-                                                <thead>
-                                                  <tr>
-                                                    <th>Name</th>
-                                                    <th>Position</th>
-                                                    <th>Min</th>
-                                                    <th>Max</th>
-                                                </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                  
-                                                  
-                                                  
-
-                                                <tr>
-                                                    <td>Ashton Cox</td>
-                                                    <td>Technical Author</td>
-                                                    <td>66</td>
-                                                    <td>2009</td>
-
-                                                  </tr>
-                                                  <tr>
-                                                    <td>Garrett Winters</td>
-                                                    <td>Director</td>
-                                                    <td>63</td>
-                                                    <td>300</td>
-                                                  </tr>
-                                                  <tr>
-                                                    <td>Tiger Nixon</td>
-                                                    <td>System Architect</td>
-                                                    <td>61</td>
-                                                    <td>205</td>
-                                                  </tr>
-                                              </tbody>
-                                              </table>
-                                            </div>
-                                        </div> -->
-
-                                    <input type="text" class="form-control" id="mySearch" placeholder="custom search">
+                                    <input type="text" class="form-control" id="mySearch" placeholder="Start typing a drug name">
 
                                     <div class="dataTables_wrapper no-footer" id="example_wrapper">
                                         <style type="text/css">

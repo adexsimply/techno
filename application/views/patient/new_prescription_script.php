@@ -39,7 +39,7 @@
         $.post("<?php echo base_url() . 'patient/save_prescription'; ?>", formData).done(function(data) {
             //console.log(data);
 
-            window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
+            //window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
             $("button[title='add_prescription']").html("Prescription Added");
         });
     }

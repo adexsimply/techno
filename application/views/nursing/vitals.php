@@ -45,9 +45,14 @@
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <!-- Date and time range -->
-                                                <div class="col-md-4">
-                                                    <label>Date Range</label>
-                                                    <input type="" class="form-control" name="dates" placeholder="Select Date Range" onchange="filter_vitals()" id="date_range">
+                                                <div class="col-md-2">
+                                                    <label>From</label>
+                                                    <input type="date" placeholder="From" class="form-control" onchange="filter_vitals()" id="date_range_from" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>">
+                                                   <!--  <input type="" class="form-control" name="dates" placeholder="Select Date Range" onchange="filter_vitals()" id="date_range"> -->
+                                                </div>
+                                                <div class="col-md-2"> 
+                                                    <label>To</label>
+                                                    <input type="date" class="form-control" onchange="filter_vitals()" id="date_range_to" placeholder="From" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>"> 
                                                 </div>
 
 
@@ -71,22 +76,13 @@
                                                     </select>
                                                 </div>
 
-                                                <!--  <div class="col-md-3">
-                                                    <label for="status">Doctor</label>
-                                                    <select class="form-control select2" onchange="filter_vitals()" name="doctor_id" id="doctor_id">
-                                                        <option value="all" selected>All</option>
-                                                        <?php foreach ($doctors_list as $doctor) {
-                                                        ?>
-                                                            <option value="<?php echo $doctor->id ?>">Dr. <?php echo $doctor->staff_firstname ?> <?php echo $doctor->staff_middlename ?> <?php echo $doctor->staff_lastname ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                        <?php //var_dump($vitals_list); ?>
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
                                 <table id="employeeListing" class="table table-hover js-basic-example dataTable">
@@ -113,7 +109,7 @@
                                         foreach ($vitals_list as $appointment) {
 
                                         ?>
-                                            <tr>
+                                       <!--      <tr>
                                                 <td><?php echo $i; ?></td>
                                                 <td><span class="list-name"><?php echo date('jS \of M Y', strtotime($appointment->appointment_date)) ?></span></td>
                                                 <td><span class="list-name"><?php echo date('h:i:s A', strtotime($appointment->appointment_time)) ?></span></td>
@@ -137,7 +133,7 @@
 
                                                     <?php } ?>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
 
                                         <?php
                                             $i++;

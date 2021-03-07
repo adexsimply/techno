@@ -52,7 +52,7 @@
                                         ?>
                                             <tr>
                                                 <td><?php echo $i; ?></td>
-                                                <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($appointment->appointment_date)) ?></span></td>
+                                                <td><span class="list-name"><?php if (date('jS \of F Y', strtotime($appointment->appointment_date)) == date('jS \of F Y')) { echo "Today "; } else { echo date('jS \of F Y', strtotime($appointment->appointment_date)); } ?></span></td>
                                                 <td><span class="list-name"><?php echo date('h:i:s A', strtotime($appointment->appointment_time)) ?></span></td>
                                                 <td><span class="list-name"><?php echo $appointment->patient_id_num; ?></span></td>
                                                 <td><?php echo $appointment->patient_title . " " . $appointment->patient_name;; ?></td>
