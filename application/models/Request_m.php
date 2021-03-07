@@ -45,15 +45,19 @@ class Request_m extends CI_Model
     public function update_request()
     {
         $id = $this->input->post('id');
-        $sample = $this->input->post('sample[]');
-        $specimen = $this->input->post('specimen[]');
-        $spec = $this->input->post('special_instuction[]');
+        $sample = $this->input->post('sample');
+        $specimen = $this->input->post('specimen');
+        $spec = $this->input->post('special_instuction');
         foreach ($id as $key => $val) {
-            $data = array(
-                'collect_sample' => $sample[$key] ?? "",
-                'sample_type' => $specimen[$key] ?? "",
-                'special_instuction' => $spec,
-            );
+
+            if ($sample[$key] != Null && $specimen[$key] != Null) {
+                $data['status'] = "Specimen";
+            } else {
+                $data['status'] = "Pending";
+            }
+            $data['collect_sample'] = $sample[$key] ?? "";
+            $data['sample_type'] = $specimen[$key] ?? "";
+            $data['special_instuction'] = $spec;
             $this->db->where('id', $val);
             $this->db->update('lab_requests', $data);
             // echo json_encode($val);
