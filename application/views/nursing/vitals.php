@@ -12,7 +12,7 @@
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-6 col-md-8 col-sm-12">
-                    <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Vital Signs</h2>
+                    <h2> Vital Signs</h2>
                 </div>
             </div>
         </div>
@@ -20,13 +20,13 @@
         <div class="row clearfix">
             <div class="col-md-12">
                 <div class="card patients-list">
-                    <?php //var_dump($this->session->userdata('active_user')); 
+               <!--      <?php //var_dump($this->session->userdata('active_user')); 
                     ?>
                     <div class="header">
                         <h2>Vital Signs</h2>
                         <?php //echo $this->session->userdata('active_user')->role_id 
                         ?>
-                    </div>
+                    </div> -->
                     <div class="body">
                         <!-- Nav tabs -->
                         <!--    <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="Appointment List" href="<?php echo base_url('nursing/vital_appointments') ?>">
