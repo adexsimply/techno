@@ -155,10 +155,10 @@
 																		?></td>
 																	<td><?php echo $consultation->treatment ?></td>
 																	<td>
-																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_consultation/' . $consultation->con_id) ?>">
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Edit Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_consultation/' . $consultation->con_id) ?>">
 																			<i class="fa fa-pencil"></i>
 																		</button>
-																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View Consultation" href="<?php echo base_url('patient/view_consultation/' . $consultation->con_id) ?>">
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="View Consultation" href="<?php echo base_url('patient/view_consultation/' . $consultation->con_id) ?>">
 																			<i class="fa fa-eye"></i>
 																		</button>
 																		<button class="btn btn-dark" type="button" onclick="delete_consultation(<?php echo $consultation->con_id ?>)">

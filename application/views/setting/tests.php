@@ -54,7 +54,7 @@
                                                     <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit <?php echo $lab_test->lab_test_name; ?>" href="<?php echo base_url('setting/create_test/' . $lab_test->id) ?>">
                                                         <i class="fa fa-pencil"></i>
                                                     </button>
-                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Viewm <?php echo $lab_test->lab_test_name; ?>" href="<?php echo base_url('setting/edit_test/' . $lab_test->id) ?>">
+                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View <?php echo $lab_test->lab_test_name; ?>" href="<?php echo base_url('setting/edit_test/' . $lab_test->id) ?>">
                                                         <i class="fa fa-eye"></i>
                                                     </button>
                                                     <button class="btn btn-dark" type="button" onclick="delete_test(<?php echo $lab_test->id ?>)">

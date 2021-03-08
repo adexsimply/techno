@@ -43,6 +43,8 @@ class Laboratory extends Base_Controller
         $this->data['drug_list'] =  $this->drug_m->get_drug_items();
         $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
         $this->data['request_destinations_list'] =  $this->request_m->get_request_destinations_list();
+        $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+        $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         $this->load->view('laboratory/requests', $this->data);
     }
     public function view_request()
@@ -50,6 +52,8 @@ class Laboratory extends Base_Controller
         if ($this->uri->segment(3)) {
             $this->data['lab_requests'] = $lb =  $this->request_m->get_lab_request_by_id($this->uri->segment(3));
             $this->data['tests'] =  $this->request_m->get_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            $this->data['specimen_test_status'] =  $this->request_m->get_specimen_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            $this->data['review_test_status'] =  $this->request_m->get_review_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
             $this->data['lab_specimens_list'] =  $this->laboratory_m->get_specimen_list();
             $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
             $this->load->view('laboratory/request-modal', $this->data);

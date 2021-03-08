@@ -81,120 +81,190 @@
                                                 </div>
                                             </div> -->
 
-
-                        <h5>Tests</h5>
-                        <hr>
-                        <div class="table-responsive mb-3">
-                            <table class="table table-hover js-basic-example dataTable table-custom" id="mprDetailDataTable">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Date</th>
-                                        <th>Test Name</th>
-                                        <th>Collect Sample</th>
-                                        <th>Status</th>
-                                        <th>Sample Type</th>
-                                    </tr>
-                                <tbody>
-
-                                    <?php $j = 1;
-                                    //var_dump($tests);
-                                    foreach ($tests as $test) { ?>
-                                        <tr class="request">
-                                            <td><input type="text" name="id[]" value="<?php echo $test->id ?>"></td>
-                                            <td><?php echo $j++ ?></td>
-                                            <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($test->date_created)) ?></span></td>
-                                            <td>
-                                                <?php echo $test->lab_test_name ?>
-                                            </td>
-                                            <td width="15%"><input type="checkbox" <?php if ($test->collect_sample != Null && $test->collect_sample == "on") {
-                                                                                        echo "checked";
-                                                                                    } ?> name="sample[]"></td>
-                                            <td><?php echo $test->status ?></td>
-                                            <td width="20%">
-                                                <select class="form-control" name="specimen[]">
-                                                    <option value="">Select</option>
-                                                    <?php foreach ($lab_specimens_list as $specimen) { ?>
-                                                        <option value="<?php echo $specimen->id; ?>" <?php if ($specimen->id == $test->sample_type) {
-                                                                                                            echo "selected";
-                                                                                                        } ?>><?php echo $specimen->specimen_name; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </td>
-
-                                        </tr>
-                                    <?php } ?>
-                                </tbody>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-lg-12 col-md-12">
-                            <b>Special Instruction</b>
-                            <div class="input-group mb-3">
-                                <textarea rows="3" class="form-control" name="special_instuction"><?php echo $lab_requests->special_instuction; ?></textarea>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- <hr>
                     <h5>Investigation Required</h5>
-                    <hr>
-                    <div class="body" style="height: 210px; overflow: scroll;">
-                        <div class="table-responsive">
-                            <table class="table table-hover js-basic-example dataTable table-custom">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>S/N</th>
-                                        <th>Test Name</th>
-                                        <th>Test Done By</th>
-                                        <th>Result Entry By</th>
-                                        <th>Time Requested</th>
-                                        <th>Time Treated</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="body">
+                    <hr> -->
+                    <div class="col-lg-12 col-md-12">
                         <ul class="nav nav-tabs">
-                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#Home">Test Results</a></li>
-                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Profile">Notes(Histology, Cytology etc_</a></li>
+                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#result">Test Results</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#specimen">Specimen Mode</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#review">Review Mode</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane show active" id="Home">
+                            <div class="tab-pane show active" id="result">
 
-                                <div class="body" style="height: 210px; overflow: scroll;">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th>S/N</th>
-                                                    <th>Test</th>
-                                                    <th>Result</th>
-                                                    <th>Measure</th>
-                                                    <th>Range</th>
+                                <div class="table-responsive mb-3">
+                                    <table class="table table-hover js-basic-example dataTable table-custom" id="mprDetailDataTable">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>S/N</th>
+                                                <th>Date</th>
+                                                <th>Test Name</th>
+                                                <th>Collect Sample</th>
+                                                <th>Status</th>
+                                                <th>Sample Type</th>
+                                            </tr>
+                                        <tbody>
+
+                                            <?php $j = 1;
+                                            //var_dump($tests);
+                                            foreach ($tests as $test) { ?>
+                                                <tr class="request">
+                                                    <td><input type="text" name="id[]" value="<?php echo $test->id ?>"></td>
+                                                    <td><?php echo $j++ ?></td>
+                                                    <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($test->date_created)) ?></span></td>
+                                                    <td>
+                                                        <?php echo $test->lab_test_name ?>
+                                                    </td>
+                                                    <td width="15%"><input type="checkbox" <?php if ($test->collect_sample != Null && $test->collect_sample == "on") {
+                                                                                                echo "checked";
+                                                                                            } ?> name="sample[]"></td>
+                                                    <td><?php echo $test->status ?></td>
+                                                    <td width="20%">
+                                                        <select class="form-control" name="specimen[]">
+                                                            <option value="">Select</option>
+                                                            <?php foreach ($lab_specimens_list as $specimen) { ?>
+                                                                <option value="<?php echo $specimen->id; ?>" <?php if ($specimen->id == $test->sample_type) {
+                                                                                                                    echo "selected";
+                                                                                                                } ?>><?php echo $specimen->specimen_name; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </td>
+
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            </tbody>
-                                        </table>
+                                            <?php } ?>
+                                        </tbody>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-12 col-md-12">
+                                    <b>Special Instruction</b>
+                                    <div class="input-group mb-3">
+                                        <textarea rows="3" class="form-control" name="special_instuction"><?php echo $lab_requests->special_instuction; ?></textarea>
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="Profile">
+                            <div class="tab-pane" id="specimen">
+                                <div class="table-responsive mb-3">
+                                    <table class="table table-hover js-basic-example dataTable table-custom" id="mprDetailDataTable">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>S/N</th>
+                                                <th>Date</th>
+                                                <th>Test Name</th>
+                                                <!-- <th>Collect Sample</th> -->
+                                                <th>Status</th>
+                                                <th>Result</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        <tbody>
 
+                                            <?php $j = 1;
+                                            //var_dump($tests);
+                                            foreach ($specimen_test_status as $test) { ?>
+                                                <tr class="request">
+                                                    <td><input type="text" name="test_result_id[]" value="<?php echo $test->id ?>"></td>
+                                                    <td><?php echo $j++ ?></td>
+                                                    <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($test->date_created)) ?></span></td>
+                                                    <td>
+                                                        <?php echo $test->lab_test_name ?>
+                                                    </td>
+                                                    <!-- <td width="15%"><input type="checkbox" <?php if ($test->collect_sample != Null && $test->collect_sample == "on") {
+                                                                                                    echo "checked";
+                                                                                                } ?> name="sample[]"></td> -->
+                                                    <td><span class="badge badge-success"><?php echo $test->status ?></span></td>
+                                                    <!-- <td width="20%">
+                                                        <select class="form-control" name="specimen[]">
+                                                            <option value="">Select</option>
+                                                            <?php foreach ($lab_specimens_list as $specimen) { ?>
+                                                                <option value="<?php echo $specimen->id; ?>" <?php if ($specimen->id == $test->sample_type) {
+                                                                                                                    echo "selected";
+                                                                                                                } ?>><?php echo $specimen->specimen_name; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </td> -->
+                                                    <td width="40%">
+                                                        <textarea class="form-control" name="results[]" rows="3"><?php echo $test->result ?></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View <?php echo $test->lab_test_name; ?> Test Details" href="<?php echo base_url('setting/edit_test/' . $test->lab_test_unique_id) ?>">
+                                                            View Details
+                                                        </button>
+                                                    </td>
+
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="tab-pane" id="Contact">
 
+                            <div class="tab-pane" id="review">
+                                <div class="table-responsive mb-3">
+                                    <table class="table table-hover js-basic-example dataTable table-custom" id="mprDetailDataTable">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>S/N</th>
+                                                <th>Date</th>
+                                                <th>Test Name</th>
+                                                <!-- <th>Collect Sample</th> -->
+                                                <th>Status</th>
+                                                <th>Result</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        <tbody>
+
+                                            <?php $j = 1;
+                                            //var_dump($tests);
+                                            foreach ($review_test_status as $test) { ?>
+                                                <tr class="request">
+                                                    <td><input type="text" name="test_result_id[]" disabled value="<?php echo $test->id ?>"></td>
+                                                    <td><?php echo $j++ ?></td>
+                                                    <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($test->date_created)) ?></span></td>
+                                                    <td>
+                                                        <?php echo $test->lab_test_name ?>
+                                                    </td>
+                                                    <!-- <td width="15%"><input type="checkbox" <?php if ($test->collect_sample != Null && $test->collect_sample == "on") {
+                                                                                                    echo "checked";
+                                                                                                } ?> name="sample[]"></td> -->
+                                                    <td><span class="badge badge-success"><?php echo $test->status ?></span></td>
+                                                    <!-- <td width="20%">
+                                                        <select class="form-control" name="specimen[]">
+                                                            <option value="">Select</option>
+                                                            <?php foreach ($lab_specimens_list as $specimen) { ?>
+                                                                <option value="<?php echo $specimen->id; ?>" <?php if ($specimen->id == $test->sample_type) {
+                                                                                                                    echo "selected";
+                                                                                                                } ?>><?php echo $specimen->specimen_name; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </td> -->
+                                                    <td width="40%">
+                                                        <textarea class="form-control" name="review[]" rows="3" disabled><?php echo $test->result ?></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View <?php echo $test->lab_test_name; ?> Test Details" href="<?php echo base_url('setting/edit_test/' . $test->lab_test_unique_id) ?>">
+                                                            View Details
+                                                        </button>
+                                                    </td>
+
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
 
                 </div>
                 <div class="text-right">

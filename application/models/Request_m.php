@@ -38,16 +38,30 @@ class Request_m extends CI_Model
 
     public function get_lab_test_by_patient_id($p_id, $test_id)
     {
-        $get_lab_request = $this->db->select('lr.*, t.lab_test_name,t.id as test_id')->from('lab_requests lr')->join('lab_tests as lt', 'lt.id=lr.lab_test_unique_id', 'left')->join('lab_tests as t', 't.id=lr.lab_test_unique_id', 'left')->where('lr.patient_id', $p_id)->where('lr.lab_test_id', $test_id)->get();
+        $get_lab_request = $this->db->select('lr.*, t.lab_test_name,t.id as test_id')->from('lab_requests lr')->join('lab_tests as lt', 'lt.id=lr.lab_test_unique_id', 'left')->join('lab_tests as t', 't.id=lr.lab_test_unique_id', 'left')->where('lr.patient_id', $p_id)->where('lr.lab_test_id', $test_id)->where('lr.status', 'Pending')->get();
+        $lab_request_list = $get_lab_request->result();
+        return $lab_request_list;
+    }
+    public function get_specimen_lab_test_by_patient_id($p_id, $test_id)
+    {
+        $get_lab_request = $this->db->select('lr.*, t.lab_test_name,t.id as test_id')->from('lab_requests lr')->join('lab_tests as lt', 'lt.id=lr.lab_test_unique_id', 'left')->join('lab_tests as t', 't.id=lr.lab_test_unique_id', 'left')->where('lr.patient_id', $p_id)->where('lr.lab_test_id', $test_id)->where('lr.status', 'Specimen')->get();
+        $lab_request_list = $get_lab_request->result();
+        return $lab_request_list;
+    }
+    public function get_review_lab_test_by_patient_id($p_id, $test_id)
+    {
+        $get_lab_request = $this->db->select('lr.*, t.lab_test_name,t.id as test_id')->from('lab_requests lr')->join('lab_tests as lt', 'lt.id=lr.lab_test_unique_id', 'left')->join('lab_tests as t', 't.id=lr.lab_test_unique_id', 'left')->where('lr.patient_id', $p_id)->where('lr.lab_test_id', $test_id)->where('lr.status', 'Review')->get();
         $lab_request_list = $get_lab_request->result();
         return $lab_request_list;
     }
     public function update_request()
     {
         $id = $this->input->post('id');
+        $test_result_id = $this->input->post('test_result_id');
         $sample = $this->input->post('sample');
         $specimen = $this->input->post('specimen');
         $spec = $this->input->post('special_instuction');
+        $results = $this->input->post('results');
         foreach ($id as $key => $val) {
 
             if ($sample[$key] != Null && $specimen[$key] != Null) {
@@ -60,6 +74,19 @@ class Request_m extends CI_Model
             $data['special_instuction'] = $spec;
             $this->db->where('id', $val);
             $this->db->update('lab_requests', $data);
+            // echo json_encode($val);
+        }
+
+        foreach ($test_result_id as $key => $val) {
+            if ($results[$key] != Null) {
+                $data['result'] = $results[$key] ?? "";
+                $data['status'] = "Review";
+                $this->db->where('id', $val);
+                $this->db->update('lab_requests', $data);
+            }
+            if ($results[$key] == Null) {
+                $data['status'] = "Specimen";
+            }
             // echo json_encode($val);
         }
     }
