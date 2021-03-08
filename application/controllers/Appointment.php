@@ -43,7 +43,7 @@ class appointment extends Base_Controller
     public function waiting_list()
     {
         $this->data['title'] = 'Waiting List';
-        $this->data['vitals_list'] =  $this->nursing_m->get_appointment_vitals3();
+        $this->data['vitals_list'] =  $this->nursing_m->get_appointment_vitalsWL();
         $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
         $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         $this->load->view('appointment/waiting_list', $this->data);
@@ -261,5 +261,15 @@ class appointment extends Base_Controller
         $patient_lists2[] = array("id" => $patients_list2->id, "name" => $patients_list2->patient_name, "email" => $patients_list2->patient_email);
 
         echo json_encode($patient_lists2);
+    }
+
+
+    ////Get Default Appointment lists for waiting lists page
+    public function get_default_vitals()
+    {
+        $default_vitals = $this->nursing_m->get_appointment_vitalsWL();
+
+        //  header("Content-type:application/json");
+        echo json_encode($default_vitals);
     }
 }

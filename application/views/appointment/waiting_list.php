@@ -43,14 +43,19 @@
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <!-- Date and time range -->
-                                                <div class="col-md-3">
-                                                    <label>Date Range</label>
-                                                    <input type="" class="form-control" name="dates" placeholder="Select Date Range" onchange="filter_vitals()" id="date_range">
+                                                <div class="col-md-2">
+                                                    <label>From</label>
+                                                    <input type="date" placeholder="From" class="form-control" onchange="filter_vitals()" id="date_range_from" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>">
+                                                   <!--  <input type="" class="form-control" name="dates" placeholder="Select Date Range" onchange="filter_vitals()" id="date_range"> -->
+                                                </div>
+                                                <div class="col-md-2"> 
+                                                    <label>To</label>
+                                                    <input type="date" class="form-control" onchange="filter_vitals()" id="date_range_to" placeholder="From" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>"> 
                                                 </div>
 
 
                                                 <!-- Currency -->
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <label for="currency">Clinic</label>
                                                     <select class="form-control select2" onchange="filter_vitals()" name="currency" id="clinic_id">
                                                         <option value="all" selected>All</option>
@@ -59,26 +64,17 @@
                                                         <?php } ?>
                                                     </select>
                                                 </div>
-
-                                                <div class="col-md-3">
-                                                    <label for="status">Status</label>
-                                                    <select onchange="filter_vitals()" class="form-control select2" name="status" id="status">
-                                                        <option value="all" selected>All</option>
-                                                        <option value="Pending">Pending</option>
-                                                        <option value="Treated">Treated</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="col-md-3">
+                                                <?php //var_dump($doctors_list); ?>
+                                                <div class="col-md-4">
                                                     <label for="status">Doctor</label>
-                                                    <select class="form-control select2" onchange="filter_vitals()" name="doctor_id" id="doctor_id">
+                                                    <select class="form-control select2" onchange="filter_vitals()" name="currency" id="doctor_id">
                                                         <option value="all" selected>All</option>
-                                                        <?php foreach ($doctors_list as $doctor) {
-                                                        ?>
-                                                            <option value="<?php echo $doctor->id ?>">Dr. <?php echo $doctor->staff_firstname ?> <?php echo $doctor->staff_middlename ?> <?php echo $doctor->staff_lastname ?></option>
+                                                        <?php foreach ($doctors_list as $doctor) { ?>
+                                                            <option value="<?php echo $doctor->user_id ?>"><?php echo $doctor->staff_firstname." ".$doctor->staff_lastname; ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -87,11 +83,12 @@
                         </div>
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="waitingList">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Date Added</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
                                             <th>Name</th>
                                             <th>Sex</th>
                                             <th>Hospital No</th>
@@ -102,14 +99,14 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="filterd_vitals">
+                                    <tbody id="filtered_vitals">
                                         <?php
                                         //var_dump($vitals_list);
                                         $i = 1;
                                         foreach ($vitals_list as $appointment) {
                                             //var_dump($appointment);
                                         ?>
-                                            <tr>
+                                    <!--         <tr>
                                                 <td><?php echo $i; ?></td>
                                                 <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($appointment->date_added)) ?></span></td>
                                                 <td><?php echo $appointment->patient_title . " " . $appointment->patient_name; ?></td>
@@ -124,11 +121,11 @@
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="<?php echo $appointment->patient_name; ?>" href="<?php echo base_url('patient/view/') . $appointment->p_id; ?>"><i class="icon-eye" aria-hidden="true"></i></button>
-                                                    <!-- <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Edit Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/edit_vital/' . $appointment->id); ?>" style="cursor: pointer;">Edit Vitals</span>
+                                                    <span class="btn btn-sm btn-icon btn-pure btn-success on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Edit Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/edit_vital/' . $appointment->id); ?>" style="cursor: pointer;">Edit Vitals</span>
                                                     <span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Vital for <?php echo $appointment->patient_name; ?>" href="<?php echo base_url('nursing/view_vital/' . $appointment->id); ?>" style="cursor: pointer;">View Vitals</span>
-                                                    <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->id ?>)" style="cursor: pointer;">Delete Vitals</span> -->
+                                                    <span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(<?php echo $appointment->id ?>)" style="cursor: pointer;">Delete Vitals</span>
                                                 </td>
-                                            </tr>
+                                            </tr> -->
 
                                         <?php
                                             $i++;
@@ -147,5 +144,5 @@
 <script type="text/javascript">
     $("#date_range").val('');
 </script>
-<?php $this->load->view('nursing/script'); ?>
+<?php $this->load->view('appointment/waiting_list_script'); ?>
 <?php $this->load->view('includes/footer_2'); ?>

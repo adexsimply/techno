@@ -130,9 +130,12 @@ class Nursing_m extends CI_Model
 
         }
     }
-    public function get_appointment_vitals3()
+    public function get_appointment_vitalsWL()
     {
-        $get_appointments = $this->db->select('pv.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,p.id as p_id,pv.*, pa.id as app_id,')->from('patient_vitals pv')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->order_by('pv.id', 'DESC')->get();
+         $date = new DateTime("now");
+        $curr_date = $date->format('Y-m-d ');
+
+        $get_appointments = $this->db->select('pv.*,pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,p.id as p_id,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_vitals pv')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->where('DATE(pa.appointment_date)',$curr_date)->order_by('pa.appointment_date', 'DESC')->order_by('pa.appointment_time', 'DESC')->get();
         $appointment_list = $get_appointments->result();
         return $appointment_list;
     }
@@ -186,7 +189,7 @@ class Nursing_m extends CI_Model
         } else {
             // $date = new DateTime("now");
             // $curr_date = $date->format('Y-m-d ');
-           $date_range = array('appointment_date' => '2021-03-07');
+           $date_range = array('appointment_date' => $today_date);
            //$date_range = 'pa.appointment_date IN (SELECT appointment_date FROM patient_appointments WHERE appointment_date=' . $today_date . ')';
             //$date_range = 'appointment_date='.$today_date .'';
            // $date_range = '1=1';
@@ -199,7 +202,65 @@ class Nursing_m extends CI_Model
         // $second_date = "2021-01-30";
 
         //$cond1 = 'pa.id NOT IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
-        $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->join('patient_vitals as pv', 'pv.appointment_id=pa.id', 'left')->where($cond)->where($clinic_cond)->where($date_range)->order_by('pa.id', 'DESC')->get();
+        $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->join('patient_vitals as pv', 'pv.appointment_id=pa.id', 'left')->where($cond)->where($clinic_cond)->where($date_range)->order_by('pa.appointment_date', 'DESC')->order_by('pa.appointment_time', 'DESC')->get();
+        // print_r($this->db->last_query());
+        $appointment_list = $get_appointments->result();
+      //  return $this->db->last_query();
+        return $appointment_list;
+    }
+
+    public function get_appointment_vitalsWL_filtered()
+    {
+        if ($this->input->post('status')) {
+            $status = $this->input->post('status');
+            if ($status == 'Pending') {
+                $cond = 'pa.id NOT IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
+            } elseif ($status == 'Treated') {
+                $cond = 'pa.id IN (SELECT appointment_id FROM patient_vitals WHERE appointment_id=pa.id)';
+            } else {
+                $cond = '1=1';
+            }
+        }
+
+        if ($this->input->post('clinic_id')) {
+            $clinic_id = $this->input->post('clinic_id');
+            if ($clinic_id != 'all') {
+                $clinic_cond = 'pa.clinic_id IN (SELECT clinic_id FROM patient_appointments WHERE clinic_id=' . $clinic_id . ')';
+
+            } else {
+                $clinic_cond = '1=1';
+            }
+        }
+
+        $today_date = date('Y-m-d');
+
+        if ($this->input->post('date_range_from') != $today_date) {
+            //
+            $first_date = $this->input->post('date_range_from');
+            $second_date =  $this->input->post('date_range_to');
+
+            $date_range = array('pa.appointment_date >=' => $first_date, 'pa.appointment_date <=' => $second_date);
+        } else {
+
+           $date_range = array('pa.appointment_date' => $today_date);
+
+        }
+
+        
+        if ($this->input->post('doctor_id')) {
+            $doctor_id = $this->input->post('doctor_id');
+            if ($doctor_id != 'all') {
+                $doctor_cond = 'pa.doctor_id IN (SELECT doctor_id FROM patient_appointments WHERE doctor_id=' . $doctor_id . ')';
+                //$doctor_cond = 'pa.doctor_id',
+                //$doctor_cond = explode(',', $doctor_cond);
+            } else {
+                $doctor_cond = '1=1';
+            }
+        }
+        //
+        $get_appointments = $this->db->select('pv.*,pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,p.id as p_id,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_vitals pv')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->where($cond)->where($clinic_cond)->where($date_range)->where('DATE(pa.appointment_date)',$curr_date)->order_by('pa.appointment_date', 'DESC')->order_by('pa.appointment_time', 'DESC')->get();
+        //
+        // $get_appointments = $this->db->select('pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_appointments pa')->join('patient_details as p', 'p.id=pa.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=pa.doctor_id', 'left')->join('patient_vitals as pv', 'pv.appointment_id=pa.id', 'left')->where($cond)->where($clinic_cond)->where($date_range)->order_by('pa.id', 'DESC')->get();
         // print_r($this->db->last_query());
         $appointment_list = $get_appointments->result();
       //  return $this->db->last_query();
