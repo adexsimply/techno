@@ -95,7 +95,7 @@
                                             <th>Account Status</th>
                                             <th>Clinic</th>
                                             <th>Doctor To See</th>
-                                            <th>Status</th>
+                                            <!-- <th>Status</th> -->
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -141,8 +141,5 @@
 
     </div>
 </div>
-<script type="text/javascript">
-    $("#date_range").val('');
-</script>
 <?php $this->load->view('appointment/waiting_list_script'); ?>
 <?php $this->load->view('includes/footer_2'); ?>

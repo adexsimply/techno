@@ -21,6 +21,12 @@ class Staff_m extends CI_Model
         $staff_list = $get_staff->result();
         return $staff_list;
     }
+    public function get_doctors_can_consult_list()
+    {
+        $get_staff = $this->db->select('s.*,u.*,st.name,sa.title, s.id as s_id')->from('staff s')->join('users as u', 'u.id=s.user_id', 'left')->join('states as st', 'st.id=s.staff_state', 'left')->join('salutations as sa', 'sa.id=s.staff_title', 'left')->where('s.can_consult',1)->get();
+        $staff_list = $get_staff->result();
+        return $staff_list;
+    }
     public function create_staff_name()
     {
 

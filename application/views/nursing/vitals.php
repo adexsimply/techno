@@ -149,8 +149,5 @@
 
     </div>
 </div>
-<script type="text/javascript">
-    $("#date_range").val('');
-</script>
-<?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('nursing/script'); ?>
+<?php $this->load->view('includes/footer_2'); ?>

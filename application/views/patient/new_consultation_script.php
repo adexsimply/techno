@@ -1,4 +1,35 @@
 <script type="text/javascript">
+
+$( document ).ready(function() {
+    var vital_id = $("input[name=vital_id]").val();
+    var patient_id = $("input[name=patient_id]").val();
+    console.log(vital_id);
+       $.ajax({
+      type  : 'post',
+      url   : '<?php echo base_url('patient/get_prescription_by_vital_id'); ?>',
+      data: {
+          //status: status,
+          patient_id: patient_id,
+          vital_id: vital_id
+        },
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        console.log(response);
+        var html = '';
+        var i;
+        var sn =1;
+        for(i=0; i<response.length; i++){
+
+
+          }
+          $('#filtered_vitals').html(html);
+        }
+
+      });
+
+    });
+
     /////Add Session form begins
     function save_consultation_name(formData) {
         $("button[title='add_consultation']").html("Saving data, please wait...");
@@ -52,4 +83,6 @@ function delete_consultation(rowIndex) {
   }
 
     //////////////Add session form ends
+
+
 </script>
