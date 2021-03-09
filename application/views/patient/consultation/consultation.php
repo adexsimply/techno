@@ -33,6 +33,7 @@
                                                                                             } ?>">
                             </div>
                         </div>
+
                         <div class="col-lg-3 col-md-6 mb-3">
                             <b>Hospital Number</b>
                             <div class="input-group">
@@ -265,7 +266,7 @@
                         <div class="col-lg-6 col-md-6 mb-3">
                             <b>Treatment</b>
                             <div class="input-group">
-                                <textarea rows="" cols="" name="treatment" class="form-control"><?php if ($this->uri->segment(3) && isset($consultation_details->treatment)) {
+                                <textarea rows="" cols="" name="treatment" id="treatment" class="form-control"><?php if ($this->uri->segment(3) && isset($consultation_details->treatment)) {
                                                                                                     echo $consultation_details->treatment;
                                                                                                 } ?></textarea>
                             </div>
