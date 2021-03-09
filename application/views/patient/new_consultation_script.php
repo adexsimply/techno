@@ -1,9 +1,10 @@
 <script type="text/javascript">
-
-$( document ).ready(function() {
+get_pres_lab()
+// $( document ).ready(function() {
+    function get_pres_lab() {
     var vital_id = $("input[name=vital_id]").val();
     var patient_id = $("input[name=patient_id]").val();
-    console.log(vital_id);
+    //console.log(patient_id);
        $.ajax({
       type  : 'post',
       url   : '<?php echo base_url('patient/get_prescription_by_vital_id'); ?>',
@@ -15,20 +16,23 @@ $( document ).ready(function() {
       async : false,
       dataType : 'json',
       success : function(response){
-        console.log(response);
+        //console.log(response);
         var html = '';
         var i;
         var sn =1;
         for(i=0; i<response.length; i++){
 
+            html += response[i].drug_item_name+' - '+response[i].prescription
+            //console.log(html);
 
           }
-          $('#filtered_vitals').html(html);
+          $('textarea#treatment').val(html);
         }
 
       });
+    }
 
-    });
+   // });
 
     /////Add Session form begins
     function save_consultation_name(formData) {

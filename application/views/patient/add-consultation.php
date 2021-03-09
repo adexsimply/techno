@@ -40,7 +40,7 @@
     <div class="card">
         <div class="body">
             <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#consultation">Consultation</a></li>
+                <li class="nav-item"><a class="nav-link active show" onclick="get_pres_lab()" data-toggle="tab" href="#consultation">Consultation</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#rad_results">Rad Results</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab_results">Lab Results</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#pres_hxs">Pres Hxs</a></li>
