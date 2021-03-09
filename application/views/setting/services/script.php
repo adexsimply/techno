@@ -67,6 +67,10 @@
         }
     }
 
+    function ola()
+    {
+        alert()
+    }
     function delete_service(rowIndex) {
         $.confirm({
             title: 'Delete service',
@@ -87,3 +91,4 @@
             }
         });
     }
+</script>
