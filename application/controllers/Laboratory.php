@@ -53,6 +53,7 @@ class Laboratory extends Base_Controller
             $this->data['lab_requests'] = $lb =  $this->request_m->get_lab_request_by_id($this->uri->segment(3));
             $this->data['tests'] =  $this->request_m->get_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
             $this->data['specimen_test_status'] =  $this->request_m->get_specimen_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            $this->data['treated_test_status'] =  $this->request_m->get_treated_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
             $this->data['review_test_status'] =  $this->request_m->get_review_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
             $this->data['lab_specimens_list'] =  $this->laboratory_m->get_specimen_list();
             $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();

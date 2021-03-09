@@ -93,7 +93,7 @@
                                                 <tr>
                                                     <td><?php echo $i; ?></td>
                                                     <td><?php echo $lab_test->lab_test_name; ?></td>
-                                                    <td><span class="text-success">₦5000</span></td>
+                                                    <td><span class="text-success">₦<?php echo $lab_test->cost; ?></span></td>
                                                 </tr>
                                             <?php $i++;
                                             } ?>

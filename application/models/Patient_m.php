@@ -365,7 +365,7 @@ class Patient_m extends CI_Model
     }
     public function get_lab_test_by_unique_id($id)
     {
-        $get_consultation = $this->db->select('d.*, l.lab_test_name, l.id as test_id, d.id as lab_test_id')->from('patient_lab_tests d')->join('lab_tests as l', 'l.id=d.lab_test_id', 'left')->where('d.lab_test_unique_id', $id)->order_by('d.id', 'DESC')->get();
+        $get_consultation = $this->db->select('d.*, l.lab_test_name, l.id as test_id, l.cost, d.id as lab_test_id')->from('patient_lab_tests d')->join('lab_tests as l', 'l.id=d.lab_test_id', 'left')->where('d.lab_test_unique_id', $id)->order_by('d.id', 'DESC')->get();
         $consultation = $get_consultation->result();
         return $consultation;
     }

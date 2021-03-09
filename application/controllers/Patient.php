@@ -142,6 +142,7 @@ class Patient extends Base_Controller
         if ($this->uri->segment(3)) {
             $this->data['consultation_details'] = $v = $this->patient_m->get_consultation_by_id($this->uri->segment(3));
             $this->data['vital_details'] = $h =  $this->patient_m->get_edit_vitals_request_by_id($v->vital_id);
+            $this->data['drugs'] = $this->patient_m->drugs();
             $this->data['patient'] = $patient = $this->patient_m->get_patient_by_id($h->patient_id);
             $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
             $this->data['radiologies'] = $radiology = $this->patient_m->get_radiology_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);

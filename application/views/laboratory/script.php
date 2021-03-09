@@ -3,8 +3,8 @@
     function save_eye_clinic_name(formData) {
         $("button[title='update_request']").html("Saving data, please wait...");
         $.post("<?php echo base_url('laboratory/update_request'); ?>", formData).done(function(data) {
-            //console.log(data)
-            window.location = "<?php echo base_url('laboratory/requests_results'); ?>";
+            console.log(data)
+            //window.location = "<?php echo base_url('laboratory/requests_results'); ?>";
         });
     }
 

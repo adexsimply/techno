@@ -136,6 +136,7 @@
                                                 foreach ($patient_prescriptions as $patient_prescription_test) {
                                             ?>
                                                     <tr id="tr-summarry">
+                                                        <td><?php echo $patient_prescription_test->drug_id ?></td>
                                                         <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($patient_prescription_test->date_added)) ?></span></td>
                                                         <td><?php echo $patient_prescription_test->drug_item_name; ?></td>
                                                         <td><?php echo $patient_prescription_test->quantity_in_stock; ?></td>
@@ -147,7 +148,8 @@
                                                                     echo 'contenteditable="true" id="by"';
                                                                 } ?>><?php if ($patient_prescription_test->quantity_in_stock <= 0) {
                                                                             echo '0';
-                                                                        } ?></td>
+                                                                        } ?><?php echo $patient_prescription_test->qty_given; ?>
+                                                            </td>
                                                         <?php } ?>
                                                         <td id="amounts" class="amounts"><?php echo $patient_prescription_test->drug_sell; ?></td>
                                                         <td id="drug_id"><?php echo $patient_prescription_test->prescription; ?></td>
@@ -177,8 +179,10 @@
                         <div id="items_prescription">
                         </div>
 
-                        <?php if ($this->uri->segment(3) && isset($vital_details->prescription_id)) {
-                            //var_dump($vital_details) 
+                        <?php
+                        //var_dump($vital_details);
+                        if ($this->uri->segment(3) && isset($vital_details->prescription_id)) {
+                            //var_dump($vital_details)
                         ?>
                             <input type="hidden" name="appointment_id" value="<?php echo $vital_details->appointment_id ?>">
                             <input type="hidden" name="prescription_unique_id" id="prescription_unique_id" value="<?php echo $vital_details->prescription_unique_id ?>">
@@ -210,14 +214,19 @@
 
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script>
+    $("#testTable_prescription td:nth-child(1)").hide();
+    // $(".allow_numeric").on('keydown keyup blur', function(e) {
+    //     this.value = this.value.replace(/[^0-9]/g, "")
+    // })
     $("#get-bill").click(function(drug_id, qty_given) {
         var sum = 0;
         var rtotal = 0;
         $('#testTable_prescription tr:not(:first)').each(function() {
             var tds = $(this).find('td');
-            var rtotal = parseFloat($(tds[3]).text()) * parseFloat($(tds[4]).text());
+            var rtotal = ($(tds[4]).text()) * ($(tds[5]).text());
+            console.log(tds)
             sum += rtotal;
-            $("#items_prescription").append("<input type='hidden' name='drug_ids[]' value='" + $(tds[6]).text() + "," + $(tds[3]).text() + "' >")
+            $("#items_prescription").append("<input type='' name='drug_ids[]' value='" + $(tds[0]).text() + "," + $(tds[4]).text() + "' >")
         });
         console.log(sum)
         $('#amount').text(sum + ".00");

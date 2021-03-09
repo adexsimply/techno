@@ -150,7 +150,7 @@
                                                 ?>
                                                         <tr>
                                                             <td><?php echo $patient_lab_test->lab_test_name; ?></td>
-                                                            <td><span class="text-success">₦5000</span></td>
+                                                            <td><span class="text-success">₦<?php echo $patient_lab_test->cost; ?></span></td>
                                                             <td><button type='button' onclick='testDelete(this, <?php echo $patient_lab_test->test_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </td>
                                                         </tr>

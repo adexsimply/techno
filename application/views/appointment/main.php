@@ -22,7 +22,8 @@
                         <button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="New Appointment" href="<?php echo base_url('appointment/new_appointment') ?>">
                             <i class="icon wb-plus" aria-hidden="true"></i> Create Appointment
                         </button>
-                        <?php //var_dump($appointment_list); ?>
+                        <?php //var_dump($appointment_list); 
+                        ?>
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
@@ -52,7 +53,11 @@
                                         ?>
                                             <tr>
                                                 <td><?php echo $i; ?></td>
-                                                <td><span class="list-name"><?php if (date('jS \of F Y', strtotime($appointment->appointment_date)) == date('jS \of F Y')) { echo "Today "; } else { echo date('jS \of F Y', strtotime($appointment->appointment_date)); } ?></span></td>
+                                                <td><span class="list-name"><?php if (date('jS \of F Y', strtotime($appointment->appointment_date)) == date('jS \of F Y')) {
+                                                                                echo "Today ";
+                                                                            } else {
+                                                                                echo date('jS \of F Y', strtotime($appointment->appointment_date));
+                                                                            } ?></span></td>
                                                 <td><span class="list-name"><?php echo date('h:i:s A', strtotime($appointment->appointment_time)) ?></span></td>
                                                 <td><span class="list-name"><?php echo $appointment->patient_id_num; ?></span></td>
                                                 <td><?php echo $appointment->patient_title . " " . $appointment->patient_name;; ?></td>

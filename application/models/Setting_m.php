@@ -81,6 +81,18 @@ class Setting_m extends CI_Model
         $drug_details = $get_drug_by_id->result();
         return $drug_details;
     }
+    public function get_rad_services()
+    {
+        $get_drug_by_id = $this->db->select('*')->from('radiology_services')->order_by('id', 'DESC')->get();
+        $drug_details = $get_drug_by_id->result();
+        return $drug_details;
+    }
+    function get_rad_services_by_id($id)
+    {
+        $get_get_lab_test_range_by_id = $this->db->select('r.*')->from('radiology_services r')->where('r.id', $id)->get();
+        $details = $get_get_lab_test_range_by_id->row();
+        return $details;
+    }
     public function get_drug_bin_card_by_id($id)
     {
         $get_drug_by_id = $this->db->select('d.*')->from('drug_activities d')->where('d.id', $id)->get();
@@ -129,6 +141,24 @@ class Setting_m extends CI_Model
                 'drug_id' => $this->input->post('drug_id'),
             );
             $insert = $this->db->insert('drug_batches', $data);
+            return $insert;
+        }
+    }
+    function save_service()
+    {        
+        if ($this->input->post('id')) {
+            $data = array(
+                'type' => $this->input->post('type'),
+                'cost' => $this->input->post('cost'),
+            );
+            $this->db->where('id', $this->input->post('id'));
+            $update = $this->db->update('radiology_services', $data);
+        } else {
+            $data = array(
+                'type' => $this->input->post('type'),
+                'cost' => $this->input->post('cost'),
+            );
+            $insert = $this->db->insert('radiology_services', $data);
             return $insert;
         }
     }

@@ -93,6 +93,17 @@ class Setting extends Base_Controller
             $this->load->view('setting/ranges', $this->data);
         }
     }
+    public function services()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['service'] = $t =  $this->setting_m->get_rad_services_by_id($this->uri->segment(3));
+            $this->load->view('setting/services/add', $this->data);
+        } else {
+            $this->data['title'] = 'Services';
+            $this->data['services'] =  $this->setting_m->get_rad_services();
+            $this->load->view('setting/services/index', $this->data);
+        }
+    }
     public function create_range()
     {
         $this->load->view('setting/range-modal', $this->data);
@@ -157,6 +168,35 @@ class Setting extends Base_Controller
         $this->setting_m->qty_update();
         return true;
     }
+    
+    public function validate_service()
+    {
+        $rules = [
+            [
+                'field' => 'type',
+                'label' => 'Service Type',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'cost',
+                'label' => 'Service Cost',
+                'rules' => 'trim|numeric|required'
+            ],
+        ];
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+    function save_service()
+    {
+        $this->setting_m->save_service();
+    }
     public function validate_batch()
     {
         $rules = [
@@ -191,6 +231,11 @@ class Setting extends Base_Controller
     {
         $id = $this->input->post('id');
         $this->db->delete('drug_batches', array('id' => $id));
+    }
+    public function delete_service()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('radiology_services', array('id' => $id));
     }
 
     public function delete_bin_card()
