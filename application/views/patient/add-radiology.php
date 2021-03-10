@@ -106,21 +106,21 @@
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>S/N</th>
-                                                    <th>Test</th>
-                                                    <th>Price</th>
+                                                    <th>Name</th>
+                                                    <!-- <th>Price</th> -->
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php
                                                 $i = 1;
-                                                foreach ($lab_tests as $lab_test) {
+                                                foreach ($rad_items as $rad_item) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
-                                                        <td><?php echo $lab_test->lab_test_name; ?></td>
-                                                        <td><span class='text-success'>₦5000</span></td>
-                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $lab_test->id; ?>)">Add</button></td>
+                                                        <td><?php echo $rad_item->Name; ?></td>
+                                                        <!-- <td><span class='text-success'>₦<?php echo $rad_item->cost; ?></span></td> -->
+                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $rad_item->ChargeItemID; ?>)">Add</button></td>
                                                     </tr>
                                                 <?php $i++;
                                                 } ?>
@@ -139,7 +139,7 @@
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>Test</th>
-                                                    <th width='25%'>Price</th>
+                                                    <!-- <th width='25%'>Price</th> -->
                                                     <th width='10%'>Action</th>
                                                 </tr>
                                             </thead>
@@ -149,8 +149,7 @@
                                                     foreach ($patient_radiology_tests as $patient_radiology_test) {
                                                 ?>
                                                         <tr>
-                                                            <td><?php echo $patient_radiology_test->lab_test_name; ?></td>
-                                                            <td><span class="text-success">₦5000</span></td>
+                                                            <td><?php echo $patient_radiology_test->Name; ?></td>
                                                             <td><button type='button' onclick='testDelete_radiology(this, <?php echo $patient_radiology_test->test_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </td>
                                                         </tr>
@@ -200,7 +199,7 @@
 
         $("#testTable_radiology tbody").append("<tr>" +
             "<td>" + $(cols[1]).text() + "</td>" +
-            "<td width='25%'>" + $(cols[2]).text() + "</td>" +
+            // "<td width='25%'>" + $(cols[2]).text() + "</td>" +
             "<td width='10%'><button type='button' onclick='testDelete_radiology(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
             "</tr>");
     }

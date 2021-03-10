@@ -116,13 +116,13 @@
                                                 <tbody>
                                                     <?php
                                                     $i = 1;
-                                                    foreach ($lab_tests as $lab_test) {
+                                                    foreach ($rad_services as $rad_service) {
                                                     ?>
                                                         <tr>
                                                             <td><?php echo $i; ?></td>
-                                                            <td><?php echo $lab_test->lab_test_name; ?></td>
-                                                            <td><span class='text-success'>₦5000</span></td>
-                                                            <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $lab_test->id; ?>)">Add</button></td>
+                                                            <td><?php echo $rad_service->type; ?></td>
+                                                            <td><span class='text-success'>₦<?php echo $rad_service->cost; ?></span></td>
+                                                            <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $rad_service->id; ?>)">Add</button></td>
                                                         </tr>
                                                     <?php $i++;
                                                     } ?>

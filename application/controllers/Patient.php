@@ -677,7 +677,7 @@ class Patient extends Base_Controller
     {
         if ($this->uri->segment(3)) {
             $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
-            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->data['rad_items'] = $this->patient_m->rad_items();
             $this->load->view('patient/add-radiology', $this->data);
         } else {
             redirect('/appointment/waiting_list');
@@ -716,6 +716,7 @@ class Patient extends Base_Controller
         if ($this->uri->segment(3)) {
             $this->data['vital_details'] =  $this->patient_m->get_radiology_by_id($this->uri->segment(3));
             $this->data['radiology_tests'] =  $this->patient_m->get_radiology_by_unique_id($this->uri->segment(3));
+            $this->data['rad_items'] = $this->patient_m->rad_items();
             $this->load->view('patient/view-radiology', $this->data);
         } else {
             redirect('/appointment/waiting_list');
@@ -726,7 +727,7 @@ class Patient extends Base_Controller
         if ($this->uri->segment(3)) {
             $this->data['vital_details'] =  $this->patient_m->get_radiology_by_id($this->uri->segment(3));
             $this->data['patient_radiology_tests'] =  $this->patient_m->get_radiology_by_unique_id($this->uri->segment(3));
-            $this->data['lab_tests'] = $this->patient_m->lab_tests();
+            $this->data['rad_items'] = $this->patient_m->rad_items();
             $this->load->view('patient/add-radiology', $this->data);
         } else {
             redirect('/appointment/waiting_list');

@@ -82,7 +82,7 @@
                                             <tr>
                                                 <th>S/N</th>
                                                 <th>Test</th>
-                                                <th>Price</th>
+                                                <!-- <th>Price</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -92,8 +92,8 @@
                                             ?>
                                                 <tr>
                                                     <td><?php echo $i; ?></td>
-                                                    <td><?php echo $radiology_test->lab_test_name; ?></td>
-                                                    <td><span class="text-success">₦5000</span></td>
+                                                    <td><?php echo $radiology_test->Name; ?></td>
+                                                    <!-- <td><span class="text-success">₦<?php echo $radiology_test->cost; ?></span></td> -->
                                                 </tr>
                                             <?php $i++;
                                             } ?>

@@ -297,6 +297,13 @@ class Patient_m extends CI_Model
         $lab_test_result = $lab_test->result();
         return $lab_test_result;
     }
+    //rad service
+    public function rad_items()
+    {
+        $lab_test = $this->db->select('*')->from('tblchargeitem')->order_by('ChargeItemID', 'DESC')->get();;
+        $lab_test_result = $lab_test->result();
+        return $lab_test_result;
+    }
     public function save_lab()
     {
         $this->load->helper('string');
@@ -424,7 +431,7 @@ class Patient_m extends CI_Model
     }
     public function get_radiology_by_unique_id($id)
     {
-        $get_consultation = $this->db->select('r.*, l.lab_test_name, l.id as test_id, r.id as radiology_test_id')->from('patient_radiology_tests r')->join('lab_tests as l', 'l.id=r.radiology_test_id', 'left')->where('r.radiology_test_unique_id', $id)->order_by('r.id', 'DESC')->get();
+        $get_consultation = $this->db->select('r.*, t.Name, t.ChargeItemID as test_id, r.id as radiology_test_id')->from('patient_radiology_tests r')->join('tblchargeitem as t', 't.ChargeItemID =r.radiology_test_id', 'left')->where('r.radiology_test_unique_id', $id)->order_by('r.id', 'DESC')->get();
         $consultation = $get_consultation->result();
         return $consultation;
     }
