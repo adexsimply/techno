@@ -2,7 +2,7 @@
     <div class="card box-margin">
         <div class="card-body">
 
-            <form id="add-radiology">
+            <form id="add-procedure">
                 <div class="modal-body edit-doc-profile">
                     <div class="row clearfix">
                         <?php //var_dump($vital_details)
@@ -13,20 +13,20 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="icon-calendar"></i></span>
                                 </div>
-                                <div id="items_radiology">
+                                <div id="items_procedure">
 
-                                    <?php if (isset($patient_radiology_tests) && $patient_radiology_tests != null) {
-                                        //var_dump($patient_radiology_tests);
-                                        foreach ($patient_radiology_tests as $patient_radiology_test) {
-                                            echo "<input type='hidden' name='radiology_id[]' value='" . $patient_radiology_test->test_id . "' id='test_radiology" . $patient_radiology_test->test_id . "'>";
+                                    <?php if (isset($procedure_tests) && $procedure_tests != null) {
+                                        //var_dump($procedure_tests);
+                                        foreach ($procedure_tests as $procedure_test) {
+                                            echo "<input type='hidden' name='procedure_id[]' value='" . $procedure_test->test_id . "' id='test_procedure" . $procedure_test->test_id . "'>";
                                         }
                                     }
                                     //var_dump($vital_details);
                                     ?>
                                 </div>
-                                <?php if ($this->uri->segment(3) && isset($vital_details->radiology_id)) { ?>
+                                <?php if ($this->uri->segment(3) && isset($vital_details->procedure_id)) { ?>
                                     <input type="hidden" name="appointment_id" value="<?php echo $vital_details->appointment_id ?>">
-                                    <input type="hidden" name="edit_radiolody_id" value="<?php echo $vital_details->radiology_test_unique_id ?>">
+                                    <input type="hidden" name="edit_procedure_id" value="<?php echo $vital_details->procedure_test_unique_id ?>">
                                     <input type="hidden" name="vital_id" value="<?php echo $vital_details->vital_id ?>">
                                     <input type="hidden" name="doctor_id" value="<?php echo $vital_details->doctor_id ?>">
                                     <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
@@ -98,13 +98,15 @@
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <fieldset>
                                 <div class="text-center mb-2">
-                                    <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback radiology_error" id="radiology_error" data-field="radiology_error"></code>
+                                    <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback procedure_error" id="procedure_error" data-field="procedure_error"></code>
                                 </div>
-                                <legend><b>Choose Radiological Test</b></legend>
+                                <legend><b>Select Procedure Item</b></legend>
                                 <div class="body" style="height: 350px; overflow: scroll;">
-                                    <input type="text" class="form-control mb-3" id="mySearch" placeholder="Start typing a Radiological Test Name">
-                                    <div class="dataTables_wrapper" id="example_radiology">
-                                        <table class="table table-bordered table-striped table-hover dataTable" id="example_radiology_filter">
+                                    <input type="text" class="form-control mb-3" id="mySearch" placeholder="Start typing a Procedure Item Name">
+                                    <?php //var_dump($procedure_items); 
+                                    ?>
+                                    <div class="dataTables_wrapper" id="example_procedure">
+                                        <table class="table table-bordered table-striped table-hover dataTable" id="example_procedure_filter">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>S/N</th>
@@ -116,13 +118,13 @@
                                             <tbody>
                                                 <?php
                                                 $i = 1;
-                                                foreach ($rad_items as $rad_item) {
+                                                foreach ($procedure_items as $procedure_item) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
-                                                        <td><?php echo $rad_item->Name; ?></td>
-                                                        <!-- <td><span class='text-success'>₦<?php echo $rad_item->cost; ?></span></td> -->
-                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $rad_item->ChargeItemID; ?>)">Add</button></td>
+                                                        <td><?php echo $procedure_item->Name; ?></td>
+                                                        <!-- <td><span class='text-success'>₦<?php echo $procedure_item->cost; ?></span></td> -->
+                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $procedure_item->ChargeItemID; ?>)">Add</button></td>
                                                     </tr>
                                                 <?php $i++;
                                                 } ?>
@@ -137,7 +139,7 @@
                                 <legend><b>Summary</b></legend>
                                 <div class="body" style="height: 300px; overflow: scroll;">
                                     <div class="table-responsive">
-                                        <table id="testTable_radiology" class="table table-bordered table-striped table-hover dataTable">
+                                        <table id="testTable_procedure" class="table table-bordered table-striped table-hover dataTable">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>Item Name</th>
@@ -146,13 +148,13 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if (isset($patient_radiology_tests) && $patient_radiology_tests != null) {
-                                                    //var_dump($patient_radiology_tests);
-                                                    foreach ($patient_radiology_tests as $patient_radiology_test) {
+                                                <?php if (isset($procedure_tests) && $procedure_tests != null) {
+                                                    //var_dump($procedure_tests);
+                                                    foreach ($procedure_tests as $procedure_test) {
                                                 ?>
                                                         <tr>
-                                                            <td><?php echo $patient_radiology_test->Name; ?></td>
-                                                            <td><button type='button' onclick='testDelete_radiology(this, <?php echo $patient_radiology_test->test_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td>
+                                                            <td><?php echo $procedure_test->Name; ?></td>
+                                                            <td><button type='button' onclick='testDelete_radiology(this, <?php echo $procedure_test->test_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
@@ -165,17 +167,17 @@
                         </div>
 
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
-                            <b>Special Instruction</b>
+                            <b>Instruction</b>
                             <div class="input-group">
-                                <textarea class="form-control" name="special_instuction"><?php if ($this->uri->segment(3) && isset($vital_details->special_instuction)) {
-                                                                                                echo $vital_details->special_instuction;
-                                                                                            } ?></textarea>
+                                <textarea class="form-control" name="instuction"><?php if ($this->uri->segment(3) && isset($vital_details->instuction)) {
+                                                                                        echo $vital_details->instuction;
+                                                                                    } ?></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="text-right">
-                    <button type="button" class="btn btn-success" onclick="form_routes_radiology('add_radiology')" title="add_radiology">Save</button>
+                    <button type="button" class="btn btn-success" onclick="form_routes_procedure('add_procedure')" title="add_procedure">Save</button>
                 </div>
             </form>
         </div>
@@ -186,23 +188,23 @@
 <script>
     $(document).ready(function() {
 
-        var table = $('#example_radiology_filter').DataTable({
+        var table = $('#example_procedure_filter').DataTable({
             dom: 'lrtip'
         });
-        if ($('#example_radiology').is(':visible')) {
-            $('#example_radiology').hide();
+        if ($('#example_procedure').is(':visible')) {
+            $('#example_procedure').hide();
         }
-        //$('#example_radiology').hide();
+        //$('#example_procedure').hide();
 
 
         $('#mySearch').keyup(function() {
 
             if (document.getElementById('mySearch').value != '') {
-                //$('#example_radiology').removeAttr("style");
-                $('#example_radiology').show();
+                //$('#example_procedure').removeAttr("style");
+                $('#example_procedure').show();
                 table.search($(this).val()).draw();
             } else {
-                $('#example_radiology').hide();
+                $('#example_procedure').hide();
 
             }
         });
@@ -215,7 +217,7 @@
             var n = $('#demo_info')[0];
         }
 
-        $('#example_radiology')
+        $('#example_procedure')
             .on('order.dt', function() {
                 eventFired('Order');
             })
@@ -231,19 +233,19 @@
     function testAdd(ctl, id) {
         _row = $(ctl).parents("tr");
         var cols = _row.children("td");
-        $("#items_radiology").append("<input type='hidden' name='radiology_id[]' value='" + id + "' id='test_radiology" + id + "'>");
+        $("#items_procedure").append("<input type='hidden' name='procedure_id[]' value='" + id + "' id='test_procedure" + id + "'>");
 
-        $("#testTable_radiology tbody").append("<tr>" +
+        $("#testTable_procedure tbody").append("<tr>" +
             "<td>" + $(cols[1]).text() + "</td>" +
             // "<td width='25%'>" + $(cols[2]).text() + "</td>" +
-            "<td width='10%'><button type='button' onclick='testDelete_radiology(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
+            "<td width='10%'><button type='button' onclick='testDelete_procedure(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
             "</tr>");
     }
 
-    function testDelete_radiology(ctl, id) {
-        $("#test_radiology" + id + "").remove();
+    function testDelete_procedure(ctl, id) {
+        $("#test_procedure" + id + "").remove();
         $(ctl).parents("tr").remove();
     }
 </script>
 
-<?php $this->load->view('patient/new_radiolody_script'); ?>
+<?php $this->load->view('patient/new_procedure_script'); ?>

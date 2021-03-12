@@ -21,6 +21,31 @@ class Request_m extends CI_Model
         $pharmacy_request_list = $get_pharmacy_request->result();
         return $pharmacy_request_list;
     }
+    public function get_rad_request_list()
+    {
+        $get_lab_request = $this->db->select('r.*,p.patient_title,p.patient_name,p.patient_status,p.patient_gender,p.patient_id_num,s.staff_firstname,s.staff_lastname,c.clinic_name')->from('radiology_request r')->join('patient_details as p', 'p.id=r.patient_id', 'left')->join('staff as s', 's.user_id=r.sender_id', 'left')->join('patient_radiology_tests as pr', 'pr.radiology_test_unique_id=r.radiology_test_unique_id ', 'left')->join('patient_vitals as pv', 'pv.patient_id=r.patient_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->group_by('r.radiology_test_unique_id')->get();
+        $lab_request_list = $get_lab_request->result();
+        return $lab_request_list;
+    }
+    public function get_radiology_request_by_id($id)
+    {
+        $get_lab_request = $this->db->select('r.*,p.patient_title,p.patient_name,p.patient_status,p.patient_dob,p.patient_gender,p.patient_id_num,s.staff_firstname,s.staff_lastname,c.clinic_name,prt.special_instuction')->from('radiology_request r')->join('patient_details as p', 'p.id=r.patient_id', 'left')->join('staff as s', 's.user_id=r.sender_id', 'left')->join('patient_radiology_tests as pr', 'pr.radiology_test_unique_id=r.radiology_test_unique_id ', 'left')->join('patient_vitals as pv', 'pv.patient_id=r.patient_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_radiology_tests as prt', 'prt.id=r.patient_radiology_test_id', 'left')->group_by('r.radiology_test_unique_id')->where('r.id', $id)->get();
+        $lab_request_list = $get_lab_request->row();
+        return $lab_request_list;
+    }
+
+    public function get_treated_rad_test_by_patient_id($p_id, $test_id)
+    {
+        $get_lab_request = $this->db->select('pr.*, i.Name as rad_test_name')->from('patient_radiology_tests pr')->join('tblchargeitem as i', 'i.ChargeItemID=pr.radiology_test_id', 'left')->join('radiology_request as r', 'r.radiology_test_unique_id=pr.radiology_test_unique_id', 'left')->where('pr.patient_id', $p_id)->where('pr.radiology_test_unique_id', $test_id)->where('pr.status', 'Treated')->get();
+        $lab_request_list = $get_lab_request->result();
+        return $lab_request_list;
+    }
+    public function get_pending_rad_test_by_patient_id($p_id, $test_id)
+    {
+        $get_lab_request = $this->db->select('pr.*, i.Name as rad_test_name')->from('patient_radiology_tests pr')->join('tblchargeitem as i', 'i.ChargeItemID=pr.radiology_test_id', 'left')->join('radiology_request as r', 'r.radiology_test_unique_id=pr.radiology_test_unique_id', 'left')->where('pr.patient_id', $p_id)->where('pr.radiology_test_unique_id', $test_id)->where('pr.status', 'Pending')->get();
+        $lab_request_list = $get_lab_request->result();
+        return $lab_request_list;
+    }
 
     public function get_lab_request_list()
     {
@@ -72,7 +97,6 @@ class Request_m extends CI_Model
         $treated = $this->input->post('treated');
         //echo json_encode($review);
         foreach ($id as $key => $val) {
-
             if ($sample[$key] != Null && $specimen[$key] != Null) {
                 $data['status'] = "Specimen";
             } else {
@@ -101,16 +125,27 @@ class Request_m extends CI_Model
             $this->db->where('id', $val);
             $this->db->update('lab_requests', $data);
         }
-        // foreach ($test_result_id as $key => $val) {
-        //     if ($results[$key] != Null) {
-        //         if ($treated[$key] != Null) {
-        //             $data['status'] = "Treated";
-        //         }
-        //     } else {
-        //         $data['status'] = "Specimen";
-        //     }
-        //     $this->db->where('id', $val);
-        //     $this->db->update('lab_requests', $data);
-        // }
+    }
+    public function update_rad_request()
+    {
+        $id = $this->input->post('id');
+        $patient_id = $this->input->post('patient_id');
+        $results = $this->input->post('results');
+        $radiology_test_id = $this->input->post('radiology_test_id');
+        foreach ($id as $key => $val) {
+            if ($results[$key] != Null) {
+                //echo json_encode($val);
+                $data['status'] = 'Treated';
+            } else {
+                $data['status'] = 'Pending';
+            }
+
+            $data['result'] = $results[$key] ?? "";
+            $this->db->where('radiology_test_id', $radiology_test_id[$key]);
+            $this->db->where('patient_id', $patient_id);
+            $this->db->update('patient_radiology_tests', $data);
+
+            // echo json_encode($val);
+        }
     }
 }

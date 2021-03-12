@@ -78,6 +78,7 @@ class Patient extends Base_Controller
             $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['radiologies'] = $radiology = $this->patient_m->get_radiology_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['prescriptions'] = $prescription = $this->patient_m->get_prescription_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['procedures'] = $procedure = $this->patient_m->get_procedure_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             //var_dump($eye_clinics);
             $this->data['title'] = "Patients";
             $this->load->view('patient/view', $this->data);
@@ -688,7 +689,7 @@ class Patient extends Base_Controller
         $rules = [
             [
                 'field' => 'radiology_id[]',
-                'label' => 'Radiology Test',
+                'label' => 'Radiology Item',
                 'rules' => 'trim|required'
             ]
         ];
@@ -706,10 +707,75 @@ class Patient extends Base_Controller
     {
         echo json_encode($this->patient_m->save_radiology());
     }
+
+    public function validate_procedure()
+    {
+        $rules = [
+            [
+                'field' => 'procedure_id[]',
+                'label' => 'Procedure Item',
+                'rules' => 'trim|required'
+            ]
+        ];
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+
+    public function add_procedure()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
+            $this->data['drugs'] = $this->patient_m->drugs();
+            $this->data['procedure_items'] = $this->patient_m->procedure_items();
+            $this->load->view('patient/add-procedure', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function view_procedure()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_procedure_by_id($this->uri->segment(3));
+            $this->data['procedure_tests'] =  $this->patient_m->get_procedure_by_unique_id($this->uri->segment(3));
+            $this->load->view('patient/view_procedure', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function edit_procedure()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['procedure_items'] = $this->patient_m->procedure_items();
+            $this->data['vital_details'] =  $this->patient_m->get_procedure_by_id($this->uri->segment(3));
+            $this->data['procedure_tests'] =  $this->patient_m->get_procedure_by_unique_id($this->uri->segment(3));
+            $this->load->view('patient/add-procedure', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
+    public function save_procedure()
+    {
+        echo json_encode($this->patient_m->save_procedure());
+    }
+
+    public function delete_procedure_test()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('patient_procedure_tests', array('procedure_test_unique_id' => $id));
+    }
+
     public function delete_radiology_test()
     {
         $id = $this->input->post('id');
         $this->db->delete('patient_radiology_tests', array('radiology_test_unique_id' => $id));
+        $this->db->delete('radiology_request', array('radiology_test_unique_id' => $id));
     }
     function view_radiology()
     {

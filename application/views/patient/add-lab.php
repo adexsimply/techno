@@ -31,7 +31,7 @@
                                     <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
                                 <?php } else { ?>
                                     <input type="hidden" name="appointment_id" value="<?php echo $vital_details->appointment_id ?>">
-                                    <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
+                                    <input type="" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
                                     <input type="hidden" name="doctor_id" value="<?php echo $vital_details->doctor_id ?>">
                                     <input type="hidden" name="vital_id" value="<?php echo $vital_details->vital_id ?>">
                                     <input type="hidden" name="clinic_id" value="<?php echo $vital_details->clinic_id ?>">

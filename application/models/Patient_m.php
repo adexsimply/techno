@@ -300,7 +300,15 @@ class Patient_m extends CI_Model
     //rad service
     public function rad_items()
     {
-        $lab_test = $this->db->select('*')->from('tblchargeitem')->order_by('ChargeItemID', 'DESC')->get();;
+        $where = "ChargeSubGroupID = '57' or ChargeSubGroupID = '58' or ChargeSubGroupID = '82'";
+        $lab_test = $this->db->select('*')->from('tblchargeitem')->where($where)->order_by('ChargeItemID', 'DESC')->get();;
+        $lab_test_result = $lab_test->result();
+        return $lab_test_result;
+    }
+    public function procedure_items()
+    {
+        $where = "ChargeSubGroupID = '56' or ChargeSubGroupID = '61' or ChargeSubGroupID = '68' or ChargeSubGroupID = '76' or ChargeSubGroupID = '77' or ChargeSubGroupID = '78'";
+        $lab_test = $this->db->select('*')->from('tblchargeitem')->where($where)->order_by('ChargeItemID', 'DESC')->get();;
         $lab_test_result = $lab_test->result();
         return $lab_test_result;
     }
@@ -343,6 +351,7 @@ class Patient_m extends CI_Model
 
                 $lab_test = $this->db->select('*')->from('consultations')->where('patient_id', $this->input->post('patient_id'))->get();;
                 $lab_test_result = $lab_test->row();
+                //echo json_encode($lab_test_result);
 
                 $data2 = array(
                     'appointment_id' => $this->input->post('appointment_id'),
@@ -351,7 +360,7 @@ class Patient_m extends CI_Model
                     'vital_id' => $this->input->post('vital_id'),
                     'lab_test_id' => $unique,
                     'sender_id' => $this->session->userdata('active_user')->id,
-                    'diagnosis' => $lab_test_result->assignment,
+                    'diagnosis' => $lab_test_result->assignment ?? "",
                     'lab_test_unique_id' =>  $e_id,
                 );
                 $insert = $this->db->insert('lab_requests', $data2);
@@ -382,6 +391,7 @@ class Patient_m extends CI_Model
     {
         $this->load->helper('string');
         if ($this->input->post('edit_radiolody_id')) {
+            //echo json_encode($this->input->post('special_instuction'));
             $edit_radiolody_id = $this->input->post('edit_radiolody_id');
             $ids = $this->input->post('radiology_id');
             $patient_id = $this->input->post('patient_id');
@@ -394,14 +404,19 @@ class Patient_m extends CI_Model
                         'patient_id' => $this->input->post('patient_id'),
                         'doctor_id' => $this->input->post('doctor_id'),
                         'vital_id' => $this->input->post('vital_id'),
+                        'special_instuction' => $this->input->post('special_instuction'),
                         'radiology_test_unique_id' => $edit_radiolody_id,
                         'radiology_test_id' =>  $e_id,
                     );
                     $insert = $this->db->insert('patient_radiology_tests', $data);
+                } else {
+                    $this->db->where('radiology_test_unique_id', $edit_radiolody_id);
+                    $this->db->update('patient_radiology_tests', array('special_instuction' => $this->input->post('special_instuction')));
                 }
             }
             $this->db->select('*')->from('patient_radiology_tests')->where('radiology_test_unique_id', $edit_radiolody_id)->where('patient_id', $this->input->post('patient_id'))->where_not_in('radiology_test_id', $ids)->delete();
         } else {
+            //echo json_encode($this->input->post('special_instuction'));
             $unique = random_string('numeric', 4);
             foreach ($this->input->post('radiology_id') as $e_id) {
                 $data = array(
@@ -409,10 +424,67 @@ class Patient_m extends CI_Model
                     'patient_id' => $this->input->post('patient_id'),
                     'doctor_id' => $this->input->post('doctor_id'),
                     'vital_id' => $this->input->post('vital_id'),
+                    'special_instuction' => $this->input->post('special_instuction'),
                     'radiology_test_unique_id' => $unique,
                     'radiology_test_id' =>  $e_id,
                 );
                 $insert = $this->db->insert('patient_radiology_tests', $data);
+            }
+            $data2 = array(
+                'appointment_id' => $this->input->post('appointment_id'),
+                'patient_id' => $this->input->post('patient_id'),
+                'doctor_id' => $this->input->post('doctor_id'),
+                'vital_id' => $this->input->post('vital_id'),
+                'patient_radiology_test_id' => $this->db->insert_id(),
+                'radiology_test_unique_id' => $unique,
+                'sender_id' => $this->session->userdata('active_user')->id,
+            );
+            $insert = $this->db->insert('radiology_request', $data2);
+        }
+    }
+
+    public function save_procedure()
+    {
+        $this->load->helper('string');
+        if ($this->input->post('edit_procedure_id')) {
+            //echo json_encode($this->input->post('instuction'));
+            $edit_procedure_id = $this->input->post('edit_procedure_id');
+            $ids = $this->input->post('procedure_id');
+            $patient_id = $this->input->post('patient_id');
+            foreach ($ids as $e_id) {
+                $array = array('procedure_test_unique_id' => $edit_procedure_id, 'patient_id' => $patient_id, 'procedure_test_id' => $e_id);
+                $result = $this->db->select('*')->from('patient_procedure_tests')->where($array)->get();
+                if ($result->num_rows() == 0) {
+                    $data = array(
+                        'appointment_id' => $this->input->post('appointment_id'),
+                        'patient_id' => $this->input->post('patient_id'),
+                        'doctor_id' => $this->input->post('doctor_id'),
+                        'vital_id' => $this->input->post('vital_id'),
+                        'instuction' => $this->input->post('instuction'),
+                        'procedure_test_unique_id' => $edit_procedure_id,
+                        'procedure_test_id' =>  $e_id,
+                    );
+                    $insert = $this->db->insert('patient_procedure_tests', $data);
+                } else {
+                    $this->db->where('procedure_test_unique_id', $edit_procedure_id);
+                    $this->db->update('patient_procedure_tests', array('instuction' => $this->input->post('instuction')));
+                }
+            }
+            $this->db->select('*')->from('patient_procedure_tests')->where('procedure_test_unique_id', $edit_procedure_id)->where('patient_id', $this->input->post('patient_id'))->where_not_in('procedure_test_id', $ids)->delete();
+        } else {
+            $unique = random_string('numeric', 4);
+            foreach ($this->input->post('procedure_id') as $e_id) {
+                $data = array(
+                    'appointment_id' => $this->input->post('appointment_id'),
+                    'patient_id' => $this->input->post('patient_id'),
+                    'doctor_id' => $this->input->post('doctor_id'),
+                    'vital_id' => $this->input->post('vital_id'),
+                    'instuction' => $this->input->post('instuction'),
+                    'procedure_test_unique_id' => $unique,
+                    'procedure_test_id	' =>  $e_id,
+                    'sender_id' => $this->session->userdata('active_user')->id,
+                );
+                $insert = $this->db->insert('patient_procedure_tests', $data);
             }
         }
     }
@@ -425,13 +497,25 @@ class Patient_m extends CI_Model
     }
     public function get_radiology_by_id($id)
     {
-        $get_consultation = $this->db->select('r.*,pv.*,pd.*, r.id as radiology_id, r.date_added as date, s.staff_firstname,s.staff_middlename,s.staff_lastname, cl.clinic_name as clinic_name')->from('patient_radiology_tests r')->join('patient_vitals as pv', 'pv.patient_id=r.patient_id', 'left')->join('staff as s', 's.user_id=r.doctor_id', 'left')->join('patient_details as pd', 'pd.id=r.patient_id', 'left')->join('clinics as cl', 'cl.id=pv.clinic_id', 'left')->where('r.radiology_test_unique_id', $id)->group_by('r.radiology_test_unique_id')->get();
+        $get_consultation = $this->db->select('r.*,pv.*,pd.*, r.id as radiology_id, r.date_added as date, s.staff_firstname,s.staff_middlename,s.staff_lastname, cl.clinic_name as clinic_name')->from('patient_radiology_tests r')->join('patient_vitals as pv', 'pv.patient_id=r.vital_id', 'left')->join('staff as s', 's.user_id=r.doctor_id', 'left')->join('patient_details as pd', 'pd.id=r.patient_id', 'left')->join('clinics as cl', 'cl.id=pv.clinic_id', 'left')->where('r.radiology_test_unique_id', $id)->group_by('r.radiology_test_unique_id')->get();
         $consultation = $get_consultation->row();
         return $consultation;
     }
     public function get_radiology_by_unique_id($id)
     {
         $get_consultation = $this->db->select('r.*, t.Name, t.ChargeItemID as test_id, r.id as radiology_test_id')->from('patient_radiology_tests r')->join('tblchargeitem as t', 't.ChargeItemID =r.radiology_test_id', 'left')->where('r.radiology_test_unique_id', $id)->order_by('r.id', 'DESC')->get();
+        $consultation = $get_consultation->result();
+        return $consultation;
+    }
+    public function get_procedure_by_id($id)
+    {
+        $get_consultation = $this->db->select('p.*,pv.*,pd.*, p.id as procedure_id, p.date_added as date, s.staff_firstname,s.staff_middlename,s.staff_lastname, cl.clinic_name as clinic_name')->from('patient_procedure_tests p')->join('patient_vitals as pv', 'pv.id=p.vital_id', 'left')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('patient_details as pd', 'pd.id=p.patient_id', 'left')->join('clinics as cl', 'cl.id=pv.clinic_id', 'left')->where('p.procedure_test_unique_id', $id)->group_by('p.procedure_test_unique_id')->get();
+        $consultation = $get_consultation->row();
+        return $consultation;
+    }
+    public function get_procedure_by_unique_id($id)
+    {
+        $get_consultation = $this->db->select('p.*, t.Name, t.ChargeItemID as test_id, p.id as procedure_test_id')->from('patient_procedure_tests p')->join('tblchargeitem as t', 't.ChargeItemID=p.procedure_test_id', 'left')->where('p.procedure_test_unique_id', $id)->order_by('p.id', 'DESC')->get();
         $consultation = $get_consultation->result();
         return $consultation;
     }
@@ -562,5 +646,11 @@ class Patient_m extends CI_Model
         $get_consultation = $this->db->select('p.*, d.drug_item_name, d.quantity_in_stock, d.drug_sell, d.drug_expiry_date, d.id as drug_id, p.id as prescription_id')->from('patient_prescriptions2 p')->join('drug_items as d', 'd.id=p.prescription_id', 'left')->where('p.prescription_unique_id', $id)->order_by('p.id', 'DESC')->get();
         $consultation = $get_consultation->result();
         return $consultation;
+    }
+    public function get_procedure_by_patient_id_and_vital_id($patient_id, $vital_id)
+    {
+        $get_patients = $this->db->select('p.*')->from('patient_procedure_tests p')->where('p.patient_id', $patient_id)->where('p.vital_id', $vital_id)->group_by('p.procedure_test_unique_id')->order_by('p.id', 'DESC')->get();
+        $patient_list = $get_patients->result();
+        return $patient_list;
     }
 }

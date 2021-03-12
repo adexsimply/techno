@@ -2,10 +2,10 @@
     /////Add Session form begins
     function validate(formData) {
         var returnData;
-        $('#add-lab').disable([".action"]);
-        $("button[title='lab']").html("Validating data, please wait...");
+        $('#add-procedure').disable([".action"]);
+        $("button[title='procedure']").html("Validating data, please wait...");
         $.ajax({
-            url: "<?php echo base_url() . 'patient/validate_lab'; ?>",
+            url: "<?php echo base_url() . 'patient/validate_procedure'; ?>",
             async: false,
             type: 'POST',
             data: formData,
@@ -16,39 +16,39 @@
 
 
 
-        $('#add-lab').enable([".action"]);
-        $('#lab_id').html('');
+        $('#add-procedure').enable([".action"]);
+        $('#procedure_error').html('');
         if (returnData != 'success') {
-            $('#lab_id').html('At least one Laboratory Test must be added');
+            $('#procedure_error').html('At least one Procedure Test must be added');
         } else {
-            $('#lab_id').html('');
+            $('#procedure_error').html('');
             return 'success';
         }
         console.log(returnData);
     }
 
-    function save_lab_test(formData) {
-        $("button[title='add_lab']").html("Saving data, please wait...");
+    function save_procedure_test(formData) {
+        $("button[title='add_procedure']").html("Saving data, please wait...");
         //console.log(formData)
-        $.post("<?php echo base_url() . 'patient/save_lab'; ?>", formData).done(function(data) {
+        $.post("<?php echo base_url() . 'patient/save_procedure'; ?>", formData).done(function(data) {
             //console.log(data);
 
             window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
         });
     }
 
-    function form_routes_lab(action) {
-        if (action == 'add_lab') {
-            var formData = $('#add-lab').serialize();
+    function form_routes_procedure(action) {
+        if (action == 'add_procedure') {
+            var formData = $('#add-procedure').serialize();
             if (validate(formData) == 'success') {
                 $.confirm({
-                    title: 'Add Laboratoty Test',
-                    content: 'Are you sure you want to add new Laboratoty Test?',
+                    title: 'Add procedure Test',
+                    content: 'Are you sure you want to add new procedure Test?',
                     icon: 'fa fa-check-circle',
                     type: 'green',
                     buttons: {
                         yes: function() {
-                            save_lab_test(formData);
+                            save_procedure_test(formData);
                         },
                         no: function() {
 
@@ -61,15 +61,15 @@
         }
     }
 
-    function delete_lab_test(rowIndex) {
+    function delete_procedure(rowIndex) {
         $.confirm({
-            title: 'Delete Laboratoty Test',
-            content: 'Are you sure you want to delete Laboratoty Test?',
+            title: 'Delete Procedure',
+            content: 'Are you sure you want to delete procedure?',
             icon: 'fa fa-check-circle',
             type: 'red',
             buttons: {
                 yes: function() {
-                    $.post("<?php echo base_url() . 'patient/delete_lab_test'; ?>", {
+                    $.post("<?php echo base_url() . 'patient/delete_procedure_test'; ?>", {
                         id: rowIndex
                     }).done(function(data) {
                         location.reload();

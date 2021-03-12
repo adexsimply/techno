@@ -417,58 +417,58 @@
 														</tbody>
 													</table>
 												</div>
-													<div class="tab-pane table-responsive" id="prescriptions">
-														<?php if ($patient->appointment_id != NULL && $prescriptions == Null) { ?>
-															<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_prescription/' . $patient->vital_id) ?>">
-																<i class="fa fa-plus-circle"></i> Add New
-															</button>
-														<?php } ?>
-														<table class="table m-b-0 table-hover">
-															<thead class="thead-warning">
+												<div class="tab-pane table-responsive" id="prescriptions">
+													<?php if ($patient->appointment_id != NULL && $prescriptions == Null) { ?>
+														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_prescription/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add New
+														</button>
+													<?php } ?>
+													<table class="table m-b-0 table-hover">
+														<thead class="thead-warning">
+															<tr>
+															<tr>
+																<th>S/N</th>
+																<th>Date</th>
+																<th>Time</th>
+																<th>Status</th>
+																<th>Action</th>
+															</tr>
+															</tr>
+														</thead>
+														<tbody>
+															<?php $i = 1;
+															foreach ($prescriptions as $prescription) { ?>
 																<tr>
-																<tr>
-																	<th>S/N</th>
-																	<th>Date</th>
-																	<th>Time</th>
-																	<th>Status</th>
-																	<th>Action</th>
-																</tr>
-																</tr>
-															</thead>
-															<tbody>
-																<?php $i = 1;
-																foreach ($prescriptions as $prescription) { ?>
-																	<tr>
-																		<td><?php echo $i++ ?></td>
-																		<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($prescription->date_added)) ?></span></td>
-																		<td><span class="list-name"><?php echo date('h:i:sa', strtotime($prescription->date_added)) ?></span></td>
-																		<td><span class="list-name">
-																				<?php if ($prescription->status == "Pending") { ?>
-																					<span class="badge badge-warning"><?php echo $prescription->status ?></span>
-																				<?php } else if ($prescription->status == "Treated") { ?>
-																					<span class="badge badge-success"><?php echo $prescription->status ?></span>
-																				<?php } else if ($prescription->status == "Prescription") { ?>
-																					<span class="badge badge-primary"><?php echo $prescription->status ?></span>
-																				<?php } ?>
-																		</td>
-																		<td>
-																			<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription2/' . $prescription->prescription_unique_id) ?>">
-																				<i class="fa fa-pencil"></i>
-																			</button>
-																			<!-- <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription/' . $prescription->prescription_unique_id) ?>">
+																	<td><?php echo $i++ ?></td>
+																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($prescription->date_added)) ?></span></td>
+																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($prescription->date_added)) ?></span></td>
+																	<td><span class="list-name">
+																			<?php if ($prescription->status == "Pending") { ?>
+																				<span class="badge badge-warning"><?php echo $prescription->status ?></span>
+																			<?php } else if ($prescription->status == "Treated") { ?>
+																				<span class="badge badge-success"><?php echo $prescription->status ?></span>
+																			<?php } else if ($prescription->status == "Prescription") { ?>
+																				<span class="badge badge-primary"><?php echo $prescription->status ?></span>
+																			<?php } ?>
+																	</td>
+																	<td>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription2/' . $prescription->prescription_unique_id) ?>">
+																			<i class="fa fa-pencil"></i>
+																		</button>
+																		<!-- <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription/' . $prescription->prescription_unique_id) ?>">
 																				<i class="fa fa-pencil"></i>
 																			</button> -->
-																			<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_prescription/' . $prescription->prescription_unique_id) ?>">
-																				<i class="fa fa-eye"></i>
-																			</button>
-																			<button class="btn btn-dark" type="button" onclick="delete_prescription(<?php echo $prescription->prescription_unique_id ?>)">
-																				<i class="fa fa-trash"></i>
-																			</button>
-																		</td>
-																	</tr>
-																<?php } ?>
-															</tbody>
-														</table>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_prescription/' . $prescription->prescription_unique_id) ?>">
+																			<i class="fa fa-eye"></i>
+																		</button>
+																		<button class="btn btn-dark" type="button" onclick="delete_prescription(<?php echo $prescription->prescription_unique_id ?>)">
+																			<i class="fa fa-trash"></i>
+																		</button>
+																	</td>
+																</tr>
+															<?php } ?>
+														</tbody>
+													</table>
 												</div>
 												<div class="tab-pane table-responsive" id="admission">
 													<?php if ($patient->appointment_id != NULL) { ?>
@@ -505,34 +505,47 @@
 												</div>
 												<div class="tab-pane table-responsive" id="procedures">
 													<?php if ($patient->appointment_id != NULL) { ?>
-														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
+														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_procedure/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
 													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
-																<th>Media</th>
-																<th>Patients ID</th>
-																<th>Name</th>
-																<th>Age</th>
-																<th>Address</th>
-																<th>Number</th>
-																<th>Last Visit</th>
+																<th>S/N</th>
+																<th>Date</th>
+																<th>Time</th>
 																<th>Status</th>
+																<th>Action</th>
 															</tr>
 														</thead>
 														<tbody>
-															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar4.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00951</span></td>
-																<td>James</td>
-																<td>32</td>
-																<td>44 Shirley Ave. West Chicago, IL 60185</td>
-																<td>404-447-6013</td>
-																<td>22 Jan 2018</td>
-																<td><span class="badge badge-warning">Pending</span></td>
-															</tr>
+															<?php $i = 1;
+															foreach ($procedures as $procedure) { ?>
+																<tr>
+																	<td><?php echo $i++ ?></td>
+																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($procedure->date_added)) ?></span></td>
+																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($procedure->date_added)) ?></span></td>
+																	<td><span class="list-name">
+																			<?php if ($procedure->status == "Pending") { ?>
+																				<span class="badge badge-warning"><?php echo $procedure->status ?></span>
+																			<?php } else if ($procedure->status == "Treated") { ?>
+																				<span class="badge badge-success"><?php echo $procedure->status ?></span>
+																			<?php } ?>
+																	</td>
+																	<td>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Procedure Items for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_procedure/' . $procedure->procedure_test_unique_id) ?>">
+																			<i class="fa fa-pencil"></i>
+																		</button>
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View Procedure Items for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_procedure/' . $procedure->procedure_test_unique_id) ?>">
+																			<i class="fa fa-eye"></i>
+																		</button>
+																		<button class="btn btn-dark" type="button" onclick="delete_procedure(<?php echo $procedure->procedure_test_unique_id ?>)">
+																			<i class="fa fa-trash"></i>
+																		</button>
+																	</td>
+																</tr>
+															<?php } ?>
 														</tbody>
 													</table>
 												</div>
@@ -805,3 +818,4 @@
 <?php $this->load->view('patient/new_radiolody_script'); ?>
 <?php $this->load->view('patient/new_prescription_script'); ?>
 <?php $this->load->view('patient/new_lab_test_script'); ?>
+<?php $this->load->view('patient/new_procedure_script'); ?>

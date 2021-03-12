@@ -5,7 +5,7 @@
             <form id="add-lab">
                 <div class="modal-body edit-doc-profile">
                     <div class="row clearfix">
-                        <?php //var_dump($lab_tests)
+                        <?php //var_dump($vital_details)
                         ?>
                         <div class="col-lg-3 col-md-6 mb-3">
                             <b>Date</b>
@@ -88,12 +88,12 @@
                                         <tbody>
                                             <?php
                                             $i = 1;
-                                            foreach ($radiology_tests as $radiology_test) {
+                                            foreach ($procedure_tests as $procedure_test) {
                                             ?>
                                                 <tr>
                                                     <td><?php echo $i; ?></td>
-                                                    <td><?php echo $radiology_test->Name; ?></td>
-                                                    <!-- <td><span class="text-success">₦<?php echo $radiology_test->cost; ?></span></td> -->
+                                                    <td><?php echo $procedure_test->Name; ?></td>
+                                                    <!-- <td><span class="text-success">₦<?php echo $procedure_test->cost; ?></span></td> -->
                                                 </tr>
                                             <?php $i++;
                                             } ?>
@@ -105,8 +105,8 @@
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <b>Special Instruction</b>
                             <div class="input-group">
-                                <textarea class="form-control" name="special_instuction"><?php if ($this->uri->segment(3) && isset($vital_details->special_instuction)) {
-                                                                                                echo $vital_details->special_instuction;
+                                <textarea class="form-control" name="special_instuction"><?php if ($this->uri->segment(3) && isset($vital_details->instuction)) {
+                                                                                                echo $vital_details->instuction;
                                                                                             } ?></textarea>
                             </div>
                         </div>
@@ -139,4 +139,4 @@
     });
 </script>
 
-<?php $this->load->view('patient/new_radiolody_script'); ?>
+<?php $this->load->view('patient/new_procedure_script'); ?>
