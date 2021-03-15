@@ -37,7 +37,7 @@ class Patient_m extends CI_Model
 
     public function get_patient_by_id($patient_id)
     {
-        $get_patients = $this->db->select('p.*,pn.*,pv.*, pv.id as vital_id, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('patient_vitals as pv', 'pv.patient_id=p.id', 'left')->where('p.id', $patient_id)->get();
+        $get_patients = $this->db->select('p.*,pn.*,pv.*,pa.appointment_date,pa.appointment_time, pv.id as vital_id, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('patient_vitals as pv', 'pv.patient_id=p.id', 'left')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->where('p.id', $patient_id)->get();
         $patient_list = $get_patients->row();
         return $patient_list;
     }
@@ -624,14 +624,14 @@ class Patient_m extends CI_Model
                     $data[$i]['prescription'] = $prescription[$key];
                     $i++;
                 }
-                $this->db->insert_batch('patient_prescriptions2', $data);
             }
+                $this->db->insert_batch('patient_prescriptions2', $data);
         }
     }
 
     public function get_prescription_by_patient_id_and_vital_id($patient_id, $vital_id)
     {
-        $get_patients = $this->db->select('p.*,d.drug_item_name, s.staff_firstname,l.lab_test_name,s.staff_middlename,s.staff_lastname, p.id as prescriptions_id')->from('patient_prescriptions2 p')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('drug_items as d', 'd.id=p.prescription_id', 'left')->join('lab_tests as l', 'l.id=p.prescription_id', 'left')->where('p.patient_id', $patient_id)->where('p.vital_id', $vital_id)->group_by('p.prescription_unique_id')->order_by('p.id', 'DESC')->get();
+        $get_patients = $this->db->select('p.*,pa.*,d.drug_item_name, s.staff_firstname,l.lab_test_name,s.staff_middlename,s.staff_lastname, p.id as prescriptions_id')->from('patient_prescriptions2 p')->join('patient_appointments as pa', 'pa.id=p.appointment_id', 'left')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('drug_items as d', 'd.id=p.prescription_id', 'left')->join('lab_tests as l', 'l.id=p.prescription_id', 'left')->where('p.patient_id', $patient_id)->where('p.vital_id', $vital_id)->group_by('p.prescription_unique_id')->order_by('p.id', 'DESC')->get();
         $patient_list = $get_patients->result();
         return $patient_list;
     }

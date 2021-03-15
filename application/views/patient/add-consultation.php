@@ -1,4 +1,4 @@
-<div class="col-12 mb-5" style="padding-bottom:3rem">
+<div class="col-12 mb-5" style="padding-bottom:3rem; padding-left: 5px;padding-right: 5px;">
     <div class="tab-content">
         <?php $this->load->view('patient/consultation/consultation'); ?>
         <?php $this->load->view('patient/consultation/rad_results'); ?>

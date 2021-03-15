@@ -39,7 +39,16 @@ get_pres_lab()
         $("button[title='add_consultation']").html("Saving data, please wait...");
         $.post("<?php echo base_url() . 'patient/save_consultation'; ?>", formData).done(function(data) {
 
-            window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
+          $.alert({
+                    title: 'Done!',
+                    content: 'Consultation Saved!',
+                    type: 'green',
+                    });
+          //$(this).confirm().close();
+          $("button[title='add_consultation']").html("Saved");
+          $("button[title='add_consultation']").prop("disabled",true);;
+
+            //window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
         });
     }
 
@@ -76,7 +85,7 @@ function delete_consultation(rowIndex) {
 							$.post("<?php echo base_url() . 'patient/delete_consultation'; ?>", {
 								id: rowIndex
 							}).done(function(data) {
-								location.reload();
+								//location.reload();
 							});
                         },
                         no: function() {

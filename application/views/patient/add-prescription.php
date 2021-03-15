@@ -1,6 +1,36 @@
-<div class="col-12">
+<style type="text/css">
+   #prescriptionNew {
+        font-size: 13px;
+    }
+   #prescriptionNew .tab-content {
+     padding: 1px; 
+
+}
+.mb-3, .my-3 {
+     margin-bottom: 0!important; 
+}
+
+#prescriptionNew .form-control {
+    display: block;
+    width: 100%;
+     height: auto; 
+    padding: 1%;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 0.5;
+    color: #495057;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+#prescriptionNew  .table td, .table th {
+    padding: 1px;
+    }
+</style>
+<div class="col-12" id="prescriptionNew">
     <div class="card box-margin">
-        <div class="card-body">
+        <div class="card-body" style="padding: 1px;">
 
             <form id="add-prescription">
                 <div class="modal-body edit-doc-profile">
@@ -95,22 +125,17 @@
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
-                            <fieldset>
+                            <fieldset style="margin-top: 20px;">
                                 <div class="text-center mb-2">
-                                    <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="prescription_id[]"></code>
+                                    <code style="color: #ff0000;font-size: 13px;" class="text-center form-control-feedback" data-field="prescription_id[]"></code>
                                 </div>
-                                <legend><b>Choose Drug For Prescription</b></legend>
-                                <div class="body" style="max-height: 200px; overflow: scroll;">
+                                <legend style="font-size: 15px;"><strong>Choose Drug</strong>
+                                    <input type="text" class="form-control" id="mySearch" placeholder="Start typing a drug name"></legend>
+                                <div class="body" style="max-height: 200px; overflow: scroll; padding: 0;">
 
-                                    <input type="text" class="form-control" id="mySearch" placeholder="Start typing a drug name">
 
                                     <div class="dataTables_wrapper no-footer" id="example_wrapper">
-                                        <style type="text/css">
-                                            #example_prescription_filter td {
-                                                padding: .2rem;
 
-                                            }
-                                        </style>
                                         <table style="font-size: 13px;padding: 0;" cellpadding="0" cellspacing="0" class="table table-bordered" id="example_prescription_filter">
                                             <thead class="thead-dark">
                                                 <tr>
@@ -141,8 +166,8 @@
                         </div>
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <fieldset>
-                                <legend><b>My Prescription</b></legend>
-                                <div class="body" style="height: 200px; overflow: scroll;">
+                                <legend style="font-size: 15px;"><strong>My Prescription</strong></legend>
+                                <div class="body" style="max-height: 200px; overflow: scroll;padding: 0;">
                                     <div class="table-responsive">
                                         <table id="testTable_prescription" class="table table-bordered table-striped table-hover dataTable">
                                             <thead class="thead-dark">
@@ -201,7 +226,8 @@
 
 
         var table = $('#example_prescription_filter').DataTable({
-            dom: 'lrtip'
+            dom: 'lrtip',
+            "lengthChange": false
         });
         if ($('#example_wrapper').is(':visible')) {
             $('#example_wrapper').hide();
@@ -266,6 +292,9 @@
 
 
     function add_prescription(condi, id) {
+
+            $('#example_wrapper').hide();
+            //document.getElementById('mySearch').value('');
 
         _row = $(condi).parents("tr");
         var cols = _row.children("td");

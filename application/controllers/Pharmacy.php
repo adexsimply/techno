@@ -76,4 +76,26 @@ class Pharmacy extends Base_Controller {
 
     }
 
+
+    public function get_prescription_list_default()
+    {
+        $prescription_list = $this->request_m->get_default_prescription_pending();
+        echo json_encode($prescription_list);
+    }
+
+
+    public function filter_prescriptions()
+    {
+        $prescription_list = $this->request_m->get_prescription_filtered();
+        echo json_encode($prescription_list);
+    }
+
+    public function convert_date()
+    {
+        $date = $this->input->post('date');
+        $ini_date = date_create( $date); 
+        $converted_date = date_format($ini_date,"D M d, Y");
+        echo json_encode($converted_date);
+    }
+
 }

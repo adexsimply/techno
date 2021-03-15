@@ -1,148 +1,217 @@
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="<?php echo base_url(); ?>assets/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
 
-  $(function() {
-    function log( message ) {
-      $( "<div>" ).text( message ).prependTo( "#log" );
-      $( "#log" ).scrollTop( 0 );
-    }
+$(document).ready(function () {
 
-    $( "#city" ).autocomplete({
-      source: function( request, response ) {
-        $.ajax({
-          url: "<?php echo base_url('appointment/get_patient_list'); ?>",
-          type: 'post',
-          dataType: "json",
-          data: {
-            q: request.term,request:1
-          },
-          success: function( data ) {
-            response( data );
-           // console.log(data);
-          }
+
+listDefaultPrescriptionList(); 
+
+     var prescriptionTable =  $('#prescriptionMasterList').DataTable({
+            dom: 'lrtip',
+            "lengthChange": false
         });
-      },
-      minLength: 1,
-      select: function( event, ui ) {
-                        $(this).val(ui.item.label)
-                        var userid = ui.item.id; // selected id to input
-
-                        // AJAX
-                        $.ajax({
-                            url: '<?php echo base_url('appointment/get_patient_list2'); ?>',
-                            type: 'post',
-                            data: {userid:userid,request:2},
-                            dataType: 'json',
-                            success:function(response2){
-                                console.log(response2);
-                                
-                                var len = response2.length;
-
-                                if(len > 0){
-                                    var id = userid;
-                                    var name = response2[0]['name'];
-                                    var email = response2[0]['email'];
-                                    var patient_id = response2[0]['id'];
-                                    // var age = response[0]['age'];
-                                    // var salary = response[0]['salary'];
-
-                                    document.getElementById('patient_id').value = patient_id;
-                                    //document.getElementById('age_'+index).value = age;
-                                    document.getElementById('email').value = email;
-                                    //document.getElementById('salary_'+index).value = salary;
-                                    
-                                }
-                                
-                            }
-                        });
-
-                        return false;
-      },
-      open: function() {
-        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-      },
-      close: function() {
-        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-      }
-    });
-  });
-
-   function toggleRadio(flag){
-      if(!flag) {
-        document.getElementById('patient_status').setAttribute("disabled", "true");
-      } else {
-        document.getElementById('patient_status').removeAttribute("disabled");
-        document.getElementById('patient_status').focus();
-      }
-      
-    }
-   function togglenhis(){
-      var nhis = document.getElementById("nhis");
-        if (nhis.checked == true){
-        document.getElementById('enrollee_type').removeAttribute("disabled");
-        document.getElementById('enrollee_no').removeAttribute("disabled");
-        document.getElementById('company').removeAttribute("disabled");
-        document.getElementById('enrollee_type').focus();
-      } else {
-        document.getElementById('enrollee_type').setAttribute("disabled", "true");
-        document.getElementById('enrollee_no').setAttribute("disabled", "true");
-        document.getElementById('company').setAttribute("disabled", "true");
-      }
-      
-    }
-
-      $(document).ready(function() {
-        $("#add-appointment").submit(function(e){
-            e.preventDefault();
-            var formData = new FormData($("#add-appointment")[0]);
-
-            $.ajax({
-                url : $("#add-appointment").attr('action'),
-                dataType : 'json',
-                type : 'POST',
-                data : formData,
-                contentType : false,
-                processData : false,
-                success: function(resp) {
-                   // console.log(resp);
-                    $('.error').html('');
-                    if(resp.status == false) {
-                      $.each(resp.message,function(i,m){
-                          $('.'+i).text(m);
-                      });
-                     }
-                     else {
-                      swal({   
-                    title: "Done",   
-                    text: "Appointment has been added",
-                    type: "success",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    cancelButtonText: "Cancel",
-                    confirmButtonText: "Save",
-                    closeOnConfirm: true 
-                },
-                function (isConfirm) {
-                if (isConfirm) {
-                              window.location = "<?php echo base_url('appointment');?>";
-
-                  }
-                }
-                ); 
+    // #myInput is a <input type="text"> element
+		$('#myInput').on( 'keyup', function () {
+		    prescriptionTable.search( this.value ).draw();
+		} );
 
 
-                     }
-                }
-            });
-        });
-    });
+function listDefaultPrescriptionList() {
+      $.ajax({
+      type  : 'ajax',
+      url   : '<?php echo base_url('pharmacy/get_prescription_list_default'); ?>',
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        //console.log(response)
+        var html = '';
+        var i;
+        var sn =1;
+        for(i=0; i<response.length; i++){
+
+        	var date = response[i].presc_date_added;
+        	var response3 ="";
+
+        	  $.ajax({
+		      type  : 'post',
+		      url   : '<?php echo base_url('pharmacy/convert_date'); ?>',
+		      data: {
+		          date: date,
+		        },
+		      async : false,
+		      dataType : 'json',
+		      success : function(response2){
+		        //console.log(response2);
+
+		        response3 = response2
+		        }
+
+		      });
+        	  //console.log(response3)
+
+            if (response[i].vital_id != null) {
+              var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
+              var vital_status = '<span class="badge badge-success">Treated</span>';
+            } else {
+              var fullname = "";
+              var vital_status = '<span class="badge badge-warning">Pending</span>';
+            }
+
+        //Badge colors
+         if (response[i].status == "Pending") { 
+            var status = '<span class="badge badge-warning">'+ response[i].status +'</span>'
+        	}
+            else if (response[i].status == "Treated") {
+                var status = '<span class="badge badge-success">'+ response[i].status +'</span>'
+            }
+            else if (response[i].status == "Prescription") {
+                var status = '<span class="badge badge-primary">'+ response[i].status +'</span>'
+            }
 
 
-         ///This clears textbox on modal toggle
-          function clear_textbox() {
-            $('input[type=text]').each(function() {
-                $(this).val('');
-            });
+
+            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Prescription Test for '+response[i].patient_name+'" href="<?php echo base_url('patient/edit_prescription2/'); ?>' + response[i].prescription_unique_id+ '"> <i class="fa fa-pencil"></i></button> '+
+                           '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Edit prescription Test for '+response[i].patient_name+'" href="<?php echo base_url('patient/edit_prescription/'); ?>' + response[i].prescription_unique_id+ '"><i class="fa fa-pencil"></i></button> '+
+                            '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="View prescription Test for '+response[i].patient_name+'" href="<?php echo base_url('patient/view_prescription/'); ?>' + response[i].prescription_unique_id+ '"><i class="fa fa-eye"></i></button> '+
+                            '<button class="btn btn-dark" type="button" onclick="delete_prescription('+ response[i].prescription_unique_id +')"><i class="fa fa-trash"></i></button>';
+
+            html += '<tr><td>' + sn++ + '</td> <td>' + response3 +
+              '</td> <td>' + response[i].patient_name +
+              '</td> <td>' + response[i].clinic_name +
+              '</td> <td>' + status +
+              '</td> <td>' + response[i].patient_id_num +
+              '</td> <td>' + response[i].patient_status +
+              '</td><td>' + fullname +
+              //'</td><td>' + vital_status +
+              '</td><td>' + buttons + '</td> </tr>';
           }
+          $('#filteredPrescriptions').html(html);
+        }
+
+      });
+
+    }
+
+});
+
+
+////Filtered Prescription
+
+
+  function filter_prescriptions() {
+    $('#prescriptionMasterList').dataTable().fnClearTable();
+    //dataTable.fnClearTable();
+    $('#prescriptionMasterList').dataTable().fnDraw();
+    $('#prescriptionMasterList').dataTable().fnDestroy();
+    //$('#defaultPatients').hide();
+    var status = document.getElementById('status').value;
+    var date_range_to = document.getElementById('date_range_to').value;
+    var date_range_from = document.getElementById('date_range_from').value;
+    //console.log(date_range_to);
+
+    listPrescriptions();
+
+    //$('#filteredPatients').show();
+    //var prescriptionTable = $('#prescriptionMasterList').DataTable()    
+
+
+     var prescriptionTable =  $('#prescriptionMasterList').DataTable({
+            dom: 'lrtip',
+            "lengthChange": false
+        });
+    // #myInput is a <input type="text"> element
+		$('#myInput').on( 'keyup', function () {
+		    prescriptionTable.search( this.value ).draw();
+		} );
+
+
+    // list all employee in datatable
+    function listPrescriptions() {
+
+      $.ajax({
+      type  : 'post',
+      url   : '<?php echo base_url('pharmacy/filter_prescriptions'); ?>',
+      data: {
+          status: status,
+          //doctor_id: doctor_id,
+          date_range_from: date_range_from,
+          date_range_to: date_range_to,
+          //clinic_id: clinic_id
+        },
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        //console.log(date_range_from);
+        //console.log(response);
+        var html = '';
+        var i;
+        var sn =1;
+        for(i=0; i<response.length; i++){var date = response[i].presc_date_added;
+        	var response3 ="";
+
+        	  $.ajax({
+		      type  : 'post',
+		      url   : '<?php echo base_url('pharmacy/convert_date'); ?>',
+		      data: {
+		          date: date,
+		        },
+		      async : false,
+		      dataType : 'json',
+		      success : function(response2){
+		        //console.log(response2);
+
+		        response3 = response2
+		        }
+
+		      });
+        	  //console.log(response3)
+
+            if (response[i].vital_id != null) {
+              var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
+              var vital_status = '<span class="badge badge-success">Treated</span>';
+            } else {
+              var fullname = "";
+              var vital_status = '<span class="badge badge-warning">Pending</span>';
+            }
+
+        //Badge colors
+         if (response[i].status == "Pending") { 
+            var status = '<span class="badge badge-warning">'+ response[i].status +'</span>'
+        	}
+            else if (response[i].status == "Treated") {
+                var status = '<span class="badge badge-success">'+ response[i].status +'</span>'
+            }
+            else if (response[i].status == "Prescription") {
+                var status = '<span class="badge badge-primary">'+ response[i].status +'</span>'
+            }
+
+
+
+            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Prescription Test for '+response[i].patient_name+'" href="<?php echo base_url('patient/edit_prescription2/'); ?>' + response[i].prescription_unique_id+ '"> <i class="fa fa-pencil"></i></button> '+
+                           '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Edit prescription Test for '+response[i].patient_name+'" href="<?php echo base_url('patient/edit_prescription/'); ?>' + response[i].prescription_unique_id+ '"><i class="fa fa-pencil"></i></button> '+
+                            '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="View prescription Test for '+response[i].patient_name+'" href="<?php echo base_url('patient/view_prescription/'); ?>' + response[i].prescription_unique_id+ '"><i class="fa fa-eye"></i></button> '+
+                            '<button class="btn btn-dark" type="button" onclick="delete_prescription('+ response[i].prescription_unique_id +')"><i class="fa fa-trash"></i></button>';
+
+            html += '<tr><td>' + sn++ + '</td> <td>' + response3 +
+              '</td> <td>' + response[i].patient_name +
+              '</td> <td>' + response[i].clinic_name +
+              '</td> <td>' + status +
+              '</td> <td>' + response[i].patient_id_num +
+              '</td> <td>' + response[i].patient_status +
+              '</td><td>' + fullname +
+              //'</td><td>' + vital_status +
+              '</td><td>' + buttons + '</td> </tr>';
+          }
+          $('#filteredPrescriptions').html(html);
+        }
+
+      });
+    }
+
+
+  }
+
+
 
 </script>

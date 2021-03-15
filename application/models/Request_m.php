@@ -15,9 +15,61 @@ class Request_m extends CI_Model
         return $pharmacy_request_list;
     }
 
+    public function get_default_prescription_pending()
+    {
+         $date = new DateTime("now");
+        $curr_date = $date->format('Y-m-d ');
+        $get_pharmacy_request = $this->db->select('p.*,pa.*,pd.patient_name,pd.patient_title,pd.patient_id_num,pd.patient_status,c.clinic_name,d.drug_item_name, s.staff_firstname,l.lab_test_name,s.staff_middlename,s.staff_lastname, p.id as prescriptions_id, p.date_added as presc_date_added')->from('patient_prescriptions2 p')->join('patient_appointments as pa', 'pa.id=p.appointment_id', 'left')->join('patient_details as pd', 'pd.id=p.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('drug_items as d', 'd.id=p.prescription_id', 'left')->join('lab_tests as l', 'l.id=p.prescription_id', 'left')->where('p.status','pending')->where('DATE(p.date_added)',$curr_date)->group_by('p.prescription_unique_id')->order_by('p.id', 'DESC')->get();
+        $pharmacy_request_list = $get_pharmacy_request->result();
+        return $pharmacy_request_list;
+    } 
+
+
+    public function get_prescription_filtered()
+    {
+        if ($this->input->post('status')) {
+
+           $status = $this->input->post('status');
+            //$status = "Pending";
+            if ($status != 'all') {
+                $cond = 'p.status IN (SELECT status FROM patient_prescriptions2 WHERE status="'. $status . '")';
+            } else {
+                $cond = '1=1';
+            }
+        }
+
+        
+
+        $today_date = date('Y-m-d');
+
+        if ($this->input->post('date_range_from') != $today_date) {
+            //
+            $first_date = $this->input->post('date_range_from');
+            $second_date =  $this->input->post('date_range_to');
+
+            $date_range = array('p.date_added >=' => $first_date, 'p.date_added <=' => $second_date);
+        } else {
+
+           $date_range = array('DATE(p.date_added)' => $today_date);
+
+        }
+        
+        $get_appointments = $this->db->select('p.*,pa.*,pd.patient_name,pd.patient_title,pd.patient_id_num,pd.patient_status,c.clinic_name,d.drug_item_name, s.staff_firstname,l.lab_test_name,s.staff_middlename,s.staff_lastname, p.id as prescriptions_id, p.date_added as presc_date_added')->from('patient_prescriptions2 p')->join('patient_appointments as pa', 'pa.id=p.appointment_id', 'left')->join('patient_details as pd', 'pd.id=p.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('drug_items as d', 'd.id=p.prescription_id', 'left')->join('lab_tests as l', 'l.id=p.prescription_id', 'left')->where($cond)->where($date_range)->group_by('p.prescription_unique_id')->order_by('p.id', 'DESC')->get();
+
+
+
+        // $this->db->select('pv.*,pa.*,p.*,c.clinic_name,s.staff_title,s.staff_firstname,s.staff_middlename,s.staff_lastname,p.id as p_id,pv.*, pa.id as app_id,pv.id as vital_id')->from('patient_vitals pv')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->join('clinics as c', 'c.id=pv.clinic_id', 'left')->join('patient_details as p', 'p.id=pv.patient_id', 'left')->join('staff as s', 's.user_id=pv.doctor_id', 'left')->where($cond)->where($date_range)->order_by('pa.appointment_date', 'DESC')->order_by('pa.appointment_time', 'DESC')->get();
+        //
+
+        $appointment_list = $get_appointments->result();
+      //return $this->db->last_query();
+        return $appointment_list;
+    }
+
     public function get_prescription_request_list()
     {
-        $get_pharmacy_request = $this->db->select('pr.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num,rd.request_destination_name,s.staff_firstname,s.staff_lastname')->from('prescription_requests pr')->join('patient_details as p', 'p.id=pr.patient_id', 'left')->join('request_destinations as rd', 'rd.id=pr.request_destination_id', 'left')->join('staff as s', 's.user_id=pr.request_by')->where('patient_id IS NOT NULL')->get();
+        // $get_pharmacy_request = $this->db->select('pr.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num,rd.request_destination_name,s.staff_firstname,s.staff_lastname')->from('prescription_requests pr')->join('patient_details as p', 'p.id=pr.patient_id', 'left')->join('request_destinations as rd', 'rd.id=pr.request_destination_id', 'left')->join('staff as s', 's.user_id=pr.request_by')->where('patient_id IS NOT NULL')->get();
+        $get_pharmacy_request = $this->db->select('p.*,pa.*,pd.patient_name,pd.patient_title,pd.patient_id_num,pd.patient_status,c.clinic_name,d.drug_item_name, s.staff_firstname,l.lab_test_name,s.staff_middlename,s.staff_lastname, p.id as prescriptions_id')->from('patient_prescriptions2 p')->join('patient_appointments as pa', 'pa.id=p.appointment_id', 'left')->join('patient_details as pd', 'pd.id=p.patient_id', 'left')->join('clinics as c', 'c.id=pa.clinic_id', 'left')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('drug_items as d', 'd.id=p.prescription_id', 'left')->join('lab_tests as l', 'l.id=p.prescription_id', 'left')->group_by('p.prescription_unique_id')->order_by('p.id', 'DESC')->get();
         $pharmacy_request_list = $get_pharmacy_request->result();
         return $pharmacy_request_list;
     }

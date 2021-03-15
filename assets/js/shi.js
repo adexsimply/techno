@@ -1,4 +1,7 @@
 /*shi CRUD scripts*/
+
+
+
   function shiNew(event){
     event.preventDefault();
     /*var element = $(event.target).is('a') ? $(event.target) : $(event.target).parents('a');*/
@@ -30,7 +33,7 @@
     title = title ? title : 'Edit entity';
     size = size ? size : 'm';
     type = type ? type : '';
-    console.log(url);
+    //console.log(url);
 
     dialog(url,title,size,type);
   }
@@ -53,11 +56,18 @@ function dialog(url,title='Operation',size,type=''){
                       self.setContent('Something went wrong');
                   });
               },
+                buttons: {
+              Close: function(helloButton){
+                  // shorthand method to define a button
+                  // the button key will be used as button name
+              }
+            },
               columnClass: size,
               type:type,
               containerFluid: true
               //type:type
           });
+
 }
 
 

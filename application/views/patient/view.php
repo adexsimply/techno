@@ -2,7 +2,6 @@
 ?>
 <?php //$this->load->view('includes/sidebar') 
 ?>
-
 <div class="container-fluid">
 	<div class="block-header">
 		<div class="row">
@@ -22,7 +21,7 @@
 				</div>
 				<div class="member-img">
 					<a href="patient-invoice.html">
-						<img src="<?php echo base_url(); ?>uploads/<?php echo $patient->patient_photo; ?>" class="rounded-circle" alt="profile-image">
+						<img src="<?php if (!empty($patient->patient_photo)) { echo base_url('uploads/').$patient->patient_photo; } else { echo base_url('assets/images/ppph.jpg'); } ?>" class="rounded-circle" alt="profile-image">
 					</a>
 				</div>
 				<div class="body">
@@ -55,7 +54,7 @@
 					</ul>
 				</div>
 			</div>
-			<!-- <div class="card">
+<!-- 			<div class="card">
 				                        <div class="header">
 				                            <h2>General Report</h2>
 				                        </div>
@@ -122,8 +121,8 @@
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="general">
 													<?php if ($patient->appointment_id != NULL && $consultations == Null) { ?>
-														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Add Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
-															<i class="fa fa-plus-circle"></i> Add New
+														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="New Consultation for <?php echo $patient->patient_name.' '.$patient->appointment_date.' '.$patient->appointment_time; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+															<i class="fa fa-plus-circle"></i> Add Consultation
 														</button>
 													<?php } ?>
 													<table class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -452,7 +451,7 @@
 																			<?php } ?>
 																	</td>
 																	<td>
-																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription2/' . $prescription->prescription_unique_id) ?>">
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription2/' . $prescription->prescription_unique_id) ?>">
 																			<i class="fa fa-pencil"></i>
 																		</button>
 																		<!-- <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription/' . $prescription->prescription_unique_id) ?>">
@@ -723,7 +722,7 @@
 						<div class="tab-pane active" id="billings">
 
 							<div>
-								<!--   <h6>Payment Method</h6>
+								  <!-- <h6>Payment Method</h6>
 				                                       <div class="payment-info">
 				                                            <h3 class="payment-name"><i class="fa fa-paypal"></i> PayPal ****2222</h3>
 				                                            <span>Next billing charged $29</span>
@@ -731,7 +730,33 @@
 				                                            <em class="text-muted">Autopay on May 12, 2018</em>
 				                                            <a href="javascript:void(0);" class="edit-payment-info">Edit Payment Info</a>
 				                                        </div> -->
-								<!-- <p class="margin-top-30"><a data-toggle="modal" data-target="#addPayment"><i class="fa fa-plus-circle"></i> Add Payment</a></p> -->
+								<p class="margin-top-30"><a data-toggle="modal" data-target="#addPayment"><i class="fa fa-plus-circle"></i> Add Payment</a></p>
+							</div>
+							<!-- AddPayment Modal -->
+							<div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+								<form id="add-patient-history" action="#" method="post" >	
+										<div class="modal-header">
+											<h6 class="modal-title text-primary">Enter Amount</h6>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body edit-doc-profile">
+												<div class="form-group col-12">
+													<label for="caseDate">Amount</label>
+													<input type="number" name="case_prescription" class="form-control" id="amount" placeholder="1200">
+													<span style="color:#ff0000;" class="error case_description"></span>
+												</div>
+										</div>
+										<div class="modal-footer">
+											<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+											<input type="submit" title="add_patient_history" class="btn btn-primary px-4 m-2" value="Confirm Payment">
+										</div>
+										</form>
+									</div>
+								</div>
 							</div>
 							<div class="row clearfix">
 								<div class="col-lg-12">

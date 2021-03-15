@@ -1,4 +1,8 @@
 <script type="text/javascript">
+
+
+//listDefaultPrescriptionByPatient(); 
+    //console.log(document.getElementById('pres_d'));
     /////Add Session form begins
     function validate(formData) {
         var returnData;
@@ -39,6 +43,10 @@
         $.post("<?php echo base_url() . 'patient/save_prescription'; ?>", formData).done(function(data) {
             //console.log(data);
 
+            ///List all prescriptions in Prescription Tab
+
+           // listDefaultPrescriptionByPatient(); 
+
             //window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
             $("button[title='add_prescription']").html("Prescription Added");
         });
@@ -70,6 +78,7 @@
     }
 
     function delete_prescription(rowIndex) {
+        $('#rowIndex').remove();
         $.confirm({
             title: 'Delete Prescription Test',
             content: 'Are you sure you want to delete Prescription Test?',
@@ -80,7 +89,7 @@
                     $.post("<?php echo base_url() . 'patient/delete_prescription_test'; ?>", {
                         id: rowIndex
                     }).done(function(data) {
-                        location.reload();
+                        //location.reload();
                     });
                 },
                 no: function() {
@@ -89,5 +98,7 @@
             }
         });
     }
+
+
     //////////////Add session form ends
 </script>

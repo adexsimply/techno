@@ -1,5 +1,35 @@
-<div class="col-12">
-    <div class="card box-margin">
+<style type="text/css">
+   #editPrescription {
+        font-size: 13px;
+    }
+   #editPrescription .tab-content {
+     padding: 1px; 
+
+}
+.mb-3, .my-3 {
+     margin-bottom: 0!important; 
+}
+
+#editPrescription .form-control {
+    display: block;
+    width: 100%;
+     height: auto; 
+    padding: 1%;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 0.5;
+    color: #495057;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+#editPrescription  .table td, .table th {
+    padding: 1px;
+    }
+</style>
+<div class="col-12" id="editPrescription">
+    <div class="box-margin">
         <div class="card-body">
             <div class="modal-body edit-doc-profile">
                 <div class="row clearfix">
@@ -8,9 +38,9 @@
                     <div class="col-lg-3 col-md-6 mb-3">
                         <b>Date</b>
                         <div class="input-group">
-                            <div class="input-group-prepend">
+                           <!--  <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="icon-calendar"></i></span>
-                            </div>
+                            </div> -->
 
                             <?php if (isset($patient_prescriptions) && $patient_prescriptions != null) {
                                 //var_dump($patient_prescription_tests);
@@ -77,11 +107,11 @@
                                                                                     } ?>" disabled="">
                         </div>
                     </div>
-
+<!-- 
                     <div class="col-lg-12 col-md-12 mb-3 mt-2">
                         <fieldset>
-                            <legend><b>My Prescription</b></legend>
-                            <div class="body" style="height: 200px; overflow: scroll;">
+                            <legend style="font-size: 15px;"><strong>My Prescription</strong></legend>
+                            <div class="body" style="max-height: 200px; overflow: scroll; scroll; padding: 0;">
                                 <div class="table-responsive">
                                     <table id="" class="table table-bordered table-striped table-hover dataTable">
                                         <thead class="thead-dark">
@@ -89,9 +119,6 @@
                                                 <th>Date</th>
                                                 <th>Drug Name</th>
                                                 <th>My Prescription</th>
-                                                <!-- <th>Drug Expiry Date</th>
-                                                    <th>Price</th> -->
-                                                <!-- <th>Action</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -104,28 +131,28 @@
                                                         <td><?php echo $patient_prescription_test->drug_item_name; ?></td>
                                                         <td><?php echo $patient_prescription_test->prescription; ?></td>
                                                         <!-- <td><button type='button' onclick='testDelete_prescription(this, <?php echo $patient_prescription_test->prescription_id; ?>);' class='btn btn-sm btn-danger'>Remove</button></td> -->
-                                                        </td>
+                                               <!--          </td>
                                                     </tr>
                                                 <?php } ?>
-                                            <?php } ?>
-                                        </tbody>
+                                            <?php } ?> -->
+                 <!--                        </tbody>
                                     </table>
                                 </div>
                             </div>
                         </fieldset>
-                    </div>
+                    </div>  -->
                     <div class="col-lg-12 col-md-12 mb-3 mt-2">
                         <fieldset>
-                            <legend><b>Summarry</b></legend>
-                            <div class="body" style="height: 200px; overflow: scroll;">
+                            <legend style="font-size: 15px;"><strong>Summary</strong></legend>
+                            <div class="body" style="max-height: 200px; overflow: scroll; scroll; padding: 0;">
                                 <div class="table-responsive">
-                                    <table id="testTable_prescription" class="table table-bordered table-striped table-hover dataTable">
+                                    <table id="testTable_prescription" class="table table-bordered table-striped table-hover dataTable" style="font-size: 13px;">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Date</th>
-                                                <th>Drug Name</th>
-                                                <th>Stock Quantity</th>
-                                                <th>Quantity Given</th>
+                                                <th>Drug</th>
+                                                <th>Stock Qty</th>
+                                                <th>Qty Given</th>
                                                 <th>Unit Cost</th>
                                                 <th>Prescription</th>
                                             </tr>
@@ -144,11 +171,11 @@
                                                         <?php if ($vital_details->status == "Prescription" || $vital_details->status == "Treated") { ?>
                                                             <td><?php echo $patient_prescription_test->qty_given; ?></td>
                                                         <?php } else { ?>
-                                                            <td <?php if ($patient_prescription_test->quantity_in_stock > 0) {
+                                                            <td style="background-color: coral;" <?php if ($patient_prescription_test->quantity_in_stock > 0) {
                                                                     echo 'contenteditable="true" id="by"';
                                                                 } ?>><?php if ($patient_prescription_test->quantity_in_stock <= 0) {
-                                                                            echo '0';
-                                                                        } ?><?php echo $patient_prescription_test->qty_given; ?>
+                                                                            echo '';
+                                                                        } ?><?php if ($patient_prescription_test->qty_given == 0) { echo "";} else {echo $patient_prescription_test->qty_given;} ?>
                                                             </td>
                                                         <?php } ?>
                                                         <td id="amounts" class="amounts"><?php echo $patient_prescription_test->drug_sell; ?></td>
@@ -226,7 +253,7 @@
             var rtotal = ($(tds[4]).text()) * ($(tds[5]).text());
             console.log(tds)
             sum += rtotal;
-            $("#items_prescription").append("<input type='' name='drug_ids[]' value='" + $(tds[0]).text() + "," + $(tds[4]).text() + "' >")
+            $("#items_prescription").append("<input type='' hidden name='drug_ids[]' value='" + $(tds[0]).text() + "," + $(tds[4]).text() + "' >")
         });
         console.log(sum)
         $('#amount').text(sum + ".00");
@@ -237,7 +264,7 @@
         if (action == 'send_payment') {
             var formData = $('#send-payment').serialize();
             var amount = $("#main_amount").val()
-            if (amount != '' && amount > 0) {
+            if (amount != '') {
                 $.confirm({
                     title: 'Send For Payment',
                     content: 'Are you sure you want to Send Payment?',
@@ -247,7 +274,13 @@
                         yes: function() {
                             $.post("<?php echo base_url() .  'patient/save_billing'; ?>", formData).done(function(data) {
                                 //console.log(data);
-                                window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
+                                
+                                 $.alert({
+                                        title: 'Done!',
+                                        content: 'Payment Made!',
+                                        type: 'green',
+                                        });
+                                //window.location = "<?php //echo base_url('appointment/waiting_list'); ?>";
                             });
                         },
                         no: function() {

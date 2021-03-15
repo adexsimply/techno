@@ -17,5 +17,6 @@
 <script src="<?php echo base_url(); ?>assets/bundles/mainscripts.bundle.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/index.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/shi.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/consultation_auto.js"></script>
 </body>
 </html>
