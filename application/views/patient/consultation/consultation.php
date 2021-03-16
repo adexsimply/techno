@@ -307,9 +307,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-right">
+                <!-- <div class="text-right">
                     <button type="button" class="btn btn-success" onclick="form_routes_consultation('add_consultation')" title="add_consultation">Save Consultation</button>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>

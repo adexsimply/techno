@@ -41,7 +41,7 @@
 
 function dialog(url,title='Operation',size,type=''){
 
-  $.confirm({
+ var jesus = $.confirm({
 
 
               content: function () {

@@ -24,7 +24,7 @@
     border-radius: .25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-#prescriptionNew  .table td, .table th {
+#prescriptionNew .table td, #prescriptionNew  .table th {
     padding: 1px;
     }
 </style>
@@ -212,156 +212,12 @@
                         </div> -->
                     </div>
                 </div>
-                <div class="text-right">
+                <!-- <div class="text-right">
                     <button type="button" class="btn btn-success" onclick="form_routes_prescription('add_prescription')" title="add_prescription">Save</button>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function() {
-
-
-        var table = $('#example_prescription_filter').DataTable({
-            dom: 'lrtip',
-            "lengthChange": false
-        });
-        if ($('#example_wrapper').is(':visible')) {
-            $('#example_wrapper').hide();
-        }
-        //$('#example_wrapper').hide();
-
-
-        $('#mySearch').keyup(function() {
-
-            if (document.getElementById('mySearch').value != '') {
-                //$('#example_wrapper').removeAttr("style");
-                $('#example_wrapper').show();
-                table.search($(this).val()).draw();
-            } else {
-                $('#example_wrapper').hide();
-
-            }
-        });
-
-    });
-
-
-    var _row = null;
-    $(document).ready(function() {
-        var eventFired = function(type) {
-            var n = $('#demo_info')[0];
-        }
-
-        $('#example_prescription')
-            .on('order.dt', function() {
-                eventFired('Order');
-            })
-            .on('search.dt', function() {
-                eventFired('Search');
-            })
-            .on('page.dt', function() {
-                eventFired('Page');
-            })
-            .DataTable();
-    });
-
-    function testAdd(ctl, id) {
-        _row = $(ctl).parents("tr");
-        var cols = _row.children("td");
-        $("#items_prescription").append("<input type='hidden' name='prescription_id[]' value='" + id + "' id='test_prescription" + id + "'>");
-
-        $("#testTable_prescription tbody").append("<tr>" +
-            "<td>" + $(cols[1]).text() + "</td>" +
-            "<td width='25%'>" + $(cols[2]).text() + "</td>" +
-            "<td width='25%'>" + $(cols[3]).text() + "</td>" +
-            "<td width='25%'><span class='text-success'>" + $(cols[4]).text() + "</span></td>" +
-            "<td width='10%'><button type='button' onclick='testDelete_prescription(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
-            "</tr>");
-    }
-
-    function testDelete_prescription(ctl, id) {
-        $("#test_prescription" + id + "").remove();
-        $(ctl).parents("tr").remove();
-    }
-    //////
-    /////Popup for prescription
-
-
-    function add_prescription(condi, id) {
-
-            $('#example_wrapper').hide();
-            //document.getElementById('mySearch').value('');
-
-        _row = $(condi).parents("tr");
-        var cols = _row.children("td");
-
-        console.log(cols)
-        event.preventDefault();
-        /*var element = $(event.target).is('a') ? $(event.target) : $(event.target).parents('a');*/
-        var element = $(event.currentTarget);
-        var title = $(cols[0]).text();
-        // var retainer_id = element.data('retainer');
-        // var item_id = element.data('item1');
-        // var item_type_id = element.data('item2');
-        $.confirm({
-            title: title,
-            content: '' +
-                '<form action="" class="formName">' +
-                '<div class="form-group">' +
-                '<label>My Prescription</label>' +
-                '<input type="text" placeholder="Prescription" class="price form-control" required />' +
-                '</div>' +
-                '</form>',
-            buttons: {
-                formSubmit: {
-                    text: 'Submit',
-                    btnClass: 'btn-blue',
-                    action: function() {
-                        var price = this.$content.find('.price').val();
-                        if (!price) {
-                            $.alert('Enter Prescription');
-                            return false;
-                        }
-
-                        //$.alert('Your name is ' + price);
-
-                        $("#items_prescription").append("<input type='' hidden value='1' name='food_id[]'>");
-                        $("#items_prescription").append("<input hidden name='prescription_id[]' value='" + id + "' id='test_prescription" + id + "'>");
-                        $("#items_prescription").append("<input hidden name='prescription_value[]' value='" + price + "' id='test_prescription2" + price + "'>");
-
-
-                        $("#testTable_prescription tbody").append("<tr>" +
-                            "<td width='25%'>" + $(cols[0]).text() + "</td>" +
-                            "<td width='25%'>" + price + "</td>" +
-                            "<td width='10%'><button type='button' onclick='testDelete_prescription(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
-                            "</tr>");
-
-
-
-
-
-
-
-                    }
-                },
-                cancel: function() {
-                    //close
-                },
-            },
-            onContentReady: function() {
-                // bind to events
-                var jc = this;
-                this.$content.find('form').on('submit', function(e) {
-                    // if the user submits the form by pressing enter in the field.
-                    e.preventDefault();
-                    jc.$$formSubmit.trigger('click'); // reference the button and click it
-                });
-            }
-        });
-    }
-</script>
-<?php $this->load->view('patient/new_prescription_script'); ?>
+<?php $this->load->view('patient/all_script'); ?>

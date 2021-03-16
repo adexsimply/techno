@@ -878,6 +878,17 @@ class Patient extends Base_Controller
             redirect('/appointment/waiting_list');
         }
     }
+    function view_prescription2()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
+            $this->data['patient_prescriptions'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+            $this->data['drugs'] = $this->patient_m->drugs();
+            $this->load->view('patient/prescription/view', $this->data);
+        } else {
+            redirect('/appointment/waiting_list');
+        }
+    }
     function manage_prescription()
     {
         if ($this->uri->segment(3)) {

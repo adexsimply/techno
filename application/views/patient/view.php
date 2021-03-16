@@ -121,7 +121,7 @@
 											<div class="tab-content m-t-10 padding-0">
 												<div class="tab-pane table-responsive active show" id="general">
 													<?php if ($patient->appointment_id != NULL && $consultations == Null) { ?>
-														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="New Consultation for <?php echo $patient->patient_name.' '.$patient->appointment_date.' '.$patient->appointment_time; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="consultation_dialog(event)" data-type="black" data-size="l" data-title="New Consultation for <?php echo $patient->patient_name.' '.$patient->appointment_date.' '.$patient->appointment_time; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add Consultation
 														</button>
 													<?php } ?>
@@ -152,9 +152,9 @@
 																	<td><?php echo $consultation->assignment ?></td>
 																	<td><?php //echo $consultation->test 
 																		?></td>
-																	<td><?php echo $consultation->treatment ?></td>
+																	<td><?php echo substr($consultation->treatment, 0,15);  ?></td>
 																	<td>
-																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Edit Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_consultation/' . $consultation->con_id) ?>">
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="consultation_dialog(event)" data-type="black" data-size="l" data-title="Edit Consultation for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_consultation/' . $consultation->con_id) ?>">
 																			<i class="fa fa-pencil"></i>
 																		</button>
 																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="View Consultation" href="<?php echo base_url('patient/view_consultation/' . $consultation->con_id) ?>">
@@ -836,11 +836,12 @@
 <?php //$this->load->view('patient/script'); 
 ?>
 
+<?php $this->load->view('patient/all_script'); ?>
 <?php $this->load->view('patient/new_consultation_script'); ?>
 <?php $this->load->view('patient/new_eye_clinic_script'); ?>
 <?php $this->load->view('patient/new_dental_script'); ?>
 <?php $this->load->view('patient/new_med_report_script'); ?>
 <?php $this->load->view('patient/new_radiolody_script'); ?>
-<?php $this->load->view('patient/new_prescription_script'); ?>
+<?php //$this->load->view('patient/new_prescription_script'); ?>
 <?php $this->load->view('patient/new_lab_test_script'); ?>
 <?php $this->load->view('patient/new_procedure_script'); ?>

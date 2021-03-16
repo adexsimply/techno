@@ -49,7 +49,7 @@
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#diagnosis">Diagnosis</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#follow_up">Follow-up</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#pdf_docs">PDF Docs</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#prescription">Prescription</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="listDefaultPrescriptionByPatient()" href="#prescription">Prescription</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab_investigation">Lab Investigation</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#rad_investigation">Radiological Investigation</a></li>
             </ul>
@@ -64,3 +64,4 @@
 
 
 <?php $this->load->view('patient/new_consultation_script'); ?>
+<?php $this->load->view('patient/all_script'); ?>
