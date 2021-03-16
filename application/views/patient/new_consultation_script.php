@@ -42,26 +42,6 @@
         }
     }
     
-function delete_consultation(rowIndex) {
-	$.confirm({
-                    title: 'Delete Consultation',
-                    content: 'Are you sure you want to delete Consultation?',
-                    icon: 'fa fa-check-circle',
-                    type: 'red',
-                    buttons: {
-                        yes: function() {
-							$.post("<?php echo base_url() . 'patient/delete_consultation'; ?>", {
-								id: rowIndex
-							}).done(function(data) {
-								//location.reload();
-							});
-                        },
-                        no: function() {
-
-                        }
-                    }
-                });
-  }
 
     //////////////Add session form ends
 

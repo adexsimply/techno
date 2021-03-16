@@ -908,13 +908,11 @@ class Patient extends Base_Controller
         $prescription_list = $this->patient_m->get_prescription_by_patient_id_and_vital_id($patient_id, $vital_id);
         echo json_encode($prescription_list);
     }
-    // public function get_prescription_by_vital_id()
-    // {
-
-    //     $patient_id = $this->input->post('patient_id');
-    //     $vital_id = $this->input->post('vital_id');
-    //     $prescription = $this->patient_m->get_prescription_by_patient_id_and_vital_id($patient_id, $vital_id);
-    //     $prescription_list = $this->patient_m->get_prescription_by_patient_id_and_vital_id($patient_id, $vital_id);
-    //     echo json_encode($prescription_list);
-    // }
+    public function get_consultation_by_vital_id()
+    {
+        $patient_id = $this->input->post('patient_id');
+        $vital_id = $this->input->post('vital_id');
+        $consultation_list = $this->patient_m->get_consultations_by_patient_id_and_vital_id($patient_id , $vital_id);
+        echo json_encode($consultation_list);
+    }
 }

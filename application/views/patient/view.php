@@ -1,7 +1,4 @@
-<?php //$this->load->view('includes/head_2'); 
-?>
-<?php //$this->load->view('includes/sidebar') 
-?>
+
 <div class="container-fluid">
 	<div class="block-header">
 		<div class="row">
@@ -97,7 +94,7 @@
 				<div class="body">
 					<ul class="nav nav-tabs-new2">
 						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#billings">Billings</a></li>
-						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#documents">Documents</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="listDefaultConsultationByPatient()" href="#documents">Documents</a></li>
 						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#otherdocuments">Other Documents</a></li>
 						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#requests">Requests</a></li>
 					</ul>
@@ -119,9 +116,12 @@
 
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
+
+												<input type="text" hidden="" id="patient_id2" value="<?php echo $patient->patient_id; ?>" name="">
+												<input type="text" hidden="" id="vital_id" value="<?php echo $patient->vital_id; ?>" name="">
 												<div class="tab-pane table-responsive active show" id="general">
 													<?php if ($patient->appointment_id != NULL && $consultations == Null) { ?>
-														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="consultation_dialog(event)" data-type="black" data-size="l" data-title="New Consultation for <?php echo $patient->patient_name.' '.$patient->appointment_date.' '.$patient->appointment_time; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
+														<button class="btn btn-dark m-b-15 m-t-15" type="button" title="add_consultation_btn" data-toggle="modal" data-target="#takeVitals" onclick="consultation_dialog(event)" data-type="black" data-size="l" data-title="New Consultation for <?php echo $patient->patient_name.' '.$patient->appointment_date.' '.$patient->appointment_time; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add Consultation
 														</button>
 													<?php } ?>
@@ -130,7 +130,7 @@
 															<tr>
 																<th>S/N</th>
 																<th>Date</th>
-																<th>Time</th>
+																<!-- <th>Time</th> -->
 																<th>Doctor</th>
 																<th>Complaint</th>
 																<th>Dioagnosis</th>
@@ -139,8 +139,8 @@
 																<th>Action</th>
 															</tr>
 														</thead>
-														<tbody>
-															<?php $i = 1;
+														<tbody id="consultationList">
+													<!-- 		<?php $i = 1;
 															//var_dump($consultations);
 															foreach ($consultations as $consultation) { ?>
 																<tr>
@@ -166,7 +166,7 @@
 																	</td>
 
 																</tr>
-															<?php } ?>
+															<?php } ?> -->
 														</tbody>
 													</table>
 												</div>
@@ -315,7 +315,7 @@
 											<ul class="nav nav-tabs-new2">
 												<li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#laboratory">Laboratory</a></li>
 												<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#radiology">Radiology</a></li>
-												<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#prescriptions">Prescriptions</a></li>
+												<li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="listDefaultPrescriptionByPatient()" href="#prescriptions">Prescriptions</a></li>
 												<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#admission">Admission</a></li>
 												<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#procedures">Procedures</a></li>
 											</ul>
@@ -422,7 +422,23 @@
 															<i class="fa fa-plus-circle"></i> Add New
 														</button>
 													<?php } ?>
-													<table class="table m-b-0 table-hover">
+
+														    <table style="font-size: 13px;padding: 0;" cellpadding="0" cellspacing="0" class="table m-b-0 table-hover">
+														        <thead class="thead-warning">
+														            <tr>
+														            <tr>
+														                <th>S/N</th>
+														                <th>Date</th>
+														                <th>Status</th>
+														                <th>Action</th>
+														            </tr>
+														            </tr>
+														        </thead>
+														        <tbody id="prescriptionsList">
+
+														        </tbody>
+														    </table>
+												<!-- 	<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
 															<tr>
@@ -454,9 +470,9 @@
 																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="Prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription2/' . $prescription->prescription_unique_id) ?>">
 																			<i class="fa fa-pencil"></i>
 																		</button>
-																		<!-- <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription/' . $prescription->prescription_unique_id) ?>">
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription/' . $prescription->prescription_unique_id) ?>">
 																				<i class="fa fa-pencil"></i>
-																			</button> -->
+																			</button> 
 																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View prescription Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_prescription/' . $prescription->prescription_unique_id) ?>">
 																			<i class="fa fa-eye"></i>
 																		</button>
@@ -467,7 +483,7 @@
 																</tr>
 															<?php } ?>
 														</tbody>
-													</table>
+													</table> -->
 												</div>
 												<div class="tab-pane table-responsive" id="admission">
 													<?php if ($patient->appointment_id != NULL) { ?>

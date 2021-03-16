@@ -29,6 +29,79 @@ get_pres_lab();
 
     });
     
+function listDefaultConsultationByPatient() {
+    var patient_id = document.getElementById('patient_id2').value;
+    var vital_id = document.getElementById('vital_id').value;
+    //console.log(patient_id+vital_id);
+      $.ajax({
+      type  : 'post',
+      url   : '<?php echo base_url('patient/get_consultation_by_vital_id'); ?>',
+      data: {
+          //status: status,
+          patient_id: patient_id,
+          vital_id: vital_id
+        },
+      async : false,
+      dataType : 'json',
+      success : function(response){
+       console.log(response)
+        var html = '';
+        var i;
+        var sn =1;
+       for(i=0; i<response.length; i++){
+
+
+
+            if (response[i].vital_id != null) {
+              var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
+            } else {
+              var fullname = "";
+            }
+
+
+            //  '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="prescription_dialog(event)" data-type="black" data-size="l" data-title="Prescription Test for '+response[i].patient_name+'" href="<?php //echo base_url('patient/edit_prescription/'); ?>' + response[i].prescription_unique_id+ '"> <i class="fa fa-pencil"></i> </button>'+' '+
+               var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="consultation_dialog(event)" data-type="black" data-size="l" data-title="Edit Consultation for '+response[i].patient_name+'" href="<?php echo base_url('patient/edit_consultation/'); ?>' +response[i].con_id +'"><i class="fa fa-pencil"></i></button> '+
+               '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="l" data-title="View Consultation" href="<?php echo base_url('patient/view_consultation/'); ?>' +response[i].con_id +'"><i class="fa fa-eye"></i></button> '+
+                '<button class="btn btn-dark" type="button" onclick="delete_consultation('+response[i].con_id +')"><i class="fa fa-trash"></i></button>'
+
+            html += '<tr><td>' + sn++ + '</td> <td>' + response[i].date_added +
+              '</td> <td>' + fullname +
+              '</td> <td>' + response[i].complaint +
+              '</td> <td>' + response[i].assignment +
+              '</td> <td>' + response[i].investigation.substring(1, 15)+'...' +
+              '</td><td>' + response[i].treatment.substring(1, 15)+'...' +
+              '</td><td>' + buttons + '</td> </tr>';
+         }
+          $('#consultationList').html(html);
+        }
+
+      });
+
+    }   
+
+    /////Delete
+
+function delete_consultation(rowIndex) {
+	$.confirm({
+                    title: 'Delete Consultation',
+                    content: 'Are you sure you want to delete Consultation?',
+                    icon: 'fa fa-check-circle',
+                    type: 'red',
+                    buttons: {
+                        yes: function() {
+							$.post("<?php echo base_url() . 'patient/delete_consultation'; ?>", {
+								id: rowIndex
+							}).done(function(data) {
+								listDefaultConsultationByPatient();
+							});
+                        },
+                        no: function() {
+
+                        }
+                    }
+                });
+  }
+  ////// 
 function listDefaultPrescriptionByPatient() {
     var patient_id = document.getElementById('patient_id2').value;
     var vital_id = document.getElementById('vital_id').value;
@@ -44,7 +117,7 @@ function listDefaultPrescriptionByPatient() {
       async : false,
       dataType : 'json',
       success : function(response){
-       console.log(response)
+      // console.log(response)
         var html = '';
         var i;
         var sn =1;
@@ -70,6 +143,7 @@ function listDefaultPrescriptionByPatient() {
               //'</td><td>' + vital_status +
               '</td><td>' + buttons + '</td> </tr>';
          }
+          $("button[title='add_consultation_btn']").hide();
           $('#prescriptionsList').html(html);
         }
 
@@ -129,6 +203,8 @@ function listDefaultPrescriptionByPatient() {
                                             $.post("<?php echo base_url() .  'patient/save_consultation'; ?>", formData).done(function(data) {
                                             });
                                             ///Close Big Dialog
+
+											listDefaultConsultationByPatient();
                                             consultationDialog.close();
                                             ///Refresh Prescription Table
                                         },
