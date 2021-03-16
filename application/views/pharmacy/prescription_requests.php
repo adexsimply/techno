@@ -5,9 +5,6 @@
 <link src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js" rel="stylesheet">
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <div id="main-content">
         <div class="container-fluid">
             <div class="block-header">
@@ -82,36 +79,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="filteredPrescriptions">
-                                          <!--   <?php 
-
-                                            $i=1;
-                                             foreach ($prescription_requests_list as $pharmacy_request) { 
-
-                                                ?>
-                                            <tr>
-                                            	<td><?php echo $i; ?></td>
-                                                <td><span class="list-name"><?php  $ini_date = date_create( $pharmacy_request->appointment_date); echo date_format($ini_date,"D M d, Y");?></span></td>
-                                                <td><span class="list-name"><?php echo $pharmacy_request->patient_title." ".$pharmacy_request->patient_name; ?></span></td>
-                                                <td><?php echo $pharmacy_request->clinic_name; ?></td>
-                                                <td><?php echo $pharmacy_request->status; ?></td>
-                                                <td><?php echo $pharmacy_request->patient_id_num; ?></td>
-                                                <td><?php echo $pharmacy_request->patient_status; ?></td>
-                                                <td><?php echo $pharmacy_request->staff_firstname.' '.$pharmacy_request->staff_firstname; ?></td>
-                                                <td>
-
-                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Prescription Test for <?php echo $pharmacy_request->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription2/' . $pharmacy_request->prescription_unique_id) ?>"> <i class="fa fa-pencil"></i></button>
-                                                   <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit prescription Test for <?php echo $pharmacy_request->patient_name; ?>" href="<?php echo base_url('patient/edit_prescription/' . $pharmacy_request->prescription_unique_id) ?>"><i class="fa fa-pencil"></i></button>
-                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View prescription Test for <?php echo $pharmacy_request->patient_name; ?>" href="<?php echo base_url('patient/view_prescription/' . $pharmacy_request->prescription_unique_id) ?>">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-dark" type="button" onclick="delete_prescription(<?php echo $pharmacy_request->prescription_unique_id ?>)">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                               <?php 
-                                               $i++;
-                                           } ?> -->
+                                            <!--Prescription Lists from Ajax call shows here-->
                                         </tbody>
                                     </table>                            
                                 </div>

@@ -55,7 +55,7 @@
 
 
                                                 <!-- Currency -->
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label for="currency">Clinic</label>
                                                     <select class="form-control select2" onchange="filter_vitals()" name="currency" id="clinic_id">
                                                         <option value="all" selected>All</option>
@@ -65,7 +65,7 @@
                                                     </select>
                                                 </div>
                                                 <?php //var_dump($doctors_list); ?>
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <label for="status">Doctor</label>
                                                     <select class="form-control select2" onchange="filter_vitals()" name="currency" id="doctor_id">
                                                         <option value="all" selected>All</option>
@@ -73,6 +73,10 @@
                                                             <option value="<?php echo $doctor->user_id ?>"><?php echo $doctor->staff_firstname." ".$doctor->staff_lastname; ?></option>
                                                         <?php } ?>
                                                     </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label for="currency">Search</label>
+                                                   <input type="text" class="form-control" placeholder="Start Typing" id="myInput" name="">
                                                 </div>
 
                                             </div>

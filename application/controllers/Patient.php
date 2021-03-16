@@ -41,6 +41,12 @@ class Patient extends Base_Controller
         $this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
         $this->load->view('patient/add_patient', $this->data);
     }
+    public function test_confirm()
+    {
+        $this->data['title'] = "Add Patient";
+        //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
+        $this->load->view('pharmacy/confirm', $this->data);
+    }
     public function webcam()
     {
         $filename =  time() . '.jpg';
@@ -870,6 +876,18 @@ class Patient extends Base_Controller
             $this->load->view('patient/prescription/edit', $this->data);
         } else {
             redirect('/appointment/waiting_list');
+        }
+    }
+    function manage_prescription()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
+            $this->data['patient_prescriptions'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+            $this->data['drugs'] = $this->patient_m->drugs();
+            $this->load->view('pharmacy/manage_prescription', $this->data);
+        } else {
+            show_404();
+            //redirect('/appointment/waiting_list');
         }
     }
     public function get_prescription_by_vital_id()

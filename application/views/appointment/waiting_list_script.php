@@ -5,13 +5,21 @@ $( document ).ready(function() {
 
 listDefaultPatientsWL(); 
 
-$('#waitingList').DataTable({
-"oLanguage": {
+var waitingList = $('#waitingList').DataTable({
+   dom: 'lrtip',
+   "lengthChange": false,
+   "oLanguage": {
         "sEmptyTable": "There are no Patients at the moment"
     }
 
 
 });
+    // #myInput is a <input type="text"> element
+    $('#wlSearchInput').on( 'keyup', function () {
+        waitingList.search( this.value ).draw();
+    } );
+
+
 function listDefaultPatientsWL() {
       $.ajax({
       type  : 'ajax',
@@ -79,7 +87,14 @@ function listDefaultPatientsWL() {
     listPatients();
 
     //$('#filteredPatients').show();
-    var table = $('#waitingList').DataTable()    
+     var prescriptionTable =  $('#prescriptionMasterList').DataTable({
+            dom: 'lrtip',
+            "lengthChange": false
+        });
+    // #myInput is a <input type="text"> element
+    $('#myInput').on( 'keyup', function () {
+        prescriptionTable.search( this.value ).draw();
+    } );  
 
 
     // list all employee in datatable

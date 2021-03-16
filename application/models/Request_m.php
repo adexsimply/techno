@@ -47,7 +47,7 @@ class Request_m extends CI_Model
             $first_date = $this->input->post('date_range_from');
             $second_date =  $this->input->post('date_range_to');
 
-            $date_range = array('p.date_added >=' => $first_date, 'p.date_added <=' => $second_date);
+            $date_range = array('DATE(p.date_added) >=' => $first_date, 'DATE(p.date_added) <=' => $second_date);
         } else {
 
            $date_range = array('DATE(p.date_added)' => $today_date);
