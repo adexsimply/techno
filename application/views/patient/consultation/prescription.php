@@ -37,7 +37,7 @@
             <i class="fa fa-plus-circle"></i> Add New Prescription
         </button>
     <?php //} ?>
-    <table style="font-size: 13px;padding: 0;" cellpadding="0" cellspacing="0" class="table m-b-0 table-hover">
+    <table style="font-size: 13px;padding: 0;" cellpadding="0" cellspacing="0" class="table m-b-0 table-hover" id="prescriptionsList22">
         <thead class="thead-warning">
             <tr>
             <tr>
@@ -48,8 +48,7 @@
             </tr>
             </tr>
         </thead>
-        <tbody id="prescriptionsList">
-
+        <tbody id="prescriptionsList3">
         </tbody>
     </table>
 </div>

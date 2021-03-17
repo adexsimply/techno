@@ -8,10 +8,10 @@ class Setting extends Base_Controller
      * Index Page for this controller.
      *
      * Maps to the following URL
-     * 		http://example.com/index.php/welcome
-     *	- or -
-     * 		http://example.com/index.php/welcome/index
-     *	- or -
+     *      http://example.com/index.php/welcome
+     *  - or -
+     *      http://example.com/index.php/welcome/index
+     *  - or -
      * Since this controller is set as the default controller in
      * config/routes.php, it's displayed at http://example.com/
      *
@@ -32,7 +32,6 @@ class Setting extends Base_Controller
         $this->load->model('setting_m');
         $this->data['menu_id'] = 'settings';
     }
-
     public function drugs()
     {
         $this->data['title'] = 'Drugs';
@@ -41,6 +40,27 @@ class Setting extends Base_Controller
         $this->data['drug_list'] =  $this->drug_m->get_drug_items();
         $this->data['drug_groups_list'] =  $this->drug_m->get_drug_groups();
         $this->load->view('setting/drugs', $this->data);
+    }
+
+
+    public function add_drug()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['title'] = 'Drugs';
+            $this->data['vitals_list'] =  $this->nursing_m->get_vitals_request_list();
+            $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+            $this->data['drug_list'] =  $this->drug_m->get_drug_items();
+            $this->data['drug_groups_list'] =  $this->drug_m->get_drug_groups();
+            $this->data['drug'] =  $this->drug_m->get_drug_by_id($this->uri->segment(3));
+            $this->load->view('setting/drug-modal', $this->data);
+        } else {
+            $this->data['title'] = 'Drugs';
+            $this->data['vitals_list'] =  $this->nursing_m->get_vitals_request_list();
+            $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+            $this->data['drug_list'] =  $this->drug_m->get_drug_items();
+            $this->data['drug_groups_list'] =  $this->drug_m->get_drug_groups();
+            $this->load->view('setting/drug-modal', $this->data);
+        }
     }
     public function tests()
     {
@@ -168,7 +188,52 @@ class Setting extends Base_Controller
         $this->setting_m->qty_update();
         return true;
     }
-    
+    public function validate_drug()
+    {
+        $rules = [
+            [
+                'field' => 'name',
+                'label' => 'Drug Name',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'quantity',
+                'label' => 'Quantity in Stock',
+                'rules' => 'trim|numeric|required'
+            ],
+            [
+                'field' => 'group',
+                'label' => 'Group',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'cost',
+                'label' => 'Drug Cost',
+                'rules' => 'trim|numeric|required'
+            ],
+        ];
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+    function save_drug()
+    {
+        $this->setting_m->save_drug();
+    }
+    public function delete_drug()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('drug_batches', array('drug_id' => $id));
+        $this->db->delete('drug_items', array('id' => $id));
+        $this->db->delete('drug_activities', array('drug_id' => $id));
+    }
+
     public function validate_service()
     {
         $rules = [

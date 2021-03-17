@@ -1,56 +1,76 @@
-<!-- Add new history Modal -->
-	<div class="modal fade" id="drug" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-		<form id="add-appointment" action="<?php echo base_url('appointment/add_appointment'); ?>" method="post">	
-				<div class="modal-header">
-					<h6 class="modal-title text-primary">New</h6>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body edit-doc-profile">	
+<div class="col-12">
+	<div class="card box-margin">
+		<div class="card-body">
 
+			<form id="add-drug">
+				<div class="modal-body edit-doc-profile">
+					<div class="row clearfix">
+						<?php //var_dump($drug)
+						//var_dump($this->session->userdata('active_user')->fullname);
+						if (isset($drug->id)) { ?>
+							<input type="hidden" class="form-control" name="id" value="<?php echo $drug->id; ?> ">
 
-                                <div class="row clearfix">
-                                    <div class="col-lg-12 col-md-6">
-                                        <b>Name</b>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control time12" placeholder="Paracetamol">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 col-md-6">
-                                        <b>Group</b>
-                                        <div class="input-group mb-3">
-											<select class="form-control" name="request_destination" id="request_destination">
-												<option value="">Select Group</option>
-												<?php foreach($drug_groups_list as $drug_group) { ?>
-												<option value="<?php echo $drug_group->id; ?>"><?php echo $drug_group->drug_group_name; ?></option>
-												<?php } ?>
-											</select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <b>Quantity</b>
-                                        <div class="input-group mb-3">
-                                            <input type="number" class="form-control time12" placeholder="5">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <b>Cost</b>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control time12" placeholder="40000">
-                                        </div>
-                                    </div>
-
-                                </div>
+						<?php
+						}
+						?>
+						<div class="col-lg-12 col-md-12 mb-3">
+							<div class="form-group row">
+								<label for="inputEmail3" class="col-sm-2 col-form-label">Drug Name</label>
+								<div class="col-sm-10">
+									<input type="email" class="form-control" name="name" value="<?php if (isset($drug->drug_item_name)) {
+																									echo $drug->drug_item_name;
+																								} ?> ">
+									<code style=" color: #ff0000;font-size: 15x;" class="form-control-feedback" data-field="name"></code>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12 col-md-12 mb-3">
+							<div class="form-group row">
+								<label for="inputEmail3" class="col-sm-2 col-form-label">Quantity in Stock</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" name="quantity" value="<?php if (isset($drug->quantity_in_stock)) {
+																											echo $drug->quantity_in_stock;
+																										} ?>" placeholder="150">
+									<code style="color: #ff0000;font-size: 15x;" class="form-control-feedback" data-field="quantity"></code>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12 col-md-12 mb-3">
+							<div class="form-group row">
+								<label for="inputEmail3" class="col-sm-2 col-form-label">Cost</label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" name="cost" value="<?php if (isset($drug->drug_cost)) {
+																										echo $drug->drug_cost;
+																									} ?>" placeholder="150">
+									<code style="color: #ff0000;font-size: 15x;" class="form-control-feedback" data-field="cost"></code>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12 col-md-12 mb-3">
+							<div class="form-group row">
+								<label for="inputEmail3" class="col-sm-2 col-form-label">Group</label>
+								<div class="col-sm-10">
+									<select class="form-control" name="group" id="request_destination">
+										<option value="">Select Group</option>
+										<?php foreach ($drug_groups_list as $drug_group) { ?>
+											<option value="<?php echo $drug_group->id; ?>" <?php if (isset($drug->id) && $drug_group->id == $drug->drug_group_id) {
+																								echo "selected";
+																							} ?>><?php echo $drug_group->drug_group_name; ?></option>
+										<?php } ?>
+									</select>
+									<code style="color: #ff0000;font-size: 15x;" class="form-control-feedback" data-field="group"></code>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12 col-md-12 mb-3">
+							<div class="text-right">
+								<button class="btn btn-success" type="button" onclick="form_routes_drug('add_drug')" title="add_drug">Save</button>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="modal-footer">
-					<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-					<input type="submit" title="add_appointment" class="btn btn-primary px-4 m-2" value="Confirm">
-				</div>
-				</form>
-			</div>
+			</form>
 		</div>
 	</div>
-
+</div>
+<?php $this->load->view('setting/drug-script'); ?>

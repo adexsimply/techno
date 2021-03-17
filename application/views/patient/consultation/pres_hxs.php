@@ -43,7 +43,7 @@
 
  </div>
 
- <script type="text/javascript">
+<!--  <script type="text/javascript">
     $( document ).ready(function() {
 
 listDefaultPrescriptionByPatient(); 
@@ -98,4 +98,4 @@ function listDefaultPrescriptionByPatient() {
 
 
 });
-</script>
+</script> -->

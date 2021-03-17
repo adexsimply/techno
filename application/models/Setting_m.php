@@ -124,6 +124,29 @@ class Setting_m extends CI_Model
 
         return $update;
     }
+
+    function save_drug()
+    {
+        if ($this->input->post('id')) {
+            $data = array(
+                'drug_item_name' => $this->input->post('name'),
+                'quantity_in_stock' => $this->input->post('quantity'),
+                'drug_group_id' => $this->input->post('group'),
+                'drug_cost' => $this->input->post('cost'),
+            );
+            $this->db->where('id', $this->input->post('id'));
+            $update = $this->db->update('drug_items', $data);
+        } else {
+            $data = array(
+                'drug_item_name' => $this->input->post('name'),
+                'quantity_in_stock' => $this->input->post('quantity'),
+                'drug_group_id' => $this->input->post('group'),
+                'drug_cost' => $this->input->post('cost'),
+            );
+            $insert = $this->db->insert('drug_items', $data);
+            return $insert;
+        }
+    }
     function save_drug_batch()
     {
         if ($this->input->post('id')) {
@@ -145,7 +168,7 @@ class Setting_m extends CI_Model
         }
     }
     function save_service()
-    {        
+    {
         if ($this->input->post('id')) {
             $data = array(
                 'type' => $this->input->post('type'),

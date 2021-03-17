@@ -1,13 +1,5 @@
 <?php $this->load->view('includes/head_2'); ?>
 <?php $this->load->view('includes/sidebar') ?>
-<link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
-<link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
-<link src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js" rel="stylesheet">
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <div id="main-content">
     <div class="container-fluid">
         <div class="block-header">
@@ -26,8 +18,12 @@
                     </div>
                     <div class="body">
                         <!-- Nav tabs -->
-                        <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#drug" onclick="clear_textbox()">
+                        <!-- <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#drug" onclick="clear_textbox()">
                             <i class="icon wb-plus" aria-hidden="true"></i> Add Drug
+                        </button> -->
+
+                        <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add New" href="<?php echo base_url('setting/add_drug') ?>">
+                            Add Drug
                         </button>
 
                         <!-- 
@@ -37,7 +33,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="drugsListTable">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
@@ -65,9 +61,14 @@
                                                 <td><?php echo $drug->drug_cost; ?></td>
                                                 <td><?php echo $drug->drug_group_name; ?></td>
                                                 <td><input type="checkbox" name=""></td>
-                                                <td><span class="badge badge-success"><a href="#" data-toggle="modal" data-target="#admission" onclick="clear_textbox()">Delete</a></span>
-
-                                                    <button class="badge badge-success" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="<?php echo $drug->id; ?>" href="<?php echo base_url('setting/view_drug_details/' . $drug->id) ?>">
+                                                <td>
+                                                    <button class="badge badge-danger" type="button" onclick="delete_drug(<?php echo $drug->id; ?>)">
+                                                        Delete
+                                                    </button>
+                                                    <button class="badge badge-primary" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="<?php echo $drug->drug_item_name; ?>" href="<?php echo base_url('setting/add_drug/' . $drug->id) ?>">
+                                                        Edit
+                                                    </button>
+                                                    <button class="badge badge-success" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="<?php echo $drug->drug_item_name; ?>" href="<?php echo base_url('setting/view_drug_details/' . $drug->id) ?>">
                                                         View
                                                     </button>
                                                 </td>
@@ -87,7 +88,7 @@
     </div>
 </div>
 
-<?php $this->load->view('setting/drug-modal'); ?>
+<?php $this->load->view('includes/footer_2'); ?>
+<?php $this->load->view('setting/drug-script'); ?>
 <?php $this->load->view('setting/script');
 ?>
-<?php $this->load->view('includes/footer_2'); ?>

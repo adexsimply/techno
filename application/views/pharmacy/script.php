@@ -218,7 +218,7 @@ function prescription_dialog(event) {
     var url = element.attr('href');
     var title = element.data('title');
     var status = element.data('status');
-    console.log(url);
+    //console.log(url);
     if (status=='Pending'){
 
     var btn_text = "Send for Payment"

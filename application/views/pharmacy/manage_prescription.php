@@ -137,7 +137,7 @@
                                                             <td style="background-color: coral;" <?php if ($patient_prescription_test->quantity_in_stock > 0) {
                                                                     echo 'contenteditable="true" class="baraka" id="by"';
                                                                 } ?>><?php if ($patient_prescription_test->quantity_in_stock <= 0) {
-                                                                            echo '';
+                                                                            echo '0';
                                                                         } ?><?php if ($patient_prescription_test->qty_given == 0) { echo "";} else {echo $patient_prescription_test->qty_given;} ?>
                                                             </td>
                                                         <?php } ?>
