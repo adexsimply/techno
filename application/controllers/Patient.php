@@ -26,6 +26,7 @@ class Patient extends Base_Controller
 
         $this->load->model('patient_m');
         $this->load->model('nursing_m');
+        $this->load->model('billing_m');
         $this->data['menu_id'] = 'patient';
     }
     public function index()
@@ -892,8 +893,11 @@ class Patient extends Base_Controller
     function manage_prescription()
     {
         if ($this->uri->segment(3)) {
+            $patient_id = $this->billing_m->get_patient_id_from_prescription_unique($this->uri->segment(3));
+
             $this->data['vital_details'] =  $this->patient_m->get_prescription_by_id($this->uri->segment(3));
             $this->data['patient_prescriptions'] =  $this->patient_m->get_prescription_by_unique_id($this->uri->segment(3));
+            $this->data['patient_account'] =  $this->patient_m->get_patient_billings($patient_id->patient_id);
             $this->data['drugs'] = $this->patient_m->drugs();
             $this->load->view('pharmacy/manage_prescription', $this->data);
         } else {

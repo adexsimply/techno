@@ -1,12 +1,33 @@
-
+<style type="text/css">
+	.member-card .header {
+    min-height: 50px;
+}
+.member-card .member-img img {
+    width: 100px;
+}
+.member-card .member-img {
+    position: relative;
+    margin-top: -20px;
+}
+.card .body {
+    color: #444;
+    padding: 5px;
+    font-weight: 400;
+}
+#billingList thead th, #billingList tbody td {
+//font-size: 0.6em;
+  padding: 1px !important;
+  height: 15px;
+}
+</style>
 <div class="container-fluid">
-	<div class="block-header">
+<!-- 	<div class="block-header">
 		<div class="row">
 			<div class="col-lg-6 col-md-8 col-sm-12">
 				<h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Patient Profile</h2>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="row clearfix">
 		<?php //var_dump($patient) 
@@ -14,7 +35,7 @@
 		<div class="col-lg-3 col-md-12">
 			<div class="card member-card">
 				<div class="header l-coral">
-					<h4 class="m-t-10 text-light"><?php echo $patient->patient_title . " " . $patient->patient_name ?></h4>
+					<h4 class="m-t-10 text-light" style="font-size: 1.2rem"><?php echo $patient->patient_title . " " . $patient->patient_name ?></h4>
 				</div>
 				<div class="member-img">
 					<a href="patient-invoice.html">
@@ -24,7 +45,7 @@
 				<div class="body">
 					<div class="col-12">
 						<ul class="social-links list-unstyled">
-							<h4 class="m-t-8"><?php echo $patient->patient_id_num; ?></h4><br />
+							<h4 class="m-t-8"><?php echo $patient->patient_id_num; ?></h4>
 							<li>Gender : <?php echo $patient->patient_gender; ?></li>,
 							<li>Age : <?php echo date_diff(date_create($patient->patient_dob), date_create('today'))->y; ?></li>,
 							<li>Blood Group : <?php echo $patient->patient_blood_group; ?></li>
@@ -700,7 +721,7 @@
 				                                            <em class="text-muted">Autopay on May 12, 2018</em>
 				                                            <a href="javascript:void(0);" class="edit-payment-info">Edit Payment Info</a>
 				                                        </div> -->
-								<p class="margin-top-30"><a data-toggle="modal" data-target="#addPayment"><i class="fa fa-plus-circle"></i> Add Payment</a></p>
+								<!-- <p class="margin-top-30"><a data-toggle="modal" data-target="#addPayment"><i class="fa fa-plus-circle"></i> Add Payment</a></p> -->
 							</div>
 							<!-- AddPayment Modal -->
 							<div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
@@ -730,33 +751,23 @@
 							</div>
 							<div class="row clearfix">
 								<div class="col-lg-12">
-									<div class="card">
+									<div class="card" style="max-height: 500px; overflow: scroll;">
 										<!-- <div class="header">
 											                            <h2>Basic Table <small>Basic example without any additional modification classes</small> </h2>                            
 											                        </div> -->
 										<div class="body">
 											<div class="table-responsive">
-												<table class="table table-hover js-basic-example dataTable table-custom">
+												<table id="billingList" style="font-size: 13px;padding: 0;" class="table table-striped">
 													<thead class="thead-dark">
 														<tr>
 															<th>S/N</th>
 															<th>Date</th>
-															<th>Item</th>
-															<th>Payment Type</th>
-															<th>Amount</th>
-															<th>Discount</th>
+															<th>Service</th>
+															<th>Receipt No</th>
+															<th>Status</th>
+															<th>Total</th>
 														</tr>
 													</thead>
-													<tfoot>
-														<tr>
-															<th>S/N</th>
-															<th>Date</th>
-															<th>Item</th>
-															<th>Payment Type</th>
-															<th>Amount</th>
-															<th>Discount</th>
-														</tr>
-													</tfoot>
 													<tbody>
 														<?php
 														$i = 1;
@@ -772,20 +783,20 @@
 															<tr>
 																<td><?php echo $i; ?></td>
 																<td><?php $ini_date = date_create($patient_billing->date_added);
-																	echo date_format($ini_date, "D M d,Y h:i a"); ?></td>
-																<td><?php echo $patient_billing->category; ?></td>
-																<td><?php echo $patient_billing->billing_type; ?></td>
+																	echo date_format($ini_date, "d-M-Y h:i a"); ?></td>
+																<td><?php echo $patient_billing->item_name; ?></td>
+																<td><?php echo $patient_billing->invoice_id; ?></td>
+																<td><?php echo $patient_billing->status; ?></td>
 																<td><?php echo $patient_billing->amount; ?></td>
-																<td><?php echo $patient_billing->discount; ?></td>
 															</tr>
 														<?php $i++;
 														} ?>
 													</tbody>
 												</table>
-												<h5>Balance: <?php echo $credit - $debit; ?> </h5>
 											</div>
 										</div>
 									</div>
+									<h6>Balance:<span style="color: red"><?php echo $credit - $debit; ?> </span> </h6>
 								</div>
 							</div>
 

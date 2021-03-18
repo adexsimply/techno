@@ -146,7 +146,8 @@ function listDefaultPrescriptionList() {
         var html = '';
         var i;
         var sn =1;
-        for(i=0; i<response.length; i++){var date = response[i].presc_date_added;
+        for(i=0; i<response.length; i++){
+          var date = response[i].presc_date_added;
           var response3 ="";
 
             $.ajax({

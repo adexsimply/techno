@@ -104,6 +104,44 @@
                                                                                     } ?>" disabled="">
                         </div>
                     </div>
+                    <?php if ($vital_details->status == "Prescription" || $vital_details->status == "Treated") { ?>
+                    <div class="col-lg-12 col-md-12 mb-3 mt-2">
+                        <fieldset>
+
+                            <legend style="font-size: 15px;"><strong>Account</strong></legend>
+                            <div class="body" style="max-height: 200px; overflow: scroll; scroll; padding: 0;">
+                                <div class="table-responsive">
+                                    <table id="testTable_prescription" class="table table-bordered table-striped table-hover dataTable" style="font-size: 13px;">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                            <th>Date</th>
+                                                            <th>Service</th>
+                                                            <th>Receipt No</th>
+                                                            <th>Status</th>
+                                                            <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php  
+                                                foreach ($patient_account as $patient_billing) {
+                                            ?>
+                                                    <tr id="tr-summarry">
+                                                        <td>
+                                                                <td><?php $ini_date = date_create($patient_billing->date_added);
+                                                                    echo date_format($ini_date, "d-M-Y h:i a"); ?></td>
+                                                                <td><?php echo $patient_billing->item_name; ?></td>
+                                                                <td><?php echo $patient_billing->invoice_id; ?></td>
+                                                                <td><?php echo $patient_billing->status; ?></td>
+                                                                <td><?php echo $patient_billing->amount; ?></td>
+                                                    </tr>
+                                                <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                <?php } ?>
                     <div class="col-lg-12 col-md-12 mb-3 mt-2">
                         <fieldset>
                             <legend style="font-size: 15px;"><strong>Summary</strong></legend>

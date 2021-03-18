@@ -523,6 +523,18 @@ class Patient_m extends CI_Model
     function save_billing()
     {
         if ($this->input->post('Pending')) {
+
+            $invoice_id = rand(10000,10000000);
+            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            if ($check_if_invoice_exists->num_rows() > 0) {
+                $invoice_id = rand(10000,10000000);
+            }
+             $data_invoice = array(
+                    'invoice_id' => $invoice_id
+                );
+            $insert_invoice = $this->db->insert('invoices', $data_invoice);
+            echo json_encode($insert_invoice);
+
             echo json_encode($this->input->post('Pending'));
             $drug_id = $this->input->post('drug_ids[]');
 
@@ -540,18 +552,24 @@ class Patient_m extends CI_Model
                 $this->db->where('prescription_unique_id', $this->input->post('prescription_unique_id'));
                 $this->db->where('prescription_id', $array[0]);
                 $this->db->update('patient_prescriptions2', array('qty_given' => $array[1]));
-            }
+
+                //$get_drug_name = $this->db->select('drug_item_name')->from('drug_items')->where('invoice_id',$invoice_id)->get()
+
             $data = array(
                 'patient_id'   => $this->input->post('patient_id'),
+                'invoice_id'   => $invoice_id,
+                'item_name'     => $result->drug_item_name,
                 'category'     => "Prescription",
                 'billing_type' => "Debit",
-                'amount'       => $this->input->post('main_amount'),
+                'amount'       => $array[1] * $result->drug_sell,
                 'billed_by'    => $this->session->userdata('active_user')->id,
             );
 
             //echo json_encode($this->input->post('prescription_unique_id'));
 
             $this->db->insert('billings', $data);
+
+            }
 
             $data_update = array(
                 'status' => "Prescription",
