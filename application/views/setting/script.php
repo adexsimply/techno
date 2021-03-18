@@ -1,8 +1,14 @@
-
 <script src="<?php echo base_url(); ?>assets/js/jquery.dataTables.min.js"></script>
 <script>
 $(document)
     .ready(function () {
+
+     var drugList =  $('#drugList').DataTable({
+            "lengthChange": false
+        });
+
+
+
      var prescriptionTable =  $('#drugsListTable').DataTable({
             //"lengthChange": false
         });

@@ -1,5 +1,10 @@
 <?php $this->load->view('includes/head_2'); ?>
 <?php $this->load->view('includes/sidebar') ?>
+<link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
+<link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
+<link src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js" rel="stylesheet">
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <div id="main-content">
     <div class="container-fluid">
         <div class="block-header">
@@ -33,7 +38,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="drugList">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
@@ -88,7 +93,6 @@
     </div>
 </div>
 
-<?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('setting/drug-script'); ?>
-<?php $this->load->view('setting/script');
-?>
+<?php $this->load->view('setting/script');?>
+<?php $this->load->view('includes/footer_2'); ?>
