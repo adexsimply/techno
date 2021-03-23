@@ -28,7 +28,7 @@
 							<div class="form-group row">
 								<label for="inputEmail3" class="col-sm-2 col-form-label">Quantity in Stock</label>
 								<div class="col-sm-10">
-									<input type="number" class="form-control" name="quantity" value="<?php if (isset($drug->quantity_in_stock)) {
+									<input type="number" <?php if ($this->uri->segment(3)) { ?> disabled <?php } ?> class="form-control" name="quantity" value="<?php if (isset($drug->quantity_in_stock)) {
 																											echo $drug->quantity_in_stock;
 																										} ?>" placeholder="150">
 									<code style="color: #ff0000;font-size: 15x;" class="form-control-feedback" data-field="quantity"></code>

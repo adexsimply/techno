@@ -5,6 +5,7 @@ $(document).ready(function () {
 
 
 listDefaultPaymentList(); 
+listDefaultReceiptList(); 
 
      var paymentListTable =  $('#paymentListTable').DataTable({
             dom: 'lrtip',
@@ -13,6 +14,15 @@ listDefaultPaymentList();
     // #myInput is a <input type="text"> element
     $('#paymentListSearch').on( 'keyup', function () {
         paymentListTable.search( this.value ).draw();
+    } );
+
+     var receiptListTable =  $('#receiptListTable').DataTable({
+            dom: 'lrtip',
+            "lengthChange": false
+        });
+    // #myInput is a <input type="text"> element
+    $('#receiptListSearch').on( 'keyup', function () {
+        receiptListTable.search( this.value ).draw();
     } );
 
 
@@ -59,6 +69,7 @@ function listDefaultPaymentList() {
             html += '<tr><td>' + sn++ +
               '</td> <td>' + response[i].patient_name +
               '</td> <td>' + response[i].patient_id_num +
+              '</td> <td>' + response[i].invoice_id +
               '</td> <td>' + response3.amount +
               //'</td><td>' + vital_status +
               '</td><td>' + buttons + '</td> </tr>';
@@ -69,6 +80,63 @@ function listDefaultPaymentList() {
       });
 
     }
+
+
+function listDefaultReceiptList() {
+      $.ajax({
+      type  : 'ajax',
+      url   : '<?php echo base_url('billing/get_payment_list_default_receipt'); ?>',
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        console.log(response)
+        var html = '';
+        var i;
+        var sn =1;
+        for(i=0; i<response.length; i++){
+
+          var patient_id = response[i].patient_id;
+          var invoice_id = response[i].invoice_id;
+          var response3 ="";
+
+            $.ajax({
+          type  : 'post',
+          url   : '<?php echo base_url('billing/invoice_total'); ?>',
+          data: {
+              patient_id: patient_id,
+              invoice_id: invoice_id
+            },
+          async : false,
+          dataType : 'json',
+          success : function(response2){
+            //console.log(response2);
+
+            response3 = response2
+            }
+
+          });
+            //console.log(response3)
+
+
+
+
+            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].invoice_id+ '"> <i class="fa fa-pencil"></i></button> '
+
+            html += '<tr><td>' + sn++ +
+              '</td> <td>' + response[i].patient_name +
+              '</td> <td>' + response[i].patient_id_num +
+              '</td> <td>' + response[i].invoice_id +
+              '</td> <td>' + response3.amount +
+              //'</td><td>' + vital_status +
+              '</td><td>' + buttons + '</td> </tr>';
+          }
+          $('#receiptList').html(html);
+        }
+
+      });
+
+    }
+
 
 });
 
@@ -117,7 +185,7 @@ function listPayment() {
       dataType : 'json',
       success : function(response){
         //console.log(date_range_from);
-        //console.log(response);
+       // console.log(response);
         var html = '';
         var i;
         var sn =1;
@@ -151,6 +219,7 @@ function listPayment() {
             html += '<tr><td>' + sn++ +
               '</td> <td>' + response[i].patient_name +
               '</td> <td>' + response[i].patient_id_num +
+              '</td> <td>' + response[i].invoice_id +
               '</td> <td>' + response3.amount +
               //'</td><td>' + vital_status +
               '</td><td>' + buttons + '</td> </tr>';

@@ -2,14 +2,8 @@
 <script>
 $(document)
     .ready(function () {
-
-     var drugList =  $('#drugList').DataTable({
-            "lengthChange": false
-        });
-
-
-
-     var prescriptionTable =  $('#drugsListTable').DataTable({
+        
+     var drugsListTable =  $('#drugsListTable').DataTable({
             //"lengthChange": false
         });
 });

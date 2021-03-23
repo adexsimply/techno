@@ -47,6 +47,17 @@ class Billing extends Base_Controller {
         $this->load->view('billing/payment', $this->data);
 
     }
+    public function receipt ()
+    {   
+        $this->data['title'] = 'Payment List';
+        $this->data['payment_list'] =  $this->billing_m->get_patient_payment();
+        $this->data['patient_billings'] =  $this->patient_m->get_patient_billings(9);
+        $this->data['drug_list'] =  $this->drug_m->get_drug_items();
+        $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+        $this->data['request_destinations_list'] =  $this->request_m->get_request_destinations_list();
+        $this->load->view('billing/receipt', $this->data);
+
+    }
 
     public function cash_payment()
     {
@@ -70,6 +81,16 @@ class Billing extends Base_Controller {
         echo json_encode($payment_list);
     }
     public function get_payment_list_filtered()
+    {
+        $payment_list = $this->billing_m->get_patient_payment_filtered();
+        echo json_encode($payment_list);
+    }
+    public function get_payment_list_default_receipt()
+    {
+        $payment_list = $this->billing_m->get_patient_payment_receipt();
+        echo json_encode($payment_list);
+    }
+    public function get_payment_list_filtered_receipt()
     {
         $payment_list = $this->billing_m->get_patient_payment_filtered();
         echo json_encode($payment_list);

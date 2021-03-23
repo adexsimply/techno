@@ -38,7 +38,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="drugList">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="drugsListTable">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>

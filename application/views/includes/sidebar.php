@@ -95,9 +95,9 @@
                                     <li><a href="<?php echo base_url('billing/receipt') ?>">Receipt</a></li>
                                 </ul>
                             </li>
-                            <li><a href="javascript:void(0);" class="has-arrow"><i class="fa fa-plus"></i><span>Pharmacy</span> </a>
+                            <li <?php if ($menu_id == 'pharmacy') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="fa fa-plus"></i><span>Pharmacy</span> </a>
                                 <ul>
-                                    <li><a href="<?php echo base_url('setting/drugs') ?>">Drugs</a></li>
+                                    <li><a href="<?php echo base_url('pharmacy/drugs') ?>">Drugs</a></li>
                                     <li><a href="<?php echo base_url('nursing/bulk_requests') ?>">Main Store Requests</a></li>
                                     <li><a href="<?php echo base_url('pharmacy/prescription_requests') ?>">Prescription Requests</a></li>
                                 </ul>

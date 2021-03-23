@@ -43,6 +43,17 @@ class Pharmacy extends Base_Controller {
         $this->load->view('pharmacy/prescription_requests', $this->data);
 
     }
+
+    public function drugs()
+    {
+        $this->data['title'] = 'Drugs';
+        $this->data['vitals_list'] =  $this->nursing_m->get_vitals_request_list();
+        $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+        $this->data['drug_list'] =  $this->drug_m->get_drug_items();
+        $this->data['drug_groups_list'] =  $this->drug_m->get_drug_groups();
+        $this->load->view('setting/drugs', $this->data);
+    }
+
     public function bulk_requests ()
     {   
         $this->data['title'] = 'Pharmacy Requests';

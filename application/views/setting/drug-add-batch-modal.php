@@ -21,7 +21,7 @@
                                                                                             echo date('d M Y', strtotime($drug_details->date_added));
                                                                                         } else {
                                                                                             echo date('d M Y');
-                                                                                        } ?>">">
+                                                                                        } ?>">
                                 </div>
                             </div>
                         </div>

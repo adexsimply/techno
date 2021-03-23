@@ -19,6 +19,14 @@ class Billing_m extends CI_Model
         $patient_billings = $get_patient_billings->result();
         return $patient_billings;
     }
+    public function get_patient_payment_receipt()
+    {
+         $date = new DateTime("now");
+        $curr_date = $date->format('Y-m-d ');
+        $get_patient_billings = $this->db->select('b.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num')->from('billings b')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where('DATE(b.date_added)',$curr_date)->get();
+        $patient_billings = $get_patient_billings->result();
+        return $patient_billings;
+    }
 
 
     public function get_patient_billings_by_invoice($invoice_id)

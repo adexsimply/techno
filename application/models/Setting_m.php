@@ -124,6 +124,32 @@ class Setting_m extends CI_Model
 
         return $update;
     }
+    function adjust_drug()
+    {
+        $data = array(
+            'quantity_in_stock' => $this->input->post('adjust_to'),
+        );
+        $this->db->where('id', $this->input->post('id'));
+        $update = $this->db->update('drug_items', $data);
+
+        if (($this->input->post('qty_in_stock')) > ($this->input->post('adjust_to'))) {
+            $drug_in_out = 'drug_out';
+        }
+        else {
+            $drug_in_out = 'drug_in';
+        }
+
+        $data2 = array(
+            'drug_id' => $this->input->post('id'),
+            'particular' => 'Stock Adjustment - ' . $this->input->post('reason'),
+            'drug_in_out' => $drug_in_out,
+            'quantity' => $this->input->post('adjust_to'),
+            'balance' => $this->input->post('adjust_to'),
+        );
+        $insert = $this->db->insert('drug_activities', $data2);
+
+        return $insert;
+    }
 
     function save_drug()
     {
