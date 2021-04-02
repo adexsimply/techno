@@ -134,16 +134,18 @@ class Setting_m extends CI_Model
 
         if (($this->input->post('qty_in_stock')) > ($this->input->post('adjust_to'))) {
             $drug_in_out = 'drug_out';
+            $quantity = $this->input->post('qty_in_stock') - $this->input->post('adjust_to');
         }
         else {
             $drug_in_out = 'drug_in';
+            $quantity = $this->input->post('adjust_to') - $this->input->post('qty_in_stock');
         }
 
         $data2 = array(
             'drug_id' => $this->input->post('id'),
             'particular' => 'Stock Adjustment - ' . $this->input->post('reason'),
             'drug_in_out' => $drug_in_out,
-            'quantity' => $this->input->post('adjust_to'),
+            'quantity' => $quantity,
             'balance' => $this->input->post('adjust_to'),
         );
         $insert = $this->db->insert('drug_activities', $data2);
@@ -172,6 +174,29 @@ class Setting_m extends CI_Model
             $insert = $this->db->insert('drug_items', $data);
             return $insert;
         }
+    }
+
+    function save_drug_supply()
+    {
+
+        $new_quantity = $this->input->post('old_quantity') + $this->input->post('quantity');
+       
+            $data = array(
+                'quantity_in_stock' => $new_quantity
+            );
+            $this->db->where('id', $this->input->post('id'));
+            $update = $this->db->update('drug_items', $data);
+
+            ///
+
+        $data2 = array(
+            'drug_id' => $this->input->post('id'),
+            'particular' => 'Drug Supply',
+            'drug_in_out' => 'drug_in',
+            'quantity' => $this->input->post('quantity'),
+            'balance' => $new_quantity,
+        );
+        $insert = $this->db->insert('drug_activities', $data2);
     }
     function save_drug_batch()
     {

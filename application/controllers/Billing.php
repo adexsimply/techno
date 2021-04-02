@@ -49,7 +49,7 @@ class Billing extends Base_Controller {
     }
     public function receipt ()
     {   
-        $this->data['title'] = 'Payment List';
+        $this->data['title'] = 'Receipt Details';
         $this->data['payment_list'] =  $this->billing_m->get_patient_payment();
         $this->data['patient_billings'] =  $this->patient_m->get_patient_billings(9);
         $this->data['drug_list'] =  $this->drug_m->get_drug_items();
@@ -75,6 +75,40 @@ class Billing extends Base_Controller {
     }
 
 
+
+    public function manual_billing()
+    {
+        $this->data['title'] = "Add Bill";
+        $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+        $this->data['drugs'] = $this->patient_m->drugs();
+        $this->data['lab_tests'] = $this->patient_m->lab_tests();
+        $this->data['service_charges'] = $this->patient_m->service_charges();
+        //$this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+        //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
+
+        if ($this->uri->segment(3)) {
+
+            $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+        }
+        $this->load->view('billing/manual_billing', $this->data);
+    }
+
+    public function get_receipt_details()
+
+    {
+
+        $this->data['title'] = "Receipt Details";
+
+        if ($this->uri->segment(3)) {
+
+            $this->data['receipt_details'] = $this->billing_m->get_patient_billings_by_invoice($this->uri->segment(3));
+        $this->load->view('billing/receipt_details', $this->data);
+        }
+
+    }
+
+
+
     public function get_payment_list_default()
     {
         $payment_list = $this->billing_m->get_patient_payment();
@@ -92,7 +126,7 @@ class Billing extends Base_Controller {
     }
     public function get_payment_list_filtered_receipt()
     {
-        $payment_list = $this->billing_m->get_patient_payment_filtered();
+        $payment_list = $this->billing_m->get_patient_payment_filtered_receipt();
         echo json_encode($payment_list);
     }
     public function invoice_total()
@@ -108,6 +142,10 @@ class Billing extends Base_Controller {
     function save_payment()
     {
         echo json_encode($this->billing_m->save_payment());
+    }
+    function save_bill()
+    {
+        echo json_encode($this->billing_m->save_bill());
     }
 
 }

@@ -6,7 +6,7 @@
     }
 
     input[type='radio'] {
-        transform: scale(2);
+        //transform: scale(2);
     }
 
     .parameterTable td:first-child:before {
@@ -22,24 +22,88 @@
         content: counter(Serial);
         /* Display the counter */
     }
+
+#lab-test-modal .mb-3, .my-3 {
+     margin-bottom: 0!important; 
+}
+#lab-test-modal .card .body {
+    color: #444;
+    padding: 5px;
+    font-weight: 400;
+}
+#lab-test-modal thead th, #lab-test-modal tbody td {
+  padding: 1px !important;
+  height: 12px;
+  font-size: 12px;
+}
+#lab-test-modal .form-group {
+     margin-bottom: 1px; 
+}
+#lab-test-modal .form-control {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 1px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+#lab-test-modal select.form-control:not([size]):not([multiple]) {
+    height: 30px;
+}
 </style>
-<div class="col-12">
+<div class="col-12" id="lab-test-modal">
     <div class="card box-margin">
         <div class="card-body">
             <form id="add-test">
+                    <div class="form-row mt-2">
+                        <div class="form-group col-md-6">
+                            <label for="docName">Name</label>
+                                <input type="text" class="form-control time12" name="name" placeholder="CHLORIDE CL" value="<?php if (isset($lab_test->lab_test_name)) { echo $lab_test->lab_test_name; } ?>">
+                                <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="name"></code>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="docName">Measure</label>
+                                <input type="text" class="form-control" name="measure" placeholder="mmol/L" value="<?php if (isset($lab_test->measure)){ echo $lab_test->measure; } ?>">
+                                <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="measure"></code>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="docEmail">Group</label>
+                                <select class="form-control" name="group" id="group">
+                                    <option value="">Select Group</option>
+                                    <?php foreach ($lab_groups_list as $lab_group) { ?>
+                                        <option value="<?php echo $lab_group->id; ?>" <?php if (isset($lab_test->lab_group_id) && $lab_test->lab_group_id == $lab_group->id) { echo "selected"; } ?>><?php echo $lab_group->lab_group_name; ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                                <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="group"></code>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="docEmail">Cost</label>
+                                <input type="number" name="cost" class="form-control" placeholder="5000" value="<?php if (isset($lab_test->cost)) { echo $lab_test->cost; } ?>">
+                                <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="cost"></code>
+                        </div>
+                    </div>
                 <div class="col-lg-12 col-md-12 mb-3 mt-2" id="footer-links">
                     <div class="card">
+
                         <?php if (isset($lab_test->id)) { ?>
                             <input type="hidden" class="form-control time12" name="id" value="<?php echo $lab_test->id; ?>">
                         <?php  } ?>
                         <div class="">
                             <ul class="nav nav-tabs">
-                                <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#new">Add New</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#range">Range</a></li>
+                                <!-- <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#new">Add New</a></li> -->
+                                <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#range">Range</a></li>
                                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#parameter">Parameters</a></li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane show active" id="new">
+                              <!--   <div class="tab-pane show active" id="new">
                                     <div class="row clearfix">
                                         <div class="col-lg-12 col-md-12 mb-4 row">
                                             <label for="inputPassword" class="col-sm-2 col-form-label">Name:</label>
@@ -83,19 +147,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane" id="range">
+                                </div> -->
+                                <div class="tab-pane show active" id="range">
                                     <div class="form-check">
-                                        <label class="form-check-label" style="font-size: 20px;">
+                                        <label class="form-check-label">
                                             <input type="radio" name="range" class="m-2" onclick="toggleRange(false)" checked>
                                             <span>No Range</span>
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="m-2" name="range" type="radio" onclick="toggleRange(true)" <?php if (isset($lab_test_range) && $lab_test_range != null) {
-                                                                                                                        echo "checked";
-                                                                                                                    } ?>>
-                                        <label class="form-check-label" style="font-size: 20px;">
+                                        <input class="m-2" name="range" type="radio" onclick="toggleRange(true)" <?php if (isset($lab_test_range) && $lab_test_range != null) {echo "checked";} ?>>
+                                        <label class="form-check-label">
                                             Select Range Tag
                                         </label>
                                     </div>
@@ -116,7 +178,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="body" id="valueRange" style="height: 300px; overflow: scroll;">
+                                    <div class="body" id="valueRange" style="max-height: 150px; overflow: scroll;">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped table-hover dataTable" id="example">
                                                 <thead class="thead-dark">
@@ -137,8 +199,8 @@
                                                                 <?php } ?>
                                                             </select>
                                                         </td>
-                                                        <td contenteditable="true" style="background-color: #fff; font-size: 20px; font-family: cursive;"></td>
-                                                        <td contenteditable="true" style="background-color: #fff; font-size: 20px; font-family: cursive;"></td>
+                                                        <td contenteditable="true" class="editlowhigh" style="background-color: #fff; font-size: 20px; font-family: cursive;"></td>
+                                                        <td contenteditable="true" class="editlowhigh" style="background-color: #fff; font-size: 20px; font-family: cursive;"></td>
                                                         <td><button type="button" class="btn btn-sm btn-success" onclick="AddLabTest(this, <?php echo $range->id; ?>)">Add</button></td>
                                                     </tr>
                                                 </tbody>
@@ -146,7 +208,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="body" id="valueRangeSummary" style="height: 300px; overflow: scroll;">
+                                    <div class="body" id="valueRangeSummary" style="max-height: 200px; overflow: scroll;">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped table-hover dataTable summaryTable" id="summaryTable">
                                                 <thead class="thead-dark">
@@ -243,13 +305,17 @@
                     <div id="parameter_list"></div>
                 </div>
                 <div class="text-right">
-                    <button type="button" class="btn btn-success" onclick="form_routes_test('add_test')" title="add_test">Save</button>
+                    <button type="button" class="btn btn-warning" onclick="form_routes_test('add_test')" title="add_test">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script>
+     $(".editlowhigh").keypress(function(e) {
+    if (isNaN(String.fromCharCode(e.which))) e.preventDefault();
+        });
+
     var _row = null;
     $(document).ready(function() {
             <?php if (isset($lab_test_range) && $lab_test_range != null) { ?>

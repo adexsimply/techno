@@ -24,7 +24,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="labTestTable">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
@@ -77,5 +77,12 @@
     </div>
 </div>
 
-<?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('setting/script'); ?>
+<?php $this->load->view('includes/footer_2'); ?>
+<script type="text/javascript">
+    
+     var labTestTable =  $('#labTestTable').DataTable({
+            //"lengthChange": false
+        });
+
+</script>

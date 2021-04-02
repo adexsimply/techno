@@ -297,6 +297,13 @@ class Patient_m extends CI_Model
         $lab_test_result = $lab_test->result();
         return $lab_test_result;
     }
+    //lab test
+    public function service_charges()
+    {
+        $get_service_charges = $this->db->select('*')->from('service_charge_items')->order_by('id', 'DESC')->get();;
+        $service_charges = $get_service_charges->result();
+        return $service_charges;
+    }
     //rad service
     public function rad_items()
     {
@@ -533,9 +540,9 @@ class Patient_m extends CI_Model
                     'invoice_id' => $invoice_id
                 );
             $insert_invoice = $this->db->insert('invoices', $data_invoice);
-            echo json_encode($insert_invoice);
+            //echo json_encode($insert_invoice);
 
-            echo json_encode($this->input->post('Pending'));
+           // echo json_encode($this->input->post('Pending'));
             $drug_id = $this->input->post('drug_ids[]');
 
             foreach ($this->input->post('drug_ids[]') as $drug_id) {

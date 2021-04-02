@@ -17,7 +17,10 @@ listDefaultReceiptList();
     } );
 
      var receiptListTable =  $('#receiptListTable').DataTable({
-            dom: 'lrtip',
+        dom: 'Brtip',
+        buttons: [
+            'copy', 'csv', 'excel'
+        ],
             "lengthChange": false
         });
     // #myInput is a <input type="text"> element
@@ -123,11 +126,33 @@ function listDefaultReceiptList() {
             var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].invoice_id+ '"> <i class="fa fa-pencil"></i></button> '
 
             html += '<tr><td>' + sn++ +
-              '</td> <td>' + response[i].patient_name +
-              '</td> <td>' + response[i].patient_id_num +
-              '</td> <td>' + response[i].invoice_id +
-              '</td> <td>' + response3.amount +
-              //'</td><td>' + vital_status +
+              '</td><td>' + response[i].patient_name +
+              '</td><td>' + response[i].patient_id_num +
+              '</td><td>' + response[i].invoice_id +
+              '</td><td>' + response3.amount +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
               '</td><td>' + buttons + '</td> </tr>';
           }
           $('#receiptList').html(html);
@@ -141,7 +166,166 @@ function listDefaultReceiptList() {
 });
 
 
-  function filter_payment_list() {
+  function filter_receipt_list() {
+    $('#receiptListTable').dataTable().fnClearTable();
+    //dataTable.fnClearTable();
+    $('#receiptListTable').dataTable().fnDraw();
+    $('#receiptListTable').dataTable().fnDestroy();
+    //$('#defaultPatients').hide();
+   // var status = document.getElementById('status').value;
+    var date_range_to = document.getElementById('date_range_to').value;
+    var date_range_from = document.getElementById('date_range_from').value;
+    //console.log(date_range_to);
+
+    listPayment();
+
+    //$('#filteredPatients').show();
+    //var prescriptionTable = $('#prescriptionMasterList').DataTable()    
+
+
+   var receiptListTable =  $('#receiptListTable').DataTable({
+            dom: 'lrtip',
+            "lengthChange": false
+        });
+    // #myInput is a <input type="text"> element
+    $('#receiptListSearch').on( 'keyup', function () {
+        receiptListTable.search( this.value ).draw();
+    } );
+
+
+   
+function listPayment() {
+     
+      $.ajax({
+      type  : 'post',
+      url   : '<?php echo base_url('billing/get_payment_list_filtered_receipt'); ?>',
+      data: {
+          //doctor_id: doctor_id,
+          date_range_from: date_range_from,
+          date_range_to: date_range_to,
+          //clinic_id: clinic_id
+        },
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        //console.log(date_range_from);
+        //console.log(response);
+        var html = '';
+        var i;
+        var sn =1;
+        for(i=0; i<response.length; i++){
+
+          var patient_id = response[i].patient_id;
+          var invoice_id = response[i].invoice_id;
+          var response3 ="";
+
+          
+            $.ajax({
+          type  : 'post',
+          url   : '<?php echo base_url('pharmacy/convert_date'); ?>',
+          data: {
+              date: response[i].date_added,
+            },
+          async : false,
+          dataType : 'json',
+          success : function(response2){
+            //console.log(response2);
+
+            response3 = response2
+            }
+
+          });
+
+
+            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].invoice_id+ '"> <i class="fa fa-pencil"></i></button> '
+
+            html += '<tr href="<?php echo base_url('billing/get_receipt_details/'); ?>'+response[i].invoice_id+'" data-test="Hallelujah" onclick="get_receipt_details(event)"><td>' + sn++ +
+              '</td> <td>' + response3  +
+              '</td> <td>' + response[i].patient_id_num +
+              '</td> <td>' + response[i].invoice_id +
+              '</td> <td>' + response[i].patient_name +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>0' +
+              '</td><td>' + buttons + '</td> </tr>';
+          }
+          $('#receiptList').html(html);
+        }
+
+      });
+
+    }
+
+  }
+function get_receipt_details(event){
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var test = element.data('test');
+    console.log(url);
+    var title = "Receipt Details"
+
+
+   var a = $.confirm({
+        title: 'Receipt Details',
+        columnClass:"m",
+        content: function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      //self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+        buttons: {
+
+            Close: { 
+                btnClass: "btn-purple",
+                action: function () {
+
+                }
+
+            }
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+    });
+  //end of dialog if..else
+
+}
+
+function filter_payment_list() {
     $('#paymentListTable').dataTable().fnClearTable();
     //dataTable.fnClearTable();
     $('#paymentListTable').dataTable().fnDraw();
@@ -232,6 +416,7 @@ function listPayment() {
     }
 
   }
+
 function payment_dialog(event) {
 
     event.preventDefault();

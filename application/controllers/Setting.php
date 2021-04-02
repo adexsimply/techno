@@ -30,6 +30,7 @@ class Setting extends Base_Controller
         $this->load->model('request_m');
         $this->load->model('drug_m');
         $this->load->model('setting_m');
+        $this->load->model('patient_m');
         $this->data['menu_id'] = 'settings';
     }
     // public function drugs()
@@ -182,6 +183,12 @@ class Setting extends Base_Controller
         $this->data['drug_details'] =  $this->setting_m->get_drug_by_id($this->uri->segment(3));
         $this->load->view('setting/adjust-modal', $this->data);
     }
+    public function supply_drug()
+    {
+       // $this->data['drug_details'] =  $this->setting_m->get_drug_by_id($this->uri->segment(3));
+        $this->data['drugs'] = $this->patient_m->drugs();
+        $this->load->view('setting/supply_drug', $this->data);
+    }
     public function adjust_drug_2()
     {
         $add_drug =  $this->setting_m->adjust_drug();
@@ -236,6 +243,10 @@ class Setting extends Base_Controller
     function save_drug()
     {
         $this->setting_m->save_drug();
+    }
+    function add_drug_supply()
+    {
+        $this->setting_m->save_drug_supply();
     }
     public function delete_drug()
     {
@@ -410,4 +421,12 @@ class Setting extends Base_Controller
         $this->db->delete('lab_test_parameters', array('lab_test_id' => $id));
         $this->db->delete('lab_test_range_by_test', array('lab_test_id' => $id));
     }
+    public function get_bin_card_by_drug_id()
+    {
+        $drug_id = $this->input->post('drug_id');
+        
+        $drug_bin_cards =  $this->setting_m->get_drug_bin_cards_by_id($drug_id);
+        echo json_encode($drug_bin_cards);
+    }
+
 }

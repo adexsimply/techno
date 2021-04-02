@@ -23,7 +23,7 @@ class Billing_m extends CI_Model
     {
          $date = new DateTime("now");
         $curr_date = $date->format('Y-m-d ');
-        $get_patient_billings = $this->db->select('b.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num')->from('billings b')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where('DATE(b.date_added)',$curr_date)->get();
+        $get_patient_billings = $this->db->select('i.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num')->from('invoices i')->join('billings as b', 'i.invoice_id=b.invoice_id', 'left')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where('DATE(i.date_added)',$curr_date)->get();
         $patient_billings = $get_patient_billings->result();
         return $patient_billings;
     }
@@ -84,6 +84,41 @@ class Billing_m extends CI_Model
         return $patient_billings;
     }
 
+    public function get_patient_payment_filtered_receipt()
+    {
+
+        // if ($this->input->post('status')) {
+
+        //    $status = $this->input->post('status');
+        //     //$status = "Pending";
+        //     if ($status != 'all') {
+        //         $cond = 'b.status IN (SELECT status FROM billings WHERE status="'. $status . '")';
+        //     } else {
+        //         $cond = '1=1';
+        //     }
+        // }
+
+        
+
+        $today_date = date('Y-m-d');
+
+        if ($this->input->post('date_range_from') != $today_date) {
+            //
+            $first_date = $this->input->post('date_range_from');
+            $second_date =  $this->input->post('date_range_to');
+
+            $date_range = array('DATE(i.date_added) >=' => $first_date, 'DATE(i.date_added) <=' => $second_date);
+        } else {
+
+           $date_range = array('DATE(i.date_added)' => $today_date);
+
+        }
+
+        $get_patient_billings = $this->db->select('i.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num')->from('invoices i')->join('billings as b', 'i.invoice_id=b.invoice_id', 'left')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where($date_range)->get();
+        $patient_billings = $get_patient_billings->result();
+        return $patient_billings;
+    }
+
 
     public function get_prescription_request_list()
     {
@@ -122,6 +157,81 @@ class Billing_m extends CI_Model
             // $this->db->insert('billings', $data);
 
             }
+    }
+
+    public function save_bill() {
+
+
+            $invoice_id = rand(10000,10000000);
+            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            if ($check_if_invoice_exists->num_rows() > 0) {
+                $invoice_id = rand(10000,10000000);
+            }
+             $data_invoice = array(
+                    'invoice_id' => $invoice_id,
+                    'amount_paid' => $this->input->post('total_bill_cum')
+                );
+            $insert_invoice = $this->db->insert('invoices', $data_invoice);
+            $item_id = $this->input->post('item_id');
+            $quantity = $this->input->post('quantity');
+            $item_name = $this->input->post('item_name');
+            $cost = $this->input->post('cost');
+            $food_id = $this->input->post('food_id');
+            $service_type = $this->input->post('service_type');
+            $patient_id = $this->input->post('patient_id');
+            $i=0;
+            foreach ($food_id as $key => $val) {
+              if ($service_type[$key]=='drug') {
+
+
+                $get = $this->db->select('*')->from('drug_items')->where('id', $item_id[$key])->get();
+                $result = $get->row();
+                $data3 = array(
+                    'quantity_in_stock' => $result->quantity_in_stock - $quantity[$key],
+                );
+                $this->db->where('id', $item_id[$key]);
+                $this->db->update('drug_items', $data3);
+
+
+                    $data2 = array(
+                        'drug_id' => $item_id[$key],
+                        'particular' => 'Drug Prescription',
+                        'drug_in_out' => 'drug_out',
+                        'quantity' => $quantity[$key],
+                        'balance' => $result->quantity_in_stock - $quantity[$key],
+                    );
+                    $insert = $this->db->insert('drug_activities', $data2);
+              }
+
+                // $this->db->where('patient_id', $this->input->post('patient_id'));
+                // $this->db->where('prescription_unique_id', $this->input->post('prescription_unique_id'));
+                // $this->db->where('prescription_id', $array[0]);
+                // $this->db->update('patient_prescriptions2', array('qty_given' => $array[1]));
+
+                //$get_drug_name = $this->db->select('drug_item_name')->from('drug_items')->where('invoice_id',$invoice_id)->get()
+              if ($service_type[$key]=='drug') {
+                $category = "Prescription";
+              }
+              elseif ($service_type[$key]=='general') {
+                $category = "General";
+              }
+              else {
+                $category = "Laboratory";
+              }
+
+            
+                $data[$i]['patient_id']   = $patient_id;
+                $data[$i]['invoice_id']   = $invoice_id;
+                $data[$i]['item_name']     = $item_name[$key];
+                $data[$i]['category']     = $category;
+                $data[$i]['billing_type'] = "Debit";
+                $data[$i]['amount']       = $cost[$key] * $quantity[$key];
+                $data[$i]['billed_by']    = $this->session->userdata('active_user')->id;
+                $i++;
+            }
+
+         $this->db->insert_batch('billings', $data);
+            return $service_type;
     }
 
 }

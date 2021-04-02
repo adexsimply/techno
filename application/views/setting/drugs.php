@@ -30,6 +30,9 @@
                         <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add New" href="<?php echo base_url('setting/add_drug') ?>">
                             Add Drug
                         </button>
+                        <button class="btn btn-warning m-b-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="New Supply" href="<?php echo base_url('setting/supply_drug') ?>">
+                            Supply In
+                        </button>
 
                         <!-- 
                 <td><input type='text' class='name' id='name' ></td>

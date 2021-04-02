@@ -57,39 +57,7 @@
 							</ul>
 						</div>
 					</div>
-					<!-- <div class="card">
-				                        <div class="header">
-				                            <h2>General Report</h2>
-				                        </div>
-				                        <div class="body">
-				                            <ul class="list-unstyled">
-				                                <li>
-				                                    <div>Blood Pressure</div>
-				                                    <div class="progress m-b-20">
-				                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span class="sr-only">40% Complete (success)</span> </div>
-				                                    </div>
-				                                </li>
-				                                <li>
-				                                    <div>Heart Beat</div>
-				                                    <div class="progress m-b-20">
-				                                        <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%"> <span class="sr-only">20% Complete</span> </div>
-				                                    </div>
-				                                </li>
-				                                <li>
-				                                    <div>Haemoglobin</div>
-				                                    <div class="progress m-b-20">
-				                                        <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%"> <span class="sr-only">60% Complete (warning)</span> </div>
-				                                    </div>
-				                                </li>
-				                                <li>
-				                                    <div>Sugar</div>
-				                                    <div class="progress">
-				                                        <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%"> <span class="sr-only">80% Complete (danger)</span> </div>
-				                                    </div>
-				                                </li>
-				                            </ul>
-				                        </div>
-				                    </div> -->
+					
 				</div>
 				<div class="col-lg-8 col-md-12">
 					<div class="card">

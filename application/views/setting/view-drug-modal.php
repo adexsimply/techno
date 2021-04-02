@@ -72,12 +72,10 @@ font-size: 12px;
                                                     <!-- <th>View</th> -->
                                                 </tr>
 
-                                            <tbody>
-                                                <?php //var_dump($drug_bin_cards);
+                                            <tbody id="drugBinCardsList">
+                                         <!--        <?php 
                                                 $i = 1;
-                                                foreach ($drug_bin_cards as $drug_bin_card) {
-                                                    //var_dump($drug_bin_card)
-                                                ?>
+                                                foreach ($drug_bin_cards as $drug_bin_card) {                                                ?>
                                                     <tr>
                                                         <td><?php echo $i++; ?></td>
                                                         <td><?php echo date('d M Y', strtotime($drug_bin_card->date_added)); ?></td>
@@ -85,15 +83,15 @@ font-size: 12px;
                                                         <td><?php if ($drug_bin_card->drug_in_out =='drug_in') { echo $drug_bin_card->quantity; } else { echo "0"; } ?></td>
                                                         <td><?php if ($drug_bin_card->drug_in_out =='drug_out') { echo $drug_bin_card->quantity; } else { echo "0"; } ?></td>
                                                         <td><?php echo $drug_bin_card->balance; ?></td>
-                                                      <!--   <td>
+                                                      <td>
                                                             <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="s" data-title="View Bin Card Details" href="<?php echo base_url('setting/view_bin_card/' . $drug_bin_card->id) ?>"><i class="fa fa-eye"></i>
                                                             </button>
                                                            <button class="btn btn-sm btn-danger" type="button" onclick="delete_bin_card(<?php echo $drug_bin_card->id ?>)">
                                                                 Delete
-                                                            </button> -->
+                                                            </button>
                                                     </tr>
 
-                                                <?php } ?>
+                                                <?php } ?> -->
                                             </tbody>
                                             </thead>
                                         </table>
@@ -151,6 +149,79 @@ font-size: 12px;
 
 <?php $this->load->view('setting/drug-add-batch-script'); ?>
 <script>
+
+
+$(document).ready(function () {
+
+
+listDrugBinCards(); 
+
+
+
+});
+
+function listDrugBinCards() {
+      $.ajax({
+      type  : 'post',
+      url   : '<?php echo base_url('setting/get_bin_card_by_drug_id'); ?>',
+      data: {
+          drug_id: '<?php echo $this->uri->segment(3); ?>',
+        },
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        //console.log(response)
+        var html = '';
+        var i;
+        var sn =1;
+        for(i=0; i<response.length; i++){
+
+          var date = response[i].date_added;
+          var response3 ="";
+
+            $.ajax({
+          type  : 'post',
+          url   : '<?php echo base_url('pharmacy/convert_date'); ?>',
+          data: {
+              date: date,
+            },
+          async : false,
+          dataType : 'json',
+          success : function(response2){
+            console.log(response2);
+
+            response3 = response2
+            }
+
+          });
+
+
+            if (response[i].drug_in_out=='drug_in') {
+                var drug_in = response[i].quantity;
+                var drug_out = "0";
+            }
+            else {
+
+                var drug_out = response[i].quantity;
+                var drug_in = "0";
+
+            }
+
+
+            html += '<tr><td>' + sn++ + '</td> <td>' + response3 +
+              '</td> <td>' + response[i].particular +
+              '</td> <td>' + drug_in +
+              '</td> <td>' + drug_out +
+              '</td> <td>' + response[i].balance +
+              '</td> </tr>';
+          }
+          $('#drugBinCardsList').html(html);
+        }
+
+      });
+
+    }
+
     var _row = null;
 
     function qty_update(id) {
@@ -246,8 +317,11 @@ function adjust_dialog() {
                           dataObj[formData[i].name] = formData[i].value;
                         }
 
+                       // console.log(formData);
+
                           var adjust_to = dataObj['adjust_to'];
                           var reason = dataObj['reason'];
+                          var qty_in_stock = dataObj['qty_in_stock'];
 
 
                         if (adjust_to != '') {
@@ -260,14 +334,21 @@ function adjust_dialog() {
                                     data: {
                                         id: id,
                                         adjust_to: adjust_to,
+                                        qty_in_stock: qty_in_stock,
                                         reason: reason
                                     },
                                     success: function(response) {
                                         $("#qty_value_success").text('');
                                         if (response = true) {
-                                            console.log(response)
+                                            //console.log(response)
                                             // $("#qty_value_success").text('Successfully Saved').fadeOut(3000);
                                             alert('Successfully Saved')
+                                            $('#qty_value').val('');
+                                            $('#qty_value').val(adjust_to);
+
+                                            listDrugBinCards();
+                                            adjust_drug.close();
+
                                         } else {
                                             alert('Not Save')
                                             // $("#qty_value_error").text('Not Save').fadeOut(3000);
@@ -280,7 +361,7 @@ function adjust_dialog() {
                             //     $("#qty_value_error").text('Quatity in Stock can not be less than zero (0)')
                             // }
                         } else {
-                            console.log(qty_value, id)
+                           // console.log(qty_value, id)
                             $("#adjust_to_error").text('Please enter a value');
                         }
 

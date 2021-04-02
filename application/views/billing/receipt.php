@@ -3,6 +3,7 @@
 <link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
 <link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
 <link src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
 <style type="text/css">
     
 #receiptListTable thead th, #receiptListTable tbody td {
@@ -37,12 +38,12 @@
                                                 <!-- Date and time range -->
                                                 <div class="col-md-4">
                                                     <label>From</label>
-                                                    <input type="date" placeholder="From" class="form-control" onchange="filter_payment_list()" id="date_range_from" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>">
+                                                    <input type="date" placeholder="From" class="form-control" onchange="filter_receipt_list()" id="date_range_from" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>">
                                                    <!--  <input type="" class="form-control" name="dates" placeholder="Select Date Range" onchange="filter_vitals()" id="date_range"> -->
                                                 </div>
                                                 <div class="col-md-4"> 
                                                     <label>To</label>
-                                                    <input type="date" class="form-control" onchange="filter_payment_list()" id="date_range_to" placeholder="From" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>"> 
+                                                    <input type="date" class="form-control" onchange="filter_receipt_list()" id="date_range_to" placeholder="From" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>"> 
                                                 </div>
 
 
@@ -75,6 +76,24 @@
                                                 <th>Total</th>
                                                 <th>Part Payment</th>
                                                 <th>Debt</th>
+                                                <th>Debt Paid</th>
+                                                <th>Registration</th>
+                                                <th>Consultation</th>
+                                                <th>Laboratory</th>
+                                                <th>Pharmacy</th>
+                                                <th>Surgery</th>
+                                                <th>Delivery</th>
+                                                <th>Medical Docu</th>
+                                                <th>Feeding</th>
+                                                <th>Radiology</th>
+                                                <th>Accomodation</th>
+                                                <th>Medical Check</th>
+                                                <th>Deposit</th>
+                                                <th>Nursing Care</th>
+                                                <th>Other Proceed</th>
+                                                <th>BalofPayment</th>
+                                                <th>Others</th>
+                                                <th>Balance</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>

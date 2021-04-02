@@ -6,6 +6,32 @@ $(document)
      var drugsListTable =  $('#drugsListTable').DataTable({
             //"lengthChange": false
         });
+     /////
+
+        var table = $('#example_drug_supply').DataTable({
+            dom: 'lrtip',
+            'lengthChange': false
+        });
+        if ($('#example_wrapper_supply').is(':visible')) {
+            $('#example_wrapper_supply').hide();
+        }
+        //$('#example_wrapper').hide();
+
+
+        $('#drugSearchSupply').keyup(function() {
+
+            if (document.getElementById('drugSearchSupply').value != '') {
+                //$('#example_wrapper').removeAttr("style");
+                $('#example_wrapper_supply').show();
+                table.search($(this).val()).draw();
+            } else {
+                $('#example_wrapper_supply').hide();
+
+            }
+        });
+
+
+
 });
 
     /////Add Session form begins

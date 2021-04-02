@@ -253,16 +253,7 @@
 															</tr>
 														</thead>
 														<tbody>
-															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar4.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00951</span></td>
-																<td>James</td>
-																<td>32</td>
-																<td>44 Shirley Ave. West Chicago, IL 60185</td>
-																<td>404-447-6013</td>
-																<td>22 Jan 2018</td>
-																<td><span class="badge badge-warning">Pending</span></td>
-															</tr>
+
 														</tbody>
 													</table>
 												</div>
@@ -481,14 +472,6 @@
 														</thead>
 														<tbody>
 															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar4.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00951</span></td>
-																<td>James</td>
-																<td>32</td>
-																<td>44 Shirley Ave. West Chicago, IL 60185</td>
-																<td>404-447-6013</td>
-																<td>22 Jan 2018</td>
-																<td><span class="badge badge-warning">Pending</span></td>
 															</tr>
 														</tbody>
 													</table>
@@ -627,12 +610,6 @@
 														</thead>
 														<tbody>
 															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar1.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00598</span></td>
-																<td>Daniel</td>
-																<td>32</td>
-																<td>71 Pilgrim Avenue Chevy Chase, MD 20815</td>
-																<td>404-447-6013</td>
 															</tr>
 														</tbody>
 													</table>
@@ -658,14 +635,6 @@
 														</thead>
 														<tbody>
 															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar4.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00951</span></td>
-																<td>James</td>
-																<td>32</td>
-																<td>44 Shirley Ave. West Chicago, IL 60185</td>
-																<td>404-447-6013</td>
-																<td>22 Jan 2018</td>
-																<td><span class="badge badge-warning">Pending</span></td>
 															</tr>
 														</tbody>
 													</table>
@@ -691,14 +660,6 @@
 														</thead>
 														<tbody>
 															<tr>
-																<td><span class="list-icon"><img class="patients-img" src="../assets/images/xs/avatar4.jpg" alt=""></span></td>
-																<td><span class="list-name">KU 00951</span></td>
-																<td>James</td>
-																<td>32</td>
-																<td>44 Shirley Ave. West Chicago, IL 60185</td>
-																<td>404-447-6013</td>
-																<td>22 Jan 2018</td>
-																<td><span class="badge badge-warning">Pending</span></td>
 															</tr>
 														</tbody>
 													</table>
@@ -752,6 +713,8 @@
 							<div class="row clearfix">
 								<div class="col-lg-12">
 									<div class="card" style="max-height: 500px; overflow: scroll;">
+
+										<button class="btn btn-success m-b-15 m-t-15" type="button" data-patient="<?php echo $patient->patient_name; ?>" data-toggle="modal" data-target="#takeVitals" onclick="bill_dialog(event)" data-type="black" data-size="m" data-title="Service Request" href="<?php echo base_url('billing/manual_billing/' . $patient->p_id) ?>">New Bill</button>
 										<!-- <div class="header">
 											                            <h2>Basic Table <small>Basic example without any additional modification classes</small> </h2>                            
 											                        </div> -->
@@ -796,7 +759,7 @@
 											</div>
 										</div>
 									</div>
-									<h6>Balance:<span style="color: red"><?php echo $credit - $debit; ?> </span> </h6>
+									<!-- <h6>Balance:<span style="color: red"><?php echo $credit - $debit; ?> </span> </h6> -->
 								</div>
 							</div>
 
@@ -808,14 +771,7 @@
 		</div>
 	</div>
 </div>
-<?php //$this->load->view('patient/patient-history-modal'); 
-?>
-<?php //$this->load->view('patient/payment-modal'); 
-?>
-<?php //$this->load->view('includes/footer_2'); 
-?>
-<?php //$this->load->view('patient/script'); 
-?>
+
 
 <?php $this->load->view('patient/all_script'); ?>
 <?php $this->load->view('patient/new_consultation_script'); ?>

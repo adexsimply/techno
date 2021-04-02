@@ -665,6 +665,123 @@ function listDefaultPrescriptionByPatient2() {
             }
         });
     }
+//////////Billing Begins Here
+
+  //////
+  function bill_dialog(event) {
+
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var title = element.data('title');
+    var patient_name = element.data('patient');
+
+    // $('#patient_name').val(patient_name);
+    // console.log(patient_name);
+
+////
+   var billDialog = $.confirm({
+        title: 'Prompt!',
+        columnClass:'col-md-12',
+        content: function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+        buttons: {
+
+            billSubmit: {
+                text: "Confirm",
+                btnClass: "btn-dark",
+                action: function () {
+
+                  var confirmsir = "No"
+                  
+
+
+                          ////
+                            var formData = $('#add-bill').serialize();
+                            var amount = $("#total_bill").val()
+                           // console.log(amount);
+                            //console.log(formData);
+
+                            var check_table =  $('#billSummaryList tr').length;
+                            //console.log(check_table);
+                           // this.buttons.consultationSubmit.setText('Saving Consultation....');
+                           if (check_table >1) {
+
+                            if(document.getElementById('total_bill').value =='') {
+                              $('#amt_error2').text('Get Bill First');
+                            }
+                            else {
+
+                      // var formData = $('#add-consultation').serialize();
+                                $.confirm({
+                                    title: 'Save Bill',
+                                    content: 'Are you sure you want to save proceed?',
+                                    icon: 'fa fa-check-circle',
+                                    type: 'green',
+                                    buttons: {
+                                        yes: function() {
+                                            $.post("<?php echo base_url() .  'billing/save_bill'; ?>", formData).done(function(data) {
+                                             // console.log(data);
+                                            });
+                                            ///Close Big Dialog
+
+                      //listDefaultConsultationByPatient();
+                                            billDialog.close();
+                                            ///Refresh Prescription Table
+                                        },
+                                        no: function() {
+
+                                        }
+                                    }
+                                });
+
+                            }
+
+                           }
+                           else {
+                            alert('Add Items');
+                           }
+
+
+                        //console.log(confirmsir);
+                  if (confirmsir=='No') {
+                    return false;
+                  }
+                  else {
+                    return true;
+                  }
+
+
+                }
+            },
+            Close: function () {
+                //close
+                //return false;
+            },
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$billSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+    });
+
+}
 
 
 </script>
