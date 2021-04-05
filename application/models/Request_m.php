@@ -119,6 +119,7 @@ class Request_m extends CI_Model
         $lab_request_list = $get_lab_request->result();
         return $lab_request_list;
     }
+
     public function get_specimen_lab_test_by_patient_id($p_id, $test_id)
     {
         $get_lab_request = $this->db->select('lr.*, t.lab_test_name,t.id as test_id')->from('lab_requests lr')->join('lab_tests as lt', 'lt.id=lr.lab_test_unique_id', 'left')->join('lab_tests as t', 't.id=lr.lab_test_unique_id', 'left')->where('lr.patient_id', $p_id)->where('lr.lab_test_id', $test_id)->where('lr.status', 'Specimen')->get();
@@ -148,6 +149,8 @@ class Request_m extends CI_Model
         $review = $this->input->post('review');
         $treated = $this->input->post('treated');
         //echo json_encode($review);
+        if ($this->input->post('id')) {
+
         foreach ($id as $key => $val) {
             if ($sample[$key] != Null && $specimen[$key] != Null) {
                 $data['status'] = "Specimen";
@@ -162,6 +165,8 @@ class Request_m extends CI_Model
             // echo json_encode($val);
         }
 
+        }
+
         foreach ($test_result_id as $key => $val) {
             if ($review[$key] != Null) {
                 if ($treated[$key] != Null) {
@@ -173,6 +178,7 @@ class Request_m extends CI_Model
             }
             if ($review[$key] == Null) {
                 $data['status'] = "Specimen";
+                echo "wait";
             }
             $this->db->where('id', $val);
             $this->db->update('lab_requests', $data);

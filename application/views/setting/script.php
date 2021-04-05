@@ -165,6 +165,7 @@ $(document)
     function form_routes_test(action) {
         if (action == 'add_test') {
             var formData = $('#add-test').serialize();
+            console.log(formData);
             if (validate_test(formData) == 'success') {
                 $.confirm({
                     title: 'Save Test',

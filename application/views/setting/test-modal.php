@@ -244,8 +244,10 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="parameter">
+
+                                    <button class="btn btn btn-success" type="button"  data-toggle="modal" data-target="#takeVitals" onclick="parameter_dialog(event)" data-type="black" data-size="l" href="<?php echo base_url('setting/add_parameter/') ?>">Add New</button>
                                     <div class="col-lg-12 col-md-12 mt-2 row">
-                                        <div class="col-3">
+                                    <!--     <div class="col-3">
                                             <input type="text" class="form-control" name="paramenter_name" id="paramenter_name" placeholder="CHLORIDE CL">
                                         </div>
                                         <div class="col-3">
@@ -256,14 +258,14 @@
                                         </div>
                                         <div class="col-2">
                                             <button class="btn btn-primary" type="button" onclick="addParameter()">Add</button>
-                                        </div>
+                                        </div> -->
                                         <!-- <label for="inputPassword" class="col-sm-2 col-form-label">Measure:</label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" name="measure" placeholder="mmol/L">
                                                 <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="measure"></code>
                                             </div> -->
                                     </div>
-                                    <div class="body" style="height: 500px; overflow: scroll;">
+                                    <div class="body" style="max-height: 300px; overflow: scroll;">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped table-hover dataTable parameterTable" id="parameterTable">
                                                 <thead class="thead-dark">
@@ -284,9 +286,9 @@
                                                     ?>
                                                             <tr>
                                                                 <td></td>
-                                                                <td><?php echo $parameter->name; ?></td>
-                                                                <td><?php echo $parameter->measure; ?></td>
-                                                                <td><?php echo $parameter->range_value; ?></td>
+                                                                <td><?php echo $parameter->lab_test_subgroup_name; ?></td>
+                                                                <td><?php echo $parameter->Measure; ?></td>
+                                                                <td><?php echo $parameter->RangeValue; ?></td>
                                                                 <td width='10%'><button type='button' onclick='deleteParameter(this, <?php echo $parameter->id; ?>, "edit")' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </tr>
                                                     <?php $i++;
@@ -303,9 +305,21 @@
                     </div>
                     <div id="lab_test_list"></div>
                     <div id="parameter_list"></div>
+                    <div id="parameter_name_list2"> </div>
+                    <div id="parameter_range_list2"> </div>
                 </div>
                 <div class="text-right">
                     <button type="button" class="btn btn-warning" onclick="form_routes_test('add_test')" title="add_test">Save</button>
+                </div>
+            </form>
+            <form id="parameter-range-list">
+                <div id="parameter_range_list">
+                    
+                </div>
+            </form>
+            <form id="parameter-range-list2">
+                <div id="parameter_range_list2">
+                    
                 </div>
             </form>
         </div>
@@ -472,5 +486,87 @@
             }
         });
     }
+/////
+
+function parameter_dialog() {
+
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var title = 'Parameter';
+    var id = element.data('id');
+
+      var adjust_drug =  $.confirm({
+            title: title,
+            columnClass:'l',
+            content:  function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+            buttons: {
+                formAdjust: {
+                    text: 'Submit',
+                    btnClass: 'btn-blue',
+                    action: function() {
+
+
+                        var chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                        id = Math.floor(Math.random() * chars.length)
+
+                        var okkk = '';
+
+                        var name = document.getElementById('parameter_name').value;
+                        var measure = document.getElementById('parameter_measure').value;
+
+                        formData = $('#parameter-range-list').serializeArray();
+                        len = formData.length,
+                        dataObj = {};
+
+                        for (i=0; i<len; i++) {
+                          dataObj[formData[i].name] = formData[i].value;
+                          okkk += dataObj['parameter_range_id'];
+                        }
+
+                       console.log(okkk);
+
+                        
+
+
+                    $("#parameter_name_list2").append("<input name='parameter_name2[]' class='test" + id + "' value='" + name + "'>");
+
+                    $("#parameterTable tbody").append("<tr>" +
+                        "<td>" + name + "</td>" +
+                        "<td>" + measure + "</td>" +
+                        "<td>" + okkk+ "</td>" +
+                        "<td width='10%'><button type='button' onclick='deleteParameter(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
+                        "</tr>");
+                        $("input[name='parameter_range_id']").val('');
+
+                        return false;
+                    }
+                },
+                cancel: function() {
+                    //close
+                },
+            },
+            onContentReady: function() {
+                // bind to events
+                var jc = this;
+                this.$content.find('form').on('submit', function(e) {
+                    // if the user submits the form by pressing enter in the field.
+                    e.preventDefault();
+                    jc.$$formAdjust.trigger('click'); // reference the button and click it
+                });
+            }
+        });
+}
 </script>
 <?php $this->load->view('setting/script'); ?>

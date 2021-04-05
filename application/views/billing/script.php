@@ -460,8 +460,8 @@ function payment_dialog(event) {
 
                             // if (amount != '') {
                                 $.confirm({
-                                    title: 'Send For Payment',
-                                    content: 'Are you sure you want to Send Payment?',
+                                    title: 'Save Payment',
+                                    content: 'Are you sure you want to Save Payment?',
                                     icon: 'fa fa-check-circle',
                                     type: 'green',
                                     buttons: {

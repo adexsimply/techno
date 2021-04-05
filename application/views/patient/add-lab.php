@@ -1,4 +1,45 @@
-<div class="col-12">
+<style type="text/css">
+
+#add-lab-modal .mb-3, .my-3 {
+     margin-bottom: 0!important; 
+}
+#add-lab-modal .card .body {
+    color: #444;
+    padding: 5px;
+    font-weight: 400;
+}
+#add-lab-modal thead th, #add-lab-modal tbody td {
+  padding: 1px !important;
+  height: 12px;
+  font-size: 12px;
+}
+
+#patientSearchBill tr.selected {
+    background-color: #e92929 !important;
+    color:#fff;
+    vertical-align: middle;
+    padding: 1.5em;
+}
+#add-lab-modal .form-control {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 1px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+#add-lab-modal select.form-control:not([size]):not([multiple]) {
+    height: 30px;
+}
+</style>
+<div class="col-12" id="add-lab-modal">
     <div class="card box-margin">
         <div class="card-body">
 
@@ -31,7 +72,7 @@
                                     <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
                                 <?php } else { ?>
                                     <input type="hidden" name="appointment_id" value="<?php echo $vital_details->appointment_id ?>">
-                                    <input type="" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
+                                    <input type="hidden" name="patient_id" value="<?php echo $vital_details->patient_id ?>">
                                     <input type="hidden" name="doctor_id" value="<?php echo $vital_details->doctor_id ?>">
                                     <input type="hidden" name="vital_id" value="<?php echo $vital_details->vital_id ?>">
                                     <input type="hidden" name="clinic_id" value="<?php echo $vital_details->clinic_id ?>">
@@ -94,15 +135,17 @@
                                                                                         } ?>" disabled="">
                             </div>
                         </div>
-                        <div class="col-lg-12 col-md-12 mb-3 mt-2">
+                        <div class="col-lg-12 col-md-12 mb-3 mt-2" style="margin-top: 20px !important;">
                             <fieldset>
                                 <div class="text-center mb-2">
                                     <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback lab_id" id="lab_id" data-field="lab_id"></code>
                                 </div>
-                                <legend><b>Choose Laboratory Test</b></legend>
-                                <div class="body" style="height: 300px; overflow: scroll;">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable" id="example">
+                                <legend style="font-size: 15px;"><strong>Choose Test</strong>
+                                    <input type="text" class="form-control" id="labTestSearch" placeholder="Start typing a drug name"></legend>
+                                <div class="body" style="max-height: 200px; overflow: scroll;">
+                                    
+                                    <div class="dataTables_wrapper no-footer" id="example_wrapper_lab">
+                                        <table class="table table-bordered table-striped table-hover dataTable" id="labSearchTable">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>S/N</th>
@@ -120,7 +163,7 @@
                                                         <td><?php echo $i; ?></td>
                                                         <td><?php echo $lab_test->lab_test_name; ?></td>
                                                         <td><span class='text-success'>₦<?php echo $lab_test->cost; ?></span></td>
-                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $lab_test->id; ?>)">Add</button></td>
+                                                        <td><button type="button" class="btn btn-sm btn-primary" onclick="testAdd(this, <?php echo $lab_test->id; ?>)">Add</button></td>
                                                     </tr>
                                                 <?php $i++;
                                                 } ?>
@@ -133,9 +176,9 @@
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <fieldset>
                                 <legend><b>Summary</b></legend>
-                                <div class="body" style="height: 300px; overflow: scroll;">
+                                <div class="body" style="max-height: 200px; overflow: scroll;">
                                     <div class="table-responsive">
-                                        <table id="testTable" class="table table-bordered table-striped table-hover dataTable" id="example">
+                                        <table id="testTable" class="table table-bordered table-striped table-hover dataTable">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>Test</th>
@@ -164,9 +207,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-right">
+              <!--   <div class="text-right">
                     <button type="button" class="btn btn-success" onclick="form_routes_lab('add_lab')" title="add_lab">Save</button>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>
@@ -180,17 +223,39 @@
             var n = $('#demo_info')[0];
         }
 
-        $('#example')
-            .on('order.dt', function() {
-                eventFired('Order');
-            })
-            .on('search.dt', function() {
-                eventFired('Search');
-            })
-            .on('page.dt', function() {
-                eventFired('Page');
-            })
-            .DataTable();
+        // $('#example')
+        //     .on('order.dt', function() {
+        //         eventFired('Order');
+        //     })
+        //     .on('search.dt', function() {
+        //         eventFired('Search');
+        //     })
+        //     .on('page.dt', function() {
+        //         eventFired('Page');
+        //     })
+        //     .DataTable();
+
+        var labSearchTable = $('#labSearchTable').DataTable({            
+            "bLengthChange": false,
+            dom: 'lrtip'
+        });
+        if ($('#example_wrapper_lab').is(':visible')) {
+            $('#example_wrapper_lab').hide();
+        }
+
+
+        $('#labTestSearch').keyup(function() {
+
+            if (document.getElementById('labTestSearch').value != '') {
+                //$('#example_wrapper').removeAttr("style");
+                $('#example_wrapper_lab').show();
+                labSearchTable.search($(this).val()).draw();
+            } else {
+                $('#example_wrapper_lab').hide();
+
+            }
+        });
+
     });
 
     function testAdd(ctl, id) {

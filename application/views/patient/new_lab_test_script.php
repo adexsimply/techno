@@ -33,7 +33,8 @@
         $.post("<?php echo base_url() . 'patient/save_lab'; ?>", formData).done(function(data) {
             //console.log(data);
 
-            window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
+
+            //window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
         });
     }
 
@@ -41,20 +42,22 @@
         if (action == 'add_lab') {
             var formData = $('#add-lab').serialize();
             if (validate(formData) == 'success') {
-                $.confirm({
-                    title: 'Add Laboratoty Test',
-                    content: 'Are you sure you want to add new Laboratoty Test?',
-                    icon: 'fa fa-check-circle',
-                    type: 'green',
-                    buttons: {
-                        yes: function() {
                             save_lab_test(formData);
-                        },
-                        no: function() {
+                
+                // $.confirm({
+                //     title: 'Add Laboratoty Test',
+                //     content: 'Are you sure you want to add new Laboratoty Test?',
+                //     icon: 'fa fa-check-circle',
+                //     type: 'green',
+                //     buttons: {
+                //         yes: function() {
+                //             save_lab_test(formData);
+                //         },
+                //         no: function() {
 
-                        }
-                    }
-                });
+                //         }
+                //     }
+                // });
             }
         } else {
             cancel();

@@ -57,7 +57,39 @@ class Laboratory extends Base_Controller
             $this->data['review_test_status'] =  $this->request_m->get_review_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
             $this->data['lab_specimens_list'] =  $this->laboratory_m->get_specimen_list();
             $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
-            $this->load->view('laboratory/request-modal', $this->data);
+            $this->load->view('laboratory/lab-request-modal', $this->data);
+        } else {
+            return redirect('laboratory/requests_results');
+        }
+    }
+    public function view_request_specimen()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['lab_requests'] = $lb =  $this->request_m->get_lab_request_by_id($this->uri->segment(3));
+            $this->data['tests'] = $lb =  $this->laboratory_m->get_lab_request_specimen_by_id($this->uri->segment(3));
+            //$this->data['tests'] =  $this->request_m->get_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['specimen_test_status'] =  $this->request_m->get_specimen_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['treated_test_status'] =  $this->request_m->get_treated_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['review_test_status'] =  $this->request_m->get_review_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['lab_specimens_list'] =  $this->laboratory_m->get_specimen_list();
+            // $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+            $this->load->view('laboratory/lab-request-specimen-modal', $this->data);
+        } else {
+            return redirect('laboratory/requests_results');
+        }
+    }
+    public function view_request_review()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['lab_requests'] = $lb =  $this->request_m->get_lab_request_by_id($this->uri->segment(3));
+            $this->data['tests'] = $lb =  $this->laboratory_m->get_lab_request_specimen_by_id($this->uri->segment(3));
+            //$this->data['tests'] =  $this->request_m->get_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['specimen_test_status'] =  $this->request_m->get_specimen_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['treated_test_status'] =  $this->request_m->get_treated_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['review_test_status'] =  $this->request_m->get_review_lab_test_by_patient_id($lb->patient_id, $lb->lab_test_id);
+            // $this->data['lab_specimens_list'] =  $this->laboratory_m->get_specimen_list();
+            // $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+            $this->load->view('laboratory/lab-request-review-modal', $this->data);
         } else {
             return redirect('laboratory/requests_results');
         }
@@ -129,6 +161,10 @@ class Laboratory extends Base_Controller
     {
         echo json_encode($this->laboratory_m->save_specimen());
     }
+    public function save_lab_result_details()
+    {
+        echo json_encode($this->laboratory_m->save_lab_result_details());
+    }
     public function delete_specimen()
     {
         $id = $this->input->post('id');
@@ -139,5 +175,15 @@ class Laboratory extends Base_Controller
     {
         echo json_encode($this->request_m->update_request());
         //echo json_encode($this->input->post('sample[collect]'));
+    }
+    public function get_request_list_default()
+    {
+        $request_list = $this->laboratory_m->get_request_list_default();
+        echo json_encode($request_list);
+    }
+    public function get_request_list_filtered()
+    {
+        $request_list = $this->laboratory_m->get_request_list_filtered();
+        echo json_encode($request_list);
     }
 }

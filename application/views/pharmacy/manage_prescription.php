@@ -107,11 +107,10 @@
                     <?php if ($vital_details->status == "Prescription" || $vital_details->status == "Treated") { ?>
                     <div class="col-lg-12 col-md-12 mb-3 mt-2">
                         <fieldset>
-
                             <legend style="font-size: 15px;"><strong>Account</strong></legend>
                             <div class="body" style="max-height: 200px; overflow: scroll; scroll; padding: 0;">
                                 <div class="table-responsive">
-                                    <table id="testTable_prescription" class="table table-bordered table-striped table-hover dataTable" style="font-size: 13px;">
+                                    <table id="testTable_prescriptionBilling" class="table table-bordered table-striped table-hover dataTable" style="font-size: 13px;">
                                         <thead class="thead-dark">
                                             <tr>
                                                             <th>Date</th>
@@ -125,9 +124,8 @@
                                             <?php  
                                                 foreach ($patient_account as $patient_billing) {
                                             ?>
-                                                    <tr id="tr-summarry">
-                                                        <td>
-                                                                <td><?php $ini_date = date_create($patient_billing->date_added);
+                                                    <tr id="tr-summarryy">
+                                                        <td><?php $ini_date = date_create($patient_billing->date_added);
                                                                     echo date_format($ini_date, "d-M-Y h:i a"); ?></td>
                                                                 <td><?php echo $patient_billing->item_name; ?></td>
                                                                 <td><?php echo $patient_billing->invoice_id; ?></td>
@@ -163,13 +161,13 @@
                                                 //var_dump($patient_prescriptions);
                                                 foreach ($patient_prescriptions as $patient_prescription_test) {
                                             ?>
-                                                    <tr id="tr-summarry">
+                                                    <tr>
                                                         <td><?php echo $patient_prescription_test->drug_id ?></td>
                                                         <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($patient_prescription_test->date_added)) ?></span></td>
                                                         <td><?php echo $patient_prescription_test->drug_item_name; ?></td>
                                                         <td><?php echo $patient_prescription_test->quantity_in_stock; ?></td>
 
-                                                        <?php if ($vital_details->status == "Prescription" || $vital_details->status == "Treated") { ?>
+                                                        <?php if ($vital_details->status == "Treated") { ?>
                                                             <td><?php echo $patient_prescription_test->qty_given; ?></td>
                                                         <?php } else { ?>
                                                             <td style="background-color: coral;" <?php if ($patient_prescription_test->quantity_in_stock > 0) {
@@ -222,7 +220,7 @@
                             <input type="hidden" name="Pending" id="patient_id2" value="Pending">
                         <?php } ?>
                         <?php if ($vital_details->status == "Prescription") { ?>
-                            <input type="hidden" name="Prescription" id="patient_id" value="Prescription">
+                            <input hidden="" name="Prescription" id="patient_id345" value="Prescription">
                         <?php } ?>
                         <input type="hidden" id="main_amount" name="main_amount">
                         <?php if ($vital_details->status == "Pending") { ?>
@@ -248,6 +246,18 @@
     // $(".allow_numeric").on('keydown keyup blur', function(e) {
     //     this.value = this.value.replace(/[^0-9]/g, "")
     // })
+    var prescriptionss = $("input[name=Prescription]").val()
+    //console.log(prescriptionss);
+    if (prescriptionss=='Prescription') {
+        $('#testTable_prescription tr:not(:first)').each(function() {
+            var tds = $(this).find('td');
+            var rtotal = ($(tds[4]).text()) * ($(tds[5]).text());
+            console.log(tds)
+            //sum += rtotal;
+            $("#items_prescription").append("<input type='' name='drug_ids[]' value='" + $(tds[0]).text() + "," + $(tds[4]).text() + "' >")
+        });
+
+    }
     $("#get-bill").click(function(drug_id, qty_given) {
         var sum = 0;
         var rtotal = 0;
@@ -263,39 +273,39 @@
         $('#main_amount').val(sum);
     })
 
-    function send_for_payment(action) {
-        if (action == 'send_payment') {
-            var formData = $('#send-payment').serialize();
-            var amount = $("#main_amount").val()
-            if (amount != '') {
-                $.confirm({
-                    title: 'Send For Payment',
-                    content: 'Are you sure you want to Send Payment?',
-                    icon: 'fa fa-check-circle',
-                    type: 'green',
-                    buttons: {
-                        yes: function() {
-                            $.post("<?php echo base_url() .  'patient/save_billing'; ?>", formData).done(function(data) {
-                                //console.log(data);
+    // function send_for_payment(action) {
+    //     if (action == 'send_payment') {
+    //         var formData = $('#send-payment').serialize();
+    //         var amount = $("#main_amount").val()
+    //         if (amount != '') {
+    //             $.confirm({
+    //                 title: 'Send For Payment',
+    //                 content: 'Are you sure you want to Send Payment?',
+    //                 icon: 'fa fa-check-circle',
+    //                 type: 'green',
+    //                 buttons: {
+    //                     yes: function() {
+    //                         $.post("<?php echo base_url() .  'patient/save_billing'; ?>", formData).done(function(data) {
+    //                             //console.log(data);
                                 
-                                 $.alert({
-                                        title: 'Done!',
-                                        content: 'Payment Made!',
-                                        type: 'green',
-                                        });
-                                //window.location = "<?php //echo base_url('appointment/waiting_list'); ?>";
-                            });
-                        },
-                        no: function() {
+    //                              $.alert({
+    //                                     title: 'Done!',
+    //                                     content: 'Payment Made!',
+    //                                     type: 'green',
+    //                                     });
+    //                             //window.location = "<?php //echo base_url('appointment/waiting_list'); ?>";
+    //                         });
+    //                     },
+    //                     no: function() {
 
-                        }
-                    }
-                });
-            } else {
-                $("#amt_error").text('Total must greater than zero (0)')
-            }
-        }
-    }
+    //                     }
+    //                 }
+    //             });
+    //         } else {
+    //             $("#amt_error").text('Total must greater than zero (0)')
+    //         }
+    //     }
+    // }
 
     function treated(action) {
         if (action == 'send_payment') {

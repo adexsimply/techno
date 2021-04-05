@@ -1,13 +1,11 @@
 <div class="tab-pane" id="lab_investigation">
     <h6>Laboratory Investigation</h6>
     <div class="tab-pane table-responsive active show" id="laboratory">
-        <?php if ($patient->appointment_id != NULL && $lab_tests == Null) { ?>
-            <button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Laboratory for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_lab/' . $patient->vital_id) ?>">
+       <!--  <?php //if ($patient->appointment_id != NULL && $lab_tests == Null) { ?> -->
+            <button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="laboratory_dialog(event)" data-type="black" data-size="m" data-title="Laboratory for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_lab/' . $patient->vital_id) ?>">
                 <i class="fa fa-plus-circle"></i> Add New
             </button>
-        <?php } ?>
-        <?php //var_dump($lab_tests)
-        ?>
+       <!--  <?php //} ?> -->
         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
             <thead class="thead-dark">
                 <tr>

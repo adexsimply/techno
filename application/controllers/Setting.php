@@ -89,6 +89,22 @@ class Setting extends Base_Controller
             $this->load->view('setting/test-modal', $this->data);
         }
     }
+    public function add_parameter()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['lab_groups_list'] =  $this->setting_m->get_lab_groups();
+            $this->data['lab_test'] =  $this->setting_m->get_lab_test_by_id($this->uri->segment(3));
+            $this->data['range_list'] =  $this->setting_m->get_lab_test_range();
+            $this->data['lab_test_range'] =  $this->setting_m->get_lab_test_range_by_lab_id($this->uri->segment(3));
+            $this->data['lab_test_parameter'] =  $this->setting_m->get_lab_test_parameter_by_lab_id($this->uri->segment(3));
+            $this->load->view('setting/parameter-modal', $this->data);
+        } else {
+            $this->data['title'] = 'Range';
+            $this->data['range_list'] =  $this->setting_m->get_lab_test_range();
+            $this->data['lab_groups_list'] =  $this->setting_m->get_lab_groups();
+            $this->load->view('setting/parameter-modal', $this->data);
+        }
+    }
     public function edit_test()
     {
         if ($this->uri->segment(3)) {

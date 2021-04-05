@@ -258,6 +258,19 @@ if (status=='Treated') {
 }
 else {
 
+
+ // console.log('shina');
+                  
+            $('#testTable_prescription tr').each(function() {
+            var tds = $(this).find('td');
+            var rtotal = ($(tds[4]).text()) * ($(tds[5]).text());
+            // //console.log(tds)
+            // sum += rtotal;
+            console.log("Shi");
+            //$("#items_prescription").append("<input type='' name='drug_ids[]' value='" + $(tds[0]).text() + "," + $(tds[4]).text() + "' >")
+        });
+           // console.log(tds);
+
    var a = $.confirm({
         title: 'Prompt!',
         columnClass:'xl',
@@ -281,8 +294,6 @@ else {
                 action: function () {
 
                   var confirmsir = "No"
-                  
-
 
                           ////
                             var formData = $('#send-payment').serialize();
@@ -318,8 +329,8 @@ else {
                             }
                             else {
                                 $.confirm({
-                                    title: 'Send For Payment',
-                                    content: 'Are you sure you want to Send Payment?',
+                                    title: 'Treat Prescription',
+                                    content: 'Are you sure you want to Treat Prescription?',
                                     icon: 'fa fa-check-circle',
                                     type: 'green',
                                     buttons: {

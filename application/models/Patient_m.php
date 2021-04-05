@@ -322,6 +322,7 @@ class Patient_m extends CI_Model
     public function save_lab()
     {
         $this->load->helper('string');
+
         if ($this->input->post('edit_lab_id')) {
             $edit_lab_id = $this->input->post('edit_lab_id');
             $ids = $this->input->post('lab_id');
@@ -343,6 +344,16 @@ class Patient_m extends CI_Model
             }
             $this->db->select('*')->from('patient_lab_tests')->where('lab_test_unique_id', $edit_lab_id)->where('patient_id', $this->input->post('patient_id'))->where_not_in('lab_test_id', $ids)->delete();
         } else {
+
+            $invoice_id = rand(10000,10000000);
+            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            if ($check_if_invoice_exists->num_rows() > 0) {
+                $invoice_id = rand(10000,10000000);
+            }
+             $data_invoice = array(
+                    'invoice_id' => $invoice_id
+                );
+            $insert_invoice = $this->db->insert('invoices', $data_invoice);
             $unique = random_string('numeric', 4);
             foreach ($this->input->post('lab_id') as $e_id) {
                 $data = array(
@@ -354,8 +365,25 @@ class Patient_m extends CI_Model
                     'lab_test_id' =>  $e_id,
                 );
                 $insert = $this->db->insert('patient_lab_tests', $data);
-                // echo json_encode($this->db->insert_id());
 
+                $get = $this->db->select('*')->from('lab_tests')->where('id', $e_id)->get();
+                $result = $get->row();
+
+
+                $data2 = array(
+                    'patient_id'   => $this->input->post('patient_id'),
+                    'invoice_id'   => $invoice_id,
+                    'item_name'     => $result->lab_test_name,
+                    'category'     => "Laboratory",
+                    'billing_type' => "Debit",
+                    'amount'       => $result->cost,
+                    'billed_by'    => $this->session->userdata('active_user')->id,
+                );
+
+                //echo json_encode($this->input->post('prescription_unique_id'));
+
+               $insert_billings = $this->db->insert('billings', $data2);
+                echo json_encode($insert_billings);
                 $lab_test = $this->db->select('*')->from('consultations')->where('patient_id', $this->input->post('patient_id'))->get();;
                 $lab_test_result = $lab_test->row();
                 //echo json_encode($lab_test_result);
@@ -549,11 +577,11 @@ class Patient_m extends CI_Model
                 $array = explode(',', $drug_id);
                 $get = $this->db->select('*')->from('drug_items')->where('id', $array[0])->get();
                 $result = $get->row();
-                $data3 = array(
-                    'quantity_in_stock' => $result->quantity_in_stock - $array[1],
-                );
-                $this->db->where('id', $array[0]);
-                $this->db->update('drug_items', $data3);
+                // $data3 = array(
+                //     'quantity_in_stock' => $result->quantity_in_stock - $array[1],
+                // );
+                // $this->db->where('id', $array[0]);
+                // $this->db->update('drug_items', $data3);
 
                 $this->db->where('patient_id', $this->input->post('patient_id'));
                 $this->db->where('prescription_unique_id', $this->input->post('prescription_unique_id'));
@@ -586,6 +614,30 @@ class Patient_m extends CI_Model
         }
 
         if ($this->input->post('Prescription')) {
+
+            foreach ($this->input->post('drug_ids[]') as $drug_id) {
+                $array12 = explode(',', $drug_id);
+                $get = $this->db->select('*')->from('drug_items')->where('id', $array12[0])->get();
+                $result = $get->row();
+                $data3 = array(
+                    'quantity_in_stock' => $result->quantity_in_stock - $array12[1],
+                );
+                $this->db->where('id', $array12[0]);
+                $this->db->update('drug_items', $data3);
+
+
+
+                $data2 = array(
+                    'drug_id' => $array12[0],
+                    'particular' => 'Drug Prescription for Patient',
+                    'drug_in_out' => 'drug_out',
+                    'quantity' => $array12[1],
+                    'balance' => $result->quantity_in_stock - $array12[1],
+                );
+                $insert = $this->db->insert('drug_activities', $data2);
+
+
+            }
             $data_update = array(
                 'status' => "Treated",
             );
