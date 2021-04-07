@@ -28,8 +28,68 @@ class Radiology extends Base_Controller
         $this->load->model('staff_m');
         $this->load->model('department_m');
         $this->load->model('request_m');
+        $this->load->model('radiology_m');
         $this->data['menu_id'] = 'radiology';
     }
+
+    public function investigations()
+    {
+        $this->data['title'] = 'Investigations';
+        $this->data['radiology_investigation_list'] =  $this->radiology_m->get_radiology_investigations();
+        $this->data['radiology_subgroups_list'] =  $this->radiology_m->get_radiology_subgroup();
+        $this->load->view('radiology/investigations', $this->data);
+    }
+
+    public function add_investigation()
+    {
+        $this->data['title'] = 'Investigations';
+        if ($this->uri->segment(3)) {
+            $this->data['investigation'] =  $this->radiology_m->get_investigation_by_id($this->uri->segment(3));
+
+        }
+        $this->data['radiology_subgroups_list'] =  $this->radiology_m->get_radiology_subgroup();
+        $this->load->view('radiology/investigation-modal', $this->data);
+    }
+    public function validate_investigation()
+    {
+        $rules = [
+            [
+                'field' => 'name',
+                'label' => 'Name',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'subgroup',
+                'label' => 'SubGroup',
+                'rules' => 'trim|numeric|required'
+            ],
+            [
+                'field' => 'cost',
+                'label' => 'Drug Cost',
+                'rules' => 'trim|numeric|required'
+            ],
+        ];
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+    function save_investigation()
+    {
+        $this->radiology_m->save_investigation();
+    }
+    public function delete_investigation()
+    {
+        $id = $this->input->post('id');
+        $this->db->delete('service_charge_items', array('id' => $id));
+    }
+
+
     public function requests()
     {
         $this->data['title'] = 'Radiology';

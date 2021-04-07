@@ -77,6 +77,17 @@ class Laboratory_m extends CI_Model
         return $ranges;
     }
 
+    public function get_lab_results($lab_test_id,$lab_request_id) {
+        $get_ranges = $this->db->select('result')->from('lab_test_result_details')->where('lab_request_id',$lab_request_id)->where('lab_test_id',$lab_test_id)->get();
+        $ranges = $get_ranges->row();
+        return $ranges;
+    }
+    public function get_lab_results2($lab_test_id,$lab_request_id) {
+        $get_ranges = $this->db->select('result')->from('lab_test_result_details')->where('lab_request_id',$lab_request_id)->where('lab_test_subgroup_id',$lab_test_id)->get();
+        $ranges = $get_ranges->row();
+        return $ranges;
+    }
+
     public function get_request_list_filtered()
     {
         if ($this->input->post('status')) {
@@ -146,9 +157,6 @@ class Laboratory_m extends CI_Model
                // }
             }
                 $this->db->insert_batch('lab_test_result_details', $data);
-
-
-
 
             $data3 = array(
                 'status' => 'Review',

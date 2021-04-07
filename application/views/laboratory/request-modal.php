@@ -331,6 +331,6 @@
 </div>
 <script>
     $(document).ready(function() {
-       // $('tr.request td:nth-child(1)').hide();
+       $('tr.request td:nth-child(1)').hide();
     });
 </script>

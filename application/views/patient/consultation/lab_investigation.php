@@ -1,3 +1,10 @@
+<style type="text/css">
+    
+#lab_investigation thead th, #lab_investigation tbody td {
+  padding: 1px !important;
+  height: 12px;
+  font-size: 12px;
+</style>
 <div class="tab-pane" id="lab_investigation">
     <h6>Laboratory Investigation</h6>
     <div class="tab-pane table-responsive active show" id="laboratory">
@@ -19,7 +26,7 @@
             </thead>
             <tbody>
                 <?php $i = 1;
-                foreach ($lab_tests as $lab_test) { ?>
+                foreach ($lab_tests2 as $lab_test) { ?>
                     <tr>
                         <td><?php echo $i++ ?></td>
                         <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($lab_test->date_added)) ?></span></td>

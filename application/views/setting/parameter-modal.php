@@ -202,18 +202,18 @@
         //console.log(value);
 
 
-                        var name = document.getElementById('parameter_name').value;
-                        var measure = document.getElementById('parameter_measure').value;
+            var name = document.getElementById('parameter_name').value;
+            var measure = document.getElementById('parameter_measure').value;
 
         //console.log(value);
         //console.log(cols);
-        $("#parameter_range_list").append("<input name='parameter_range_id' class='test" + id + "' value='(" + value + ':' + $(cols[1]).text() + '-' + $(cols[2]).text() + ")' >");
+        $("#parameter_range_list").append("<input name='parameter_range_id' hidden class='test" + id + "' value='(" + value + ':' + $(cols[1]).text() + '-' + $(cols[2]).text() + ")' >");
         // if (value=='') {
 
         // $("#parameter_range_list2").append("<input name='parameter_range_without[]' class='test" + id + "' value='" + value + ',' + name + ',' + measure + ',' + $(cols[1]).text() +','+ $(cols[2]).text() + "' >");
         // }
-        $("#parameter_range_list2").append("<input name='parameter_range_id2[]' class='test" + id + "' value='" + value + ',' + name + ',' + measure + ',' + $(cols[1]).text() +','+ $(cols[2]).text() + "' >");
-        $("#lab_test_list").append("<input name='range_id[]' class='test" + id + "' value='" + value + ',' + $(cols[1]).text() + ',' + $(cols[2]).text() + "' >");
+        $("#parameter_range_list2").append("<input name='parameter_range_id2[]' hidden class='test" + id + "' value='" + value + ',' + name + ',' + measure + ',' + $(cols[1]).text() +','+ $(cols[2]).text() + "' >");
+        $("#lab_test_list").append("<input name='range_id[]' hidden class='test" + id + "' value='" + value + ',' + $(cols[1]).text() + ',' + $(cols[2]).text() + "' >");
         $("#summaryTableP tbody").append("<tr>" +
             "<td></td>" +
             "<td>" + value + "</td>" +
@@ -222,7 +222,7 @@
             "<td width='10%'><button type='button' onclick='testDelete(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
             "</tr>");
 
-        $("#range_idd").val("");
+        $("#range_idp").val("");
         $(cols[1]).text("");
         $(cols[2]).text("");
     }

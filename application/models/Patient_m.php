@@ -308,14 +308,14 @@ class Patient_m extends CI_Model
     public function rad_items()
     {
         $where = "ChargeSubGroupID = '57' or ChargeSubGroupID = '58' or ChargeSubGroupID = '82'";
-        $lab_test = $this->db->select('*')->from('tblchargeitem')->where($where)->order_by('ChargeItemID', 'DESC')->get();;
+        $lab_test = $this->db->select('*')->from('service_charge_items')->where($where)->order_by('id', 'DESC')->get();;
         $lab_test_result = $lab_test->result();
         return $lab_test_result;
     }
     public function procedure_items()
     {
         $where = "ChargeSubGroupID = '56' or ChargeSubGroupID = '61' or ChargeSubGroupID = '68' or ChargeSubGroupID = '76' or ChargeSubGroupID = '77' or ChargeSubGroupID = '78'";
-        $lab_test = $this->db->select('*')->from('tblchargeitem')->where($where)->order_by('ChargeItemID', 'DESC')->get();;
+        $lab_test = $this->db->select('*')->from('service_charge_items')->where($where)->order_by('id', 'DESC')->get();;
         $lab_test_result = $lab_test->result();
         return $lab_test_result;
     }
@@ -405,6 +405,12 @@ class Patient_m extends CI_Model
     public function get_lab_test_by_patient_id_and_vital_id($patient_id, $vital_id)
     {
         $get_patients = $this->db->select('d.*, s.staff_firstname,l.lab_test_name,s.staff_middlename,s.staff_lastname, d.id as lab_test_id')->from('patient_lab_tests d')->join('staff as s', 's.user_id=d.doctor_id', 'left')->join('lab_tests as l', 'l.id=d.lab_test_id', 'left')->where('d.patient_id', $patient_id)->where('d.vital_id', $vital_id)->group_by('d.lab_test_unique_id')->order_by('d.id', 'DESC')->get();
+        $patient_list = $get_patients->result();
+        return $patient_list;
+    }
+    public function get_lab_test_by_patient_id_and_vital_id2($patient_id, $vital_id)
+    {
+        $get_patients = $this->db->select('d.*, s.staff_firstname,l.lab_test_name,s.staff_middlename,s.staff_lastname, d.id as lab_test_id, d.lab_test_id as lab_test_group_id')->from('lab_requests d')->join('staff as s', 's.user_id=d.doctor_id', 'left')->join('lab_tests as l', 'l.id=d.lab_test_id', 'left')->where('d.patient_id', $patient_id)->where('d.vital_id', $vital_id)->order_by('d.id', 'DESC')->get();
         $patient_list = $get_patients->result();
         return $patient_list;
     }
@@ -538,7 +544,7 @@ class Patient_m extends CI_Model
     }
     public function get_radiology_by_unique_id($id)
     {
-        $get_consultation = $this->db->select('r.*, t.Name, t.ChargeItemID as test_id, r.id as radiology_test_id')->from('patient_radiology_tests r')->join('tblchargeitem as t', 't.ChargeItemID =r.radiology_test_id', 'left')->where('r.radiology_test_unique_id', $id)->order_by('r.id', 'DESC')->get();
+        $get_consultation = $this->db->select('r.*, t.Name, t.id as test_id, r.id as radiology_test_id')->from('patient_radiology_tests r')->join('service_charge_items as t', 't.id =r.radiology_test_id', 'left')->where('r.radiology_test_unique_id', $id)->order_by('r.id', 'DESC')->get();
         $consultation = $get_consultation->result();
         return $consultation;
     }
@@ -550,7 +556,7 @@ class Patient_m extends CI_Model
     }
     public function get_procedure_by_unique_id($id)
     {
-        $get_consultation = $this->db->select('p.*, t.Name, t.ChargeItemID as test_id, p.id as procedure_test_id')->from('patient_procedure_tests p')->join('tblchargeitem as t', 't.ChargeItemID=p.procedure_test_id', 'left')->where('p.procedure_test_unique_id', $id)->order_by('p.id', 'DESC')->get();
+        $get_consultation = $this->db->select('p.*, t.Name, t.id as test_id, p.id as procedure_test_id')->from('patient_procedure_tests p')->join('service_charge_items as t', 't.id=p.procedure_test_id', 'left')->where('p.procedure_test_unique_id', $id)->order_by('p.id', 'DESC')->get();
         $consultation = $get_consultation->result();
         return $consultation;
     }

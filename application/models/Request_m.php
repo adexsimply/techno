@@ -88,13 +88,13 @@ class Request_m extends CI_Model
 
     public function get_treated_rad_test_by_patient_id($p_id, $test_id)
     {
-        $get_lab_request = $this->db->select('pr.*, i.Name as rad_test_name')->from('patient_radiology_tests pr')->join('tblchargeitem as i', 'i.ChargeItemID=pr.radiology_test_id', 'left')->join('radiology_request as r', 'r.radiology_test_unique_id=pr.radiology_test_unique_id', 'left')->where('pr.patient_id', $p_id)->where('pr.radiology_test_unique_id', $test_id)->where('pr.status', 'Treated')->get();
+        $get_lab_request = $this->db->select('pr.*, i.Name as rad_test_name')->from('patient_radiology_tests pr')->join('service_charge_items as i', 'i.id=pr.radiology_test_id', 'left')->join('radiology_request as r', 'r.radiology_test_unique_id=pr.radiology_test_unique_id', 'left')->where('pr.patient_id', $p_id)->where('pr.radiology_test_unique_id', $test_id)->where('pr.status', 'Treated')->get();
         $lab_request_list = $get_lab_request->result();
         return $lab_request_list;
     }
     public function get_pending_rad_test_by_patient_id($p_id, $test_id)
     {
-        $get_lab_request = $this->db->select('pr.*, i.Name as rad_test_name')->from('patient_radiology_tests pr')->join('tblchargeitem as i', 'i.ChargeItemID=pr.radiology_test_id', 'left')->join('radiology_request as r', 'r.radiology_test_unique_id=pr.radiology_test_unique_id', 'left')->where('pr.patient_id', $p_id)->where('pr.radiology_test_unique_id', $test_id)->where('pr.status', 'Pending')->get();
+        $get_lab_request = $this->db->select('pr.*, i.Name as rad_test_name')->from('patient_radiology_tests pr')->join('service_charge_items as i', 'i.id=pr.radiology_test_id', 'left')->join('radiology_request as r', 'r.radiology_test_unique_id=pr.radiology_test_unique_id', 'left')->where('pr.patient_id', $p_id)->where('pr.radiology_test_unique_id', $test_id)->where('pr.status', 'Pending')->get();
         $lab_request_list = $get_lab_request->result();
         return $lab_request_list;
     }

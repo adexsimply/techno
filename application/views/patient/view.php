@@ -19,6 +19,13 @@
   padding: 1px !important;
   height: 15px;
 }
+
+.body thead th, .body tbody td {
+  padding: 1px !important;
+  height: 12px;
+  font-size: 12px;
+}
+
 </style>
 <div class="container-fluid">
 <!-- 	<div class="block-header">
@@ -334,7 +341,7 @@
 
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
-												<div class="tab-pane table-responsive active show" id="laboratory">
+												<div class="tab-pane table-responsive active show" id="laboratory" style="max-height: 400px;">
 													<?php if ($patient->appointment_id != NULL && $lab_tests == Null) { ?>
 														<button class="btn btn-dark m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Laboratory for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_lab/' . $patient->vital_id) ?>">
 															<i class="fa fa-plus-circle"></i> Add New
@@ -355,11 +362,14 @@
 														</thead>
 														<tbody>
 															<?php $i = 1;
-															foreach ($lab_tests as $lab_test) { ?>
+															foreach ($lab_tests as $lab_test) {
+																//var_dump($lab_test);
+
+															 ?>
 																<tr>
 																	<td><?php echo $i++ ?></td>
-																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($lab_test->date_added)) ?></span></td>
-																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($lab_test->date_added)) ?></span></td>
+																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($lab_test->date_created)) ?></span></td>
+																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($lab_test->date_created)) ?></span></td>
 																	<!-- <td><?php echo $lab_test->lab_test_name;  ?></td> -->
 																	<td>
 																		<?php if ($lab_test->status == "Pending") { ?>
@@ -369,21 +379,27 @@
 																		<?php } else if ($lab_test->status == "Specimen") { ?>
 																			<span class="badge badge-primary"><?php echo $lab_test->status ?></span>
 																		<?php } else if ($lab_test->status == "Review") { ?>
-																			<span class="badge badge-primary"><?php echo $lab_test->status ?></span>
+																			<span class="badge badge-info"><?php echo $lab_test->status ?></span>
 																		<?php } else if ($lab_test->status == "Incomplete") { ?>
 																			<span class="badge badge-primary"><?php echo $lab_test->status ?></span>
 																		<?php } ?>
 																	</td>
 																	<td>
-																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_lab_test/' . $lab_test->lab_test_unique_id) ?>">
-																			<i class="fa fa-pencil"></i>
-																		</button>
-																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View  Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_lab_test/' . $lab_test->lab_test_unique_id) ?>">
+
+																		<?php if($lab_test->status == "Treated" || $lab_test->status == "Review") {?>
+																		<button class="btn btn-dark" type="button" data-show="No" data-toggle="modal" data-target="#takeVitals" data-status="Treated" onclick="shiNew(event)" data-type="black" data-size="xl" data-title="laboratory Request" href="<?php echo base_url('laboratory/view_request_treated/'.$lab_test->lab_test_id); ?>"> <i class="fa fa-eye"></i></button>
+																		<?php } else  { ?> 
+																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_lab_test/' . $lab_test->lab_test_group_id) ?>">
 																			<i class="fa fa-eye"></i>
 																		</button>
-																		<button class="btn btn-dark" type="button" onclick="delete_lab_test(<?php echo $lab_test->lab_test_unique_id ?>)">
+
+																		<?php } ?>
+																		<!-- <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View  Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_lab_test/' . $lab_test->lab_test_group_id) ?>">
+																			<i class="fa fa-eye"></i>
+																		</button> -->
+																		<!-- <button class="btn btn-dark" type="button" onclick="delete_lab_test(<?php echo $lab_test->lab_test_unique_id; ?>)">
 																			<i class="fa fa-trash"></i>
-																		</button>
+																		</button> -->
 																	</td>
 																<?php } ?>
 																</tr>

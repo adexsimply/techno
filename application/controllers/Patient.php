@@ -82,7 +82,8 @@ class Patient extends Base_Controller
             $this->data['eye_clinics'] = $eye_clinics = $this->patient_m->get_eye_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['dental_clinics'] = $dental_clinics = $this->patient_m->get_dental_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['med_reports'] = $med_reports = $this->patient_m->get_med_report_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
-            $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
+            $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id2($this->uri->segment(3), $patient->vital_id);
+            $this->data['lab_tests2'] = $lab_test2 = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['radiologies'] = $radiology = $this->patient_m->get_radiology_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['prescriptions'] = $prescription = $this->patient_m->get_prescription_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['procedures'] = $procedure = $this->patient_m->get_procedure_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
@@ -122,7 +123,8 @@ class Patient extends Base_Controller
             $this->data['vitals_list'] =  $this->nursing_m->get_appointment_vitals2();
             $this->data['vital_details'] = $h =  $this->patient_m->get_edit_vitals_request_by_id($this->uri->segment(3));
             $this->data['patient'] = $patient = $this->patient_m->get_patient_by_id($h->patient_id);
-            $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
+            $this->data['lab_tests'] = $lab_test = $this->patient_m->get_lab_test_by_patient_id_and_vital_id2($h->patient_id, $patient->vital_id);
+            $this->data['lab_tests2'] = $lab_test2 = $this->patient_m->get_lab_test_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
             $this->data['radiologies'] = $radiology = $this->patient_m->get_radiology_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
             $this->data['prescriptions'] = $prescription = $this->patient_m->get_prescription_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);
             $this->data['med_reports'] = $med_reports = $this->patient_m->get_med_report_by_patient_id_and_vital_id($h->patient_id, $patient->vital_id);

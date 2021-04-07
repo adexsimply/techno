@@ -132,9 +132,7 @@
                                                 <select class="form-control" name="specimen[]">
                                                     <option value="">Select</option>
                                                     <?php foreach ($lab_specimens_list as $specimen) { ?>
-                                                        <option value="<?php echo $specimen->id; ?>" <?php if ($specimen->id == $test->sample_type) {
-                                                                                                            echo "selected";
-                                                                                                        } ?>><?php echo $specimen->specimen_name; ?></option>
+                                                        <option value="<?php echo $specimen->id; ?>" <?php if ($specimen->id == $test->sample_type) { echo "selected"; } ?>><?php echo $specimen->specimen_name; ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </td>
@@ -161,15 +159,15 @@
                     <hr> -->
                     <div class="col-lg-12 col-md-12">
                     </div>
-                <div class="text-right">
+              <!--   <div class="text-right">
                     <button type="button" onclick="form_routes_request('update_request')" title="update_request" class="btn btn-primary px-4 m-2">Save</button>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>
 </div>
 <script>
     $(document).ready(function() {
-       // $('tr.request td:nth-child(1)').hide();
+       $('tr.request td:nth-child(1)').hide();
     });
 </script>

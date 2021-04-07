@@ -30,6 +30,7 @@ class Setting extends Base_Controller
         $this->load->model('request_m');
         $this->load->model('drug_m');
         $this->load->model('setting_m');
+        $this->load->model('laboratory_m');
         $this->load->model('patient_m');
         $this->data['menu_id'] = 'settings';
     }

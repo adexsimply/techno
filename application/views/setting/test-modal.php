@@ -156,7 +156,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="m-2" name="range" type="radio" onclick="toggleRange(true)" <?php if (isset($lab_test_range) && $lab_test_range != null) {echo "checked";} ?>>
+                                        <input class="m-2" name="range" type="radio" onclick="toggleRange(true)" <?php if (isset($lab_test_range) && $lab_test_range != null && $lab_test->has_subgroup=='No') {echo "checked";} ?>>
                                         <label class="form-check-label">
                                             Select Range Tag
                                         </label>
@@ -283,12 +283,17 @@
                                                         $i = 1;
                                                         //var_dump($lab_test_parameter);
                                                         foreach ($lab_test_parameter as $parameter) {
+                                                            //var_dump($parameter);
                                                     ?>
                                                             <tr>
                                                                 <td></td>
                                                                 <td><?php echo $parameter->lab_test_subgroup_name; ?></td>
                                                                 <td><?php echo $parameter->Measure; ?></td>
-                                                                <td><?php echo $parameter->RangeValue; ?></td>
+                                                                <td><?php $the_ranges = $this->laboratory_m->get_ranges($parameter->id); 
+                                                                foreach ($the_ranges as $range) {
+                                                                   echo rtrim($range->name.":".$range->low."-".$range->high.",", ", ");
+                                                                }
+                                                                 ?></td>
                                                                 <td width='10%'><button type='button' onclick='deleteParameter(this, <?php echo $parameter->id; ?>, "edit")' class='btn btn-sm btn-danger'>Remove</button></td>
                                                             </tr>
                                                     <?php $i++;
@@ -332,7 +337,7 @@
 
     var _row = null;
     $(document).ready(function() {
-            <?php if (isset($lab_test_range) && $lab_test_range != null) { ?>
+            <?php if (isset($lab_test_range) && $lab_test_range != null && $lab_test->has_subgroup=='No') { ?>
                 $("#noRange").hide();
                 $("#valueRange").show();
                 $("#valueRangeSummary").show();
@@ -496,7 +501,7 @@ function parameter_dialog() {
     var title = 'Parameter';
     var id = element.data('id');
 
-      var adjust_drug =  $.confirm({
+      var parameter =  $.confirm({
             title: title,
             columnClass:'l',
             content:  function () {
@@ -535,20 +540,24 @@ function parameter_dialog() {
                           okkk += dataObj['parameter_range_id'];
                         }
 
-                       console.log(okkk);
+                      // console.log(okkk);
 
                         
 
 
-                    $("#parameter_name_list2").append("<input name='parameter_name2[]' class='test" + id + "' value='" + name + "'>");
+                    $("#parameter_name_list2").append("<input name='parameter_name2[]' hidden class='test" + id + "' value='" + name + "'>");
+                    $("#parameter_name_list2").append("<input name='parameter_measure2' hidden class='test" + id + "' value='" + measure + "'>");
 
                     $("#parameterTable tbody").append("<tr>" +
+                        "<td></td>"+
                         "<td>" + name + "</td>" +
                         "<td>" + measure + "</td>" +
                         "<td>" + okkk+ "</td>" +
                         "<td width='10%'><button type='button' onclick='deleteParameter(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
                         "</tr>");
                         $("input[name='parameter_range_id']").val('');
+
+                        parameter.close();
 
                         return false;
                     }

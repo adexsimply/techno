@@ -14,25 +14,23 @@
             <div class="col-md-12">
                 <div class="card patients-list">
                     <div class="header">
-                        <h2>Lab Tests</h2>
+                        <h2>Investigations</h2>
                     </div>
                     <div class="body">
                         <!-- Nav tabs -->
-                        <button class="btn btn-primary m-b-15" type="button" data-toggle="modal" data-target="#takeVitals78" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add New" href="<?php echo base_url('setting/create_test') ?>">
-                            <i class="icon wb-plus" aria-hidden="true"></i> Add Test
+                        <button class="btn btn-info m-b-15" type="button" data-toggle="modal" data-target="#takeVitals78" onclick="shiNew(event)" data-type="black" data-size="s" data-title="Add New" href="<?php echo base_url('radiology/add_investigation') ?>">
+                            <i class="icon wb-plus" aria-hidden="true"></i> Add New
                         </button>
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="labTestTable">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="radiologyInvestigationTable">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Test Name</th>
-                                            <th>Range Value</th>
-                                            <th>Measure</th>
-                                            <!-- <th>Discontinue</th> -->
-                                            <th>Name</th>
+                                            <th>Item Name</th>
+                                            <th>Cost</th>
+                                            <th>Subgroup</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -40,24 +38,20 @@
                                         <?php
                                         //var_dump($doctors_list);
                                         $i = 1;
-                                        foreach ($lab_test_list as $lab_test) {
+                                        foreach ($radiology_investigation_list as $radiology_investigation) {
                                             //var_dump($operation);
                                         ?>
                                             <tr>
                                                 <td><?php echo $i; ?></td>
-                                                <td><span class="list-name"><?php echo $lab_test->lab_test_name; ?></span></td>
-                                                <td><?php echo $lab_test->range_value; ?></td>
-                                                <td><?php echo $lab_test->measure; ?></td>
+                                                <td><span class="list-name"><?php echo $radiology_investigation->Name; ?></span></td>
+                                                <td><?php echo $radiology_investigation->service_charge_cost; ?></td>
                                                <!--  <td><input type="checkbox" name=""></td> -->
-                                                <td><?php echo $lab_test->lab_group_name; ?></td>
+                                                <td><?php echo $this->radiology_m->get_subgroup_name($radiology_investigation->ChargeSubGroupID)->Name ?></td>
                                                 <td>
-                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit <?php echo $lab_test->lab_test_name; ?>" href="<?php echo base_url('setting/create_test/' . $lab_test->id) ?>">
+                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit <?php echo $radiology_investigation->id; ?>" href="<?php echo base_url('radiology/add_investigation/' . $radiology_investigation->id) ?>">
                                                         <i class="fa fa-pencil"></i>
                                                     </button>
-                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View <?php echo $lab_test->lab_test_name; ?>" href="<?php echo base_url('setting/edit_test/' . $lab_test->id) ?>">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-dark" type="button" onclick="delete_test(<?php echo $lab_test->id ?>)">
+                                                    <button class="btn btn-dark" type="button" onclick="delete_investigation(<?php echo $radiology_investigation->id ?>)">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </td>
@@ -77,11 +71,11 @@
     </div>
 </div>
 
-<?php $this->load->view('setting/script'); ?>
+<?php $this->load->view('radiology/script'); ?>
 <?php $this->load->view('includes/footer_2'); ?>
 <script type="text/javascript">
     
-     var labTestTable =  $('#labTestTable').DataTable({
+     var radiologyInvestigationTable =  $('#radiologyInvestigationTable').DataTable({
             //"lengthChange": false
         });
 

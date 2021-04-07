@@ -100,7 +100,7 @@
 
                         <!-- Wait Here -->
 
-                        <input type="text" value="<?php echo $this->uri->segment(3); ?>" hidden name="lab_request_id">
+                        <input type="text" value="<?php echo $this->uri->segment(3); ?>" id="lab_request_id" hidden name="lab_request_id">
 
                         <div class="table-responsive mb-3" style="margin-top: 20px;">
                             <table class="table table-bordered js-basic-example dataTable table-custom" id="mprDetailDataTable">
@@ -131,9 +131,7 @@
                                                     </td>
                                                     <td width="40%">
                                                     <input type="text" hidden value="2" name="food_id[]">
-                                                    <input type="text" hidden value="<?php echo $tests->id; ?>" name="lab_test_id[]">
-
-                                                        <textarea class="form-control" name="results[]" rows="3"><?php //echo $test->result ?></textarea>
+                                                    <input type="text" hidden value="<?php echo $tests->id; ?>" name="lab_test_id[]"><?php echo $this->laboratory_m->get_lab_results($tests->id,$this->uri->segment(3))->result; ?>
                                                     </td>
                                                     <td>
                                                         <?php echo $tests->measure ?>
@@ -159,8 +157,7 @@
                                                     </td>
                                                     <td width="40%">
                                                     <input type="text" hidden value="2" name="food_id[]">
-                                                    <input type="text" hidden value="<?php echo $tests->id; ?>" name="lab_test_id[]">
-                                                        <textarea class="form-control" name="results[]" rows="3"><?php //echo $test->result ?></textarea>
+                                                    <input type="text" hidden value="<?php echo $tests->id; ?>" name="lab_test_id[]"><?php echo $this->laboratory_m->get_lab_results($tests->id,$this->uri->segment(3))->result; ?>
                                                     </td>
                                                     <td>
                                                         <?php echo $tests->measure ?>
@@ -198,8 +195,7 @@
                                                     <input type="text" hidden value="2" name="food_id[]">
                                                     <input type="text" hidden value="<?php echo $tests->id; ?>" name="lab_test_id[]">
 
-                                                    <input type="text" hidden value="<?php echo $lab_group->id; ?>" name="lab_test_subgroup_id[]">
-                                                        <textarea class="form-control" name="results[]" rows="3"><?php //echo $test->result ?></textarea>
+                                                    <input type="text" hidden value="<?php echo $lab_group->id; ?>" name="lab_test_subgroup_id[]"><?php echo $this->laboratory_m->get_lab_results2($lab_group->id,$this->uri->segment(3))->result; ?>
                                                     </td>
                                                     <td>
                                                         <?php echo $lab_group->Measure ?>
@@ -242,7 +238,7 @@
                     <hr> -->
                     <div class="col-lg-12 col-md-12">
                     </div>
-               <!--  <div class="text-right">
+            <!--     <div class="text-right">
                     <button type="button" onclick="form_routes_request_s('update_request_specimen')" title="update_request" class="btn btn-primary px-4 m-2">Save</button>
                 </div> -->
             </form>

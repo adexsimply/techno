@@ -23,7 +23,7 @@ function listDefaultLabList() {
       async : false,
       dataType : 'json',
       success : function(response){
-        console.log(response)
+        //console.log(response)
         var html = '';
         var i;
         var sn =1;
@@ -62,7 +62,7 @@ function listDefaultLabList() {
                 status = '<span class="badge badge-primary">'+response[i].status+'</span>'
             }
             else if (response[i].status=='Review') {
-                status = '<span class="badge badge-primary">'+response[i].status+'</span>'
+                status = '<span class="badge badge-info">'+response[i].status+'</span>'
             }
             else if (response[i].status=='Incomplete') {
                 status = '<span class="badge badge-primary">'+response[i].status+'</span>'
@@ -71,6 +71,16 @@ function listDefaultLabList() {
             if (response[i].status=='Specimen') {
 
             var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="laboratory_dialog(event)" data-type="black" data-size="xl" data-title="laboratory Request" href="<?php echo base_url('laboratory/view_request_specimen/'); ?>' + response[i].lab_request_id+ '"> <i class="fa fa-pencil"></i></button> '
+
+            }
+            else if (response[i].status=='Review') {
+
+            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="laboratory_dialog(event)" data-type="black" data-size="xl" data-title="laboratory Request" href="<?php echo base_url('laboratory/view_request_review/'); ?>' + response[i].lab_request_id+ '"> <i class="fa fa-pencil"></i></button> '
+
+            }
+            else if (response[i].status=='Treated') {
+
+            var buttons = '<button class="btn btn-dark" type="button" data-show="yes" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="laboratory_dialog(event)" data-type="black" data-size="xl" data-title="laboratory Request" href="<?php echo base_url('laboratory/view_request_treated/'); ?>' + response[i].lab_request_id+ '"> <i class="fa fa-pencil"></i></button> '
 
             }
             else if(response[i].status=='Pending'){
@@ -184,7 +194,7 @@ function listLabRequest() {
                 status = '<span class="badge badge-primary">'+response[i].status+'</span>'
             }
             else if (response[i].status=='Review') {
-                status = '<span class="badge badge-primary">'+response[i].status+'</span>'
+                status = '<span class="badge badge-info">'+response[i].status+'</span>'
             }
             else if (response[i].status=='Incomplete') {
                 status = '<span class="badge badge-primary">'+response[i].status+'</span>'
@@ -199,6 +209,11 @@ function listLabRequest() {
             else if (response[i].status=='Review') {
 
             var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="laboratory_dialog(event)" data-type="black" data-size="xl" data-title="laboratory Request" href="<?php echo base_url('laboratory/view_request_review/'); ?>' + response[i].lab_request_id+ '"> <i class="fa fa-pencil"></i></button> '
+
+            }
+            else if (response[i].status=='Treated') {
+
+            var buttons = '<button class="btn btn-dark" type="button" data-show="yes" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="laboratory_dialog(event)" data-type="black" data-size="xl" data-title="laboratory Request" href="<?php echo base_url('laboratory/view_request_treated/'); ?>' + response[i].lab_request_id+ '"> <i class="fa fa-pencil"></i></button> '
 
             }
             else if(response[i].status=='Pending'){
@@ -233,7 +248,7 @@ function listLabRequest() {
     function save_eye_clinic_name(formData) {
         $("button[title='update_request']").html("Saving data, please wait...");
         $.post("<?php echo base_url('laboratory/update_request'); ?>", formData).done(function(data) {
-            console.log(data)
+            //console.log(data)
             //window.location = "<?php echo base_url('laboratory/requests_results'); ?>";
         });
     }
@@ -265,7 +280,7 @@ function listLabRequest() {
     function save_lab_result_details(formData) {
         $("button[title='update_request']").html("Saving data, please wait...");
         $.post("<?php echo base_url('laboratory/save_lab_result_details'); ?>", formData).done(function(data) {
-            console.log(data)
+           // console.log(data)
             //window.location = "<?php echo base_url('laboratory/requests_results'); ?>";
         });
     }
@@ -273,7 +288,7 @@ function listLabRequest() {
     function form_routes_request_s(action) {
         if (action == 'update_request_specimen') {
             var formData = $('#update-request-specimen').serialize();
-                console.log(formData);
+                //console.log(formData);
                     save_lab_result_details(formData);
             // $.confirm({
             //     title: 'Update Request',
@@ -289,7 +304,27 @@ function listLabRequest() {
             //         }
             //     }
             // });
-        } else {
+        } 
+        else if(action == 'update_request_review') {
+            var lab_request_id = document.getElementById('lab_request_id').value;
+            console.log(lab_request_id);
+
+                $.ajax({
+              type  : 'post',
+              url   : '<?php echo base_url('laboratory/change_lab_request_to_treated'); ?>',
+              data: {
+                  lab_request_id: lab_request_id,
+                },
+              async : false,
+              dataType : 'json',
+              success : function(response2){
+                console.log(response2);
+                }
+
+              });
+
+        }
+        else {
             cancel();
         }
     }
@@ -305,7 +340,9 @@ function laboratory_dialog(event) {
     var title = element.data('title');
     var status = element.data('status');
     var size = element.data('size');
-    console.log(status);
+    var show = element.data('show');
+
+    //console.log(status);
     var btn_text = "Save"
     var btn_color = "btn-blue"
 
@@ -347,6 +384,10 @@ function laboratory_dialog(event) {
                                                 form_routes_request_s('update_request_specimen');
 
                                                 }
+                                                else if (status=='Review') {
+                                                form_routes_request_s('update_request_review');
+                                            }
+
                                                 else {
 
                                                 form_routes_request('update_request');
@@ -354,6 +395,7 @@ function laboratory_dialog(event) {
                   
 
                                                 //alert('Done');
+                                                 filter_lab_request()
 
                                                 laboratoryDialog.close();
                                               },
@@ -385,6 +427,17 @@ function laboratory_dialog(event) {
             },
         },
         onContentReady: function () {
+            console.log("zssss");
+
+            if (status=='Treated') {
+
+            this.buttons.labSubmit.hide();
+            }
+            if (show=='No') {
+
+            this.buttons.labSubmit.hide();
+            }
+
             // bind to events
             var jc = this;
             this.$content.find('form').on('submit', function (e) {

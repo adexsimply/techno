@@ -115,19 +115,48 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php
-                                                            $i = 1;
+                                                            <?php $i = 1;
                                                             foreach ($lab_tests as $lab_test) {
-                                                            ?>
-                                                            <tr>
-                                                                <td><?php echo $i; ?></td>
-                                                                <td><?php echo $lab_test->lab_test_name; ?></td>
-                                                                <td><span class='text-success'>₦5000</span></td>
-                                                                <td><span class='text-success'>₦5000</span></td>
-                                                                <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $lab_test->id; ?>)">Add</button></td>
-                                                            </tr>
-                                                        <?php $i++;
-                                                            } ?>
+                                                                //var_dump($lab_test);
+
+                                                             ?>
+                                                                <tr>
+                                                                    <td><?php echo $i++ ?></td>
+                                                                    <td><span class="list-name"><?php echo date('jS \of F Y', strtotime($lab_test->date_created)) ?></span></td>
+                                                                    <td><span class="list-name"><?php echo date('h:i:sa', strtotime($lab_test->date_created)) ?></span></td>
+                                                                    <!-- <td><?php echo $lab_test->lab_test_name;  ?></td> -->
+                                                                    <td>
+                                                                        <?php if ($lab_test->status == "Pending") { ?>
+                                                                            <span class="badge badge-warning"><?php echo $lab_test->status ?></span>
+                                                                        <?php } else if ($lab_test->status == "Treated") { ?>
+                                                                            <span class="badge badge-success"><?php echo $lab_test->status ?></span>
+                                                                        <?php } else if ($lab_test->status == "Specimen") { ?>
+                                                                            <span class="badge badge-primary"><?php echo $lab_test->status ?></span>
+                                                                        <?php } else if ($lab_test->status == "Review") { ?>
+                                                                            <span class="badge badge-info"><?php echo $lab_test->status ?></span>
+                                                                        <?php } else if ($lab_test->status == "Incomplete") { ?>
+                                                                            <span class="badge badge-primary"><?php echo $lab_test->status ?></span>
+                                                                        <?php } ?>
+                                                                    </td>
+                                                                    <td>
+
+                                                                        <?php if($lab_test->status == "Treated" || $lab_test->status == "Review") {?>
+                                                                        <button class="btn btn-dark" type="button" data-show="No" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="shiNew(event)" data-type="black" data-size="xl" data-title="laboratory Request" href="<?php echo base_url('laboratory/view_request_treated/'.$lab_test->lab_test_id); ?>"> <i class="fa fa-eye"></i></button>
+                                                                        <?php } else  { ?> 
+                                                                        <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_lab_test/' . $lab_test->lab_test_group_id) ?>">
+                                                                            <i class="fa fa-eye"></i>
+                                                                        </button>
+
+                                                                        <?php } ?>
+                                                                        <!-- <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="View  Laboratory Test for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/view_lab_test/' . $lab_test->lab_test_group_id) ?>">
+                                                                            <i class="fa fa-eye"></i>
+                                                                        </button> -->
+                                                                        <!-- <button class="btn btn-dark" type="button" onclick="delete_lab_test(<?php echo $lab_test->lab_test_unique_id; ?>)">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button> -->
+                                                                    </td>
+                                                                </tr>
+                                                                <?php } ?>
                                                     </tbody>
                                                 </table>
                                             </div>

@@ -255,11 +255,18 @@ class Setting_m extends CI_Model
     function save_test()
     {
         if ($this->input->post('id')) {
+            if($this->input->post('parameter_name2')) {
+                $has_subgroup = "Yes";
+            }
+            else {
+                $has_subgroup ="No";
+            }
             $lab_test_id = $this->input->post('id');
             $data = array(
                 'lab_test_name' => $this->input->post('name'),
                 'lab_group_id' => $this->input->post('group'),
                 'measure' => $this->input->post('measure'),
+                'has_subgroup' => $has_subgroup,
                 'cost' => $this->input->post('cost'),
             );
             $this->db->where('id', $this->input->post('id'));
@@ -270,7 +277,7 @@ class Setting_m extends CI_Model
                     $array = explode(',', $range);
                     //print_r($array);
                     $data = array(
-                        'lab_test_id' => $lab_test_id,
+                        'lab_test_subgroup_id' => $lab_test_id,
                         'name' => $array[0],
                         'low' => $array[1],
                         'high' => $array[2],
@@ -279,41 +286,78 @@ class Setting_m extends CI_Model
                 }
             }
 
-            if ($this->input->post('parameter_id') && $this->input->post('parameter_id') != null) {
-                foreach ($this->input->post('parameter_id') as $parameter) {
-                    $array = explode(',', $parameter);
-                    //print_r($array);
-                    $data = array(
-                        'lab_test_id' => $lab_test_id,
-                        'name' => $array[0],
-                        'measure' => $array[1],
-                        'range_value' => $array[2],
-                    );
-                    $insert = $this->db->insert('lab_test_parameters', $data);
-                }
-            }
-        } else {
-            $data = array(
-                'lab_test_name' => $this->input->post('name'),
-                'lab_group_id' => $this->input->post('group'),
-                'measure' => $this->input->post('measure'),
-                'cost' => $this->input->post('cost'),
-            );
-            $insert = $this->db->insert('lab_tests', $data);
-            $lab_test_id = $this->db->insert_id();
-            // if ($this->input->post('range_id') && $this->input->post('range_id') != null) {
-            //     foreach ($this->input->post('range_id') as $range) {
-            //         $array = explode(',', $range);
+            // if ($this->input->post('parameter_id') && $this->input->post('parameter_id') != null) {
+            //     foreach ($this->input->post('parameter_id') as $parameter) {
+            //         $array = explode(',', $parameter);
             //         //print_r($array);
             //         $data = array(
             //             'lab_test_id' => $lab_test_id,
             //             'name' => $array[0],
-            //             'low' => $array[1],
-            //             'high' => $array[2],
+            //             'measure' => $array[1],
+            //             'range_value' => $array[2],
             //         );
-            //         $insert = $this->db->insert('lab_test_range_by_test', $data);
+            //         $insert = $this->db->insert('lab_test_parameters', $data);
             //     }
             // }
+            foreach ($this->input->post('parameter_name2') as $parameter) {
+                    //$array = explode(',', $parameter);
+                    //print_r($array);
+                    $data = array(
+                        'lab_test_subgroup_name' => $parameter,
+                        'Measure' => $this->input->post('parameter_measure2'),
+                        'lab_test_id' => $lab_test_id
+                    );
+                    $insert = $this->db->insert('lab_tests_subgroup', $data);
+                    $lab_tests_subgroup_id = $this->db->insert_id();
+
+                    foreach($this->input->post('parameter_range_id2') as $param_range) {
+                        $parameter_range1 = explode(",", $param_range);
+                        if ($parameter_range1[1]==$parameter) {
+
+
+
+                    $data2 = array(
+                        'lab_test_subgroup_id' => $lab_tests_subgroup_id,
+                        'name' => $parameter_range1[0],
+                        'low' => $parameter_range1[3],
+                        'high' => $parameter_range1[4]
+                    );
+                    $insert2 = $this->db->insert('lab_test_range_by_test', $data2);
+
+                        }
+                    }
+
+                }
+
+        } else {
+            if($this->input->post('parameter_name2')) {
+                $has_subgroup = "Yes";
+            }
+            else {
+                $has_subgroup ="No";
+            }
+            $data = array(
+                'lab_test_name' => $this->input->post('name'),
+                'lab_group_id' => $this->input->post('group'),
+                'measure' => $this->input->post('measure'),
+                'has_subgroup' => $has_subgroup,
+                'cost' => $this->input->post('cost'),
+            );
+            $insert = $this->db->insert('lab_tests', $data);
+            $lab_test_id = $this->db->insert_id();
+            if ($this->input->post('range_id') && $this->input->post('range_id') != null) {
+                foreach ($this->input->post('range_id') as $range) {
+                    $array = explode(',', $range);
+                    //print_r($array);
+                    $data = array(
+                        'lab_test_subgroup_id' => $lab_test_id,
+                        'name' => $array[0],
+                        'low' => $array[1],
+                        'high' => $array[2],
+                    );
+                    $insert = $this->db->insert('lab_test_range_by_test', $data);
+                }
+            }
 
             // if ($this->input->post('parameter_id') && $this->input->post('parameter_id') != null) {
             //     foreach ($this->input->post('parameter_id') as $parameter) {
@@ -346,7 +390,7 @@ class Setting_m extends CI_Model
 
 
                     $data2 = array(
-                        'lab_test_id' => $lab_tests_subgroup_id,
+                        'lab_test_subgroup_id' => $lab_tests_subgroup_id,
                         'name' => $parameter_range1[0],
                         'low' => $parameter_range1[3],
                         'high' => $parameter_range1[4]

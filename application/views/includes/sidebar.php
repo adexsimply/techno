@@ -110,8 +110,8 @@
                             </li>
                             <li <?php if ($menu_id == 'radiology') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="fa fa-bolt"></i><span>Radiology</span> </a>
                                 <ul>
-                                    <li><a href="<?php echo base_url('setting/services') ?>">Services</a></li>
-                                    <li><a href="<?php echo base_url('setting/tests') ?>">Investigations</a></li>
+                                   <!--  <li><a href="<?php echo base_url('setting/services') ?>">Services</a></li> -->
+                                    <li><a href="<?php echo base_url('radiology/investigations') ?>">Investigations</a></li>
                                     <li><a href="<?php echo base_url('radiology/requests') ?>">Requests & Results</a></li>
                                 </ul>
                             </li>
