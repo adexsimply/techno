@@ -100,18 +100,18 @@
                                 <div class="text-center mb-2">
                                     <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback procedure_error" id="procedure_error" data-field="procedure_error"></code>
                                 </div>
-                                <legend><b>Select Procedure Item</b></legend>
-                                <div class="body" style="height: 350px; overflow: scroll;">
-                                    <input type="text" class="form-control mb-3" id="mySearch" placeholder="Start typing a Procedure Item Name">
+                                <b>Select Procedure Item</b>
+                                <div class="body" style="max-height: 200px; overflow: scroll;">
+                                    <input type="text" class="form-control mb-3" id="procedureSearch" placeholder="Start typing a Procedure Item Name">
                                     <?php //var_dump($procedure_items); 
                                     ?>
                                     <div class="dataTables_wrapper" id="example_procedure">
-                                        <table class="table table-bordered table-striped table-hover dataTable" id="example_procedure_filter">
+                                        <table class="table table-bordered table-striped table-hover dataTable" id="procedureTable">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>S/N</th>
                                                     <th>Item Name</th>
-                                                    <!-- <th>Price</th> -->
+                                                    <th>Cost</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -123,8 +123,8 @@
                                                     <tr>
                                                         <td><?php echo $i; ?></td>
                                                         <td><?php echo $procedure_item->Name; ?></td>
-                                                        <!-- <td><span class='text-success'>₦<?php echo $procedure_item->cost; ?></span></td> -->
-                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $procedure_item->ChargeItemID; ?>)">Add</button></td>
+                                                        <td><?php echo $procedure_item->service_charge_cost; ?></td>
+                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $procedure_item->id; ?>)">Add</button></td>
                                                     </tr>
                                                 <?php $i++;
                                                 } ?>
@@ -136,14 +136,14 @@
                         </div>
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <fieldset>
-                                <legend><b>Summary</b></legend>
-                                <div class="body" style="height: 300px; overflow: scroll;">
+                                <b>Summary</b>
+                                <div class="body" style="max-height: 200px; overflow: scroll;">
                                     <div class="table-responsive">
                                         <table id="testTable_procedure" class="table table-bordered table-striped table-hover dataTable">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>Item Name</th>
-                                                    <!-- <th width='25%'>Price</th> -->
+                                                    <th width='25%'>Price</th>
                                                     <th width='10%'>Action</th>
                                                 </tr>
                                             </thead>
@@ -188,7 +188,7 @@
 <script>
     $(document).ready(function() {
 
-        var table = $('#example_procedure_filter').DataTable({
+        var procedureTable = $('#procedureTable').DataTable({
             dom: 'lrtip'
         });
         if ($('#example_procedure').is(':visible')) {
@@ -197,12 +197,12 @@
         //$('#example_procedure').hide();
 
 
-        $('#mySearch').keyup(function() {
+        $('#procedureSearch').keyup(function() {
 
-            if (document.getElementById('mySearch').value != '') {
+            if (document.getElementById('procedureSearch').value != '') {
                 //$('#example_procedure').removeAttr("style");
                 $('#example_procedure').show();
-                table.search($(this).val()).draw();
+                procedureTable.search($(this).val()).draw();
             } else {
                 $('#example_procedure').hide();
 
@@ -211,24 +211,24 @@
 
     });
 
-    var _row = null;
-    $(document).ready(function() {
-        var eventFired = function(type) {
-            var n = $('#demo_info')[0];
-        }
+    // var _row = null;
+    // $(document).ready(function() {
+    //     var eventFired = function(type) {
+    //         var n = $('#demo_info')[0];
+    //     }
 
-        $('#example_procedure')
-            .on('order.dt', function() {
-                eventFired('Order');
-            })
-            .on('search.dt', function() {
-                eventFired('Search');
-            })
-            .on('page.dt', function() {
-                eventFired('Page');
-            })
-            .DataTable();
-    });
+    //     $('#example_procedure')
+    //         .on('order.dt', function() {
+    //             eventFired('Order');
+    //         })
+    //         .on('search.dt', function() {
+    //             eventFired('Search');
+    //         })
+    //         .on('page.dt', function() {
+    //             eventFired('Page');
+    //         })
+    //         .DataTable();
+    // });
 
     function testAdd(ctl, id) {
         _row = $(ctl).parents("tr");
@@ -237,7 +237,7 @@
 
         $("#testTable_procedure tbody").append("<tr>" +
             "<td>" + $(cols[1]).text() + "</td>" +
-            // "<td width='25%'>" + $(cols[2]).text() + "</td>" +
+            "<td width='25%'>" + $(cols[2]).text() + "</td>" +
             "<td width='10%'><button type='button' onclick='testDelete_procedure(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
             "</tr>");
     }

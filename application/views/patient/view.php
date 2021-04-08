@@ -504,7 +504,7 @@
 																<th>S/N</th>
 																<th>Date</th>
 																<th>Time</th>
-																<th>Status</th>
+																<th>Name</th>
 																<th>Action</th>
 															</tr>
 														</thead>
@@ -515,12 +515,12 @@
 																	<td><?php echo $i++ ?></td>
 																	<td><span class="list-name"><?php echo date('jS \of F Y', strtotime($procedure->date_added)) ?></span></td>
 																	<td><span class="list-name"><?php echo date('h:i:sa', strtotime($procedure->date_added)) ?></span></td>
-																	<td><span class="list-name">
-																			<?php if ($procedure->status == "Pending") { ?>
+																	<td><span class="list-name"> <?php echo $procedure->Name; ?>
+																		<!-- 	<?php if ($procedure->status == "Pending") { ?>
 																				<span class="badge badge-warning"><?php echo $procedure->status ?></span>
 																			<?php } else if ($procedure->status == "Treated") { ?>
 																				<span class="badge badge-success"><?php echo $procedure->status ?></span>
-																			<?php } ?>
+																			<?php } ?> -->
 																	</td>
 																	<td>
 																		<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Procedure Items for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/edit_procedure/' . $procedure->procedure_test_unique_id) ?>">

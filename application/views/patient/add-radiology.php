@@ -100,11 +100,11 @@
                                 <div class="text-center mb-2">
                                     <code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback radiology_error" id="radiology_error" data-field="radiology_error"></code>
                                 </div>
-                                <legend><b>Choose Radiological Test</b></legend>
-                                <div class="body" style="height: 350px; overflow: scroll;">
-                                    <input type="text" class="form-control mb-3" id="mySearch" placeholder="Start typing a Radiological Test Name">
-                                    <div class="dataTables_wrapper" id="example_radiology">
-                                        <table class="table table-bordered table-striped table-hover dataTable" id="example_radiology_filter">
+                                <b>Choose Radiological Test</b>
+                                    <input type="text" class="form-control mb-3" id="radiologySearch" placeholder="Start typing a Radiological Test Name">
+                                <div class="body" style="max-height: 200px; overflow: scroll;">
+                                    <div class="dataTables_wrapper" id="example_radiology1">
+                                        <table class="table table-bordered table-striped table-hover dataTable" id="radiologyTable">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th>S/N</th>
@@ -122,7 +122,7 @@
                                                         <td><?php echo $i; ?></td>
                                                         <td><?php echo $rad_item->Name; ?></td>
                                                         <!-- <td><span class='text-success'>₦<?php echo $rad_item->cost; ?></span></td> -->
-                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $rad_item->ChargeItemID; ?>)">Add</button></td>
+                                                        <td><button type="button" class="btn btn-sm btn-success" onclick="testAdd(this, <?php echo $rad_item->id; ?>)">Add</button></td>
                                                     </tr>
                                                 <?php $i++;
                                                 } ?>
@@ -134,8 +134,8 @@
                         </div>
                         <div class="col-lg-12 col-md-12 mb-3 mt-2">
                             <fieldset>
-                                <legend><b>Summary</b></legend>
-                                <div class="body" style="height: 300px; overflow: scroll;">
+                                <b>Summary</b>
+                                <div class="body" style="max-height: 200px; overflow: scroll;">
                                     <div class="table-responsive">
                                         <table id="testTable_radiology" class="table table-bordered table-striped table-hover dataTable">
                                             <thead class="thead-dark">
@@ -186,23 +186,23 @@
 <script>
     $(document).ready(function() {
 
-        var table = $('#example_radiology_filter').DataTable({
+        var radiologyTable = $('#radiologyTable').DataTable({
             dom: 'lrtip'
         });
-        if ($('#example_radiology').is(':visible')) {
-            $('#example_radiology').hide();
+        if ($('#example_radiology1').is(':visible')) {
+            $('#example_radiology1').hide();
         }
         //$('#example_radiology').hide();
 
 
-        $('#mySearch').keyup(function() {
+        $('#radiologySearch').keyup(function() {
 
-            if (document.getElementById('mySearch').value != '') {
+            if (document.getElementById('radiologySearch').value != '') {
                 //$('#example_radiology').removeAttr("style");
-                $('#example_radiology').show();
-                table.search($(this).val()).draw();
+                $('#example_radiology1').show();
+                radiologyTable.search($(this).val()).draw();
             } else {
-                $('#example_radiology').hide();
+                $('#example_radiology1').hide();
 
             }
         });

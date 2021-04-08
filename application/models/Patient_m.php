@@ -431,6 +431,15 @@ class Patient_m extends CI_Model
     public function save_radiology()
     {
         $this->load->helper('string');
+            $invoice_id = rand(10000,10000000);
+            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            if ($check_if_invoice_exists->num_rows() > 0) {
+                $invoice_id = rand(10000,10000000);
+            }
+             $data_invoice = array(
+                    'invoice_id' => $invoice_id
+                );
+            $insert_invoice = $this->db->insert('invoices', $data_invoice);
         if ($this->input->post('edit_radiolody_id')) {
             //echo json_encode($this->input->post('special_instuction'));
             $edit_radiolody_id = $this->input->post('edit_radiolody_id');
@@ -460,6 +469,32 @@ class Patient_m extends CI_Model
             //echo json_encode($this->input->post('special_instuction'));
             $unique = random_string('numeric', 4);
             foreach ($this->input->post('radiology_id') as $e_id) {
+
+                ///////
+
+                //$array = explode(',', $e_id);
+
+
+                $get = $this->db->select('*')->from('service_charge_items')->where('id', $e_id)->get();
+                $result = $get->row();
+
+
+                $data2 = array(
+                    'patient_id'   => $this->input->post('patient_id'),
+                    'invoice_id'   => $invoice_id,
+                    'item_name'     => $result->Name,
+                    'category'     => "Radilogy",
+                    'billing_type' => "Debit",
+                    'amount'       => $result->service_charge_cost,
+                    'billed_by'    => $this->session->userdata('active_user')->id,
+                );
+
+                //echo json_encode($this->input->post('prescription_unique_id'));
+
+               $insert_billings = $this->db->insert('billings', $data2);
+
+
+               /////////
                 $data = array(
                     'appointment_id' => $this->input->post('appointment_id'),
                     'patient_id' => $this->input->post('patient_id'),
@@ -487,6 +522,17 @@ class Patient_m extends CI_Model
     public function save_procedure()
     {
         $this->load->helper('string');
+
+            $invoice_id = rand(10000,10000000);
+            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            if ($check_if_invoice_exists->num_rows() > 0) {
+                $invoice_id = rand(10000,10000000);
+            }
+             $data_invoice = array(
+                    'invoice_id' => $invoice_id
+                );
+            $insert_invoice = $this->db->insert('invoices', $data_invoice);
+
         if ($this->input->post('edit_procedure_id')) {
             //echo json_encode($this->input->post('instuction'));
             $edit_procedure_id = $this->input->post('edit_procedure_id');
@@ -515,6 +561,31 @@ class Patient_m extends CI_Model
         } else {
             $unique = random_string('numeric', 4);
             foreach ($this->input->post('procedure_id') as $e_id) {
+                ///////
+
+                //$array = explode(',', $e_id);
+
+
+                $get = $this->db->select('*')->from('service_charge_items')->where('id', $e_id)->get();
+                $result = $get->row();
+
+
+                $data2 = array(
+                    'patient_id'   => $this->input->post('patient_id'),
+                    'invoice_id'   => $invoice_id,
+                    'item_name'     => $result->Name,
+                    'category'     => "Procedure",
+                    'billing_type' => "Debit",
+                    'amount'       => $result->service_charge_cost,
+                    'billed_by'    => $this->session->userdata('active_user')->id,
+                );
+
+                //echo json_encode($this->input->post('prescription_unique_id'));
+
+               $insert_billings = $this->db->insert('billings', $data2);
+
+
+               /////////
                 $data = array(
                     'appointment_id' => $this->input->post('appointment_id'),
                     'patient_id' => $this->input->post('patient_id'),
@@ -732,7 +803,7 @@ class Patient_m extends CI_Model
     }
     public function get_procedure_by_patient_id_and_vital_id($patient_id, $vital_id)
     {
-        $get_patients = $this->db->select('p.*')->from('patient_procedure_tests p')->where('p.patient_id', $patient_id)->where('p.vital_id', $vital_id)->group_by('p.procedure_test_unique_id')->order_by('p.id', 'DESC')->get();
+        $get_patients = $this->db->select('p.*,t.Name')->from('patient_procedure_tests p')->join('service_charge_items as t', 't.id=p.procedure_test_id', 'left')->where('p.patient_id', $patient_id)->where('p.vital_id', $vital_id)->group_by('p.procedure_test_unique_id')->order_by('p.id', 'DESC')->get();
         $patient_list = $get_patients->result();
         return $patient_list;
     }

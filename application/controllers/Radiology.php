@@ -101,7 +101,7 @@ class Radiology extends Base_Controller
     public function view_request()
     {
         if ($this->uri->segment(3)) {
-            $this->data['radiology_request'] = $lb =  $this->request_m->get_radiology_request_by_id($this->uri->segment(3));
+            $this->data['radiology_request'] = $lb =  $this->request_m->get_radiology_request_by_id3($this->uri->segment(3));
             // print_r($lb);
             $this->data['treated_tests'] =  $this->request_m->get_treated_rad_test_by_patient_id($lb->patient_id, $lb->radiology_test_unique_id);
             $this->data['pending_tests'] =  $this->request_m->get_pending_rad_test_by_patient_id($lb->patient_id, $lb->radiology_test_unique_id);
@@ -113,5 +113,13 @@ class Radiology extends Base_Controller
     public function update_request()
     {
         echo json_encode($this->request_m->update_rad_request());
+    }
+    public function get_request_list_default()
+    {
+        echo json_encode($this->request_m->get_rad_request_list_default());
+    }
+    public function get_request_list_filtered()
+    {
+        echo json_encode($this->request_m->get_rad_request_list_filtered());
     }
 }

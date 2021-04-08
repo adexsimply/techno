@@ -1,5 +1,46 @@
+
+<style>
+#view-radiology-request .mb-3, .my-3 {
+     margin-bottom: 0!important; 
+}
+#view-radiology-request .card-body {
+    color: #444;
+    padding: 5px;
+    font-weight: 400;
+}
+#view-radiology-request thead th, #view-radiology-request tbody td {
+  padding: 1px !important;
+  height: 12px;
+  font-size: 12px;
+}
+
+#patientSearchBill tr.selected {
+    background-color: #e92929 !important;
+    color:#fff;
+    vertical-align: middle;
+    padding: 1.5em;
+}
+#view-radiology-request .form-control {
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 1px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+#view-radiology-request select.form-control:not([size]):not([multiple]) {
+    height: 30px;
+}
+</style>
 <!-- Add new history Modal -->
-<div class="col-12">
+<div class="col-12" id="view-radiology-request">
     <div class="card">
         <div class="card-body">
             <form id="update-request" method="post">
@@ -16,7 +57,7 @@
                                     <span class="input-group-text"><i class="icon-calendar"></i></span>
                                 </div>
                                 <input type="hidden" name="patient_id" value="<?php echo $radiology_request->patient_id; ?>">
-                                <input type="text" disabled class="form-control date" value="<?php $ini_date = date_create($radiology_request->date_created);
+                                <input type="text" disabled class="form-control date" value="<?php $ini_date = date_create($radiology_request->date_added);
                                                                                                 echo date_format($ini_date, "D M d, Y"); ?>">
                             </div>
                         </div>
@@ -64,10 +105,31 @@
                         </div>
                     </div>
 
-                    <!-- <hr>
                     <h5>Investigation Required</h5>
-                    <hr> -->
-                    <div class="col-lg-12 col-md-12">
+                        <div class="table-responsive mb-3">
+                            <table class="table table-bordered js-basic-example dataTable table-custom" id="mprDetailDataTable">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Investigation</th>
+                                        <th>Comment</th>
+                                    </tr>
+                                <tbody>
+                                    <?php //var_dump($radiology_request); ?>
+                                        <tr >
+                                            <td><input type="text" name="radiology_test_id" hidden value="<?php echo $this->uri->segment(3); ?>"><?php echo $radiology_request->rad_test_name; ?></td>
+                                            <td><?php echo $radiology_request->special_instuction; ?></td>                                            
+                                        </tr>
+
+                                </tbody>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <hr>
+                            <textarea rows="10" style="width: 100%" name="results"><?php if ($radiology_request->result != NULL) { echo $radiology_request->result; } ?></textarea>
+                    <!-- <div class="col-lg-12 col-md-12">
                         <ul class="nav nav-tabs">
                             <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#pending">Pending Test</a></li>
                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#treated">Treated Test</a></li>
@@ -152,7 +214,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
                 <div class="text-right">
