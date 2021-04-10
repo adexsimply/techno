@@ -41,7 +41,7 @@
                     <div class="form-row mt-2">
                         <div class="form-group col-md-12">
                             <label for="docName">Name</label>
-                            <input type="text" name="id" value="<?php echo $this->uri->segment(3); ?>">
+                            <input type="text" name="id" hidden value="<?php echo $this->uri->segment(3); ?>">
                                 <input type="text" class="form-control time12" name="name" placeholder="CHLORIDE CL" value="<?php if (isset($investigation->Name)) { echo $investigation->Name; } ?>">
                                 <code style="color: #ff0000;font-size: 14px;" class="form-control-feedback" data-field="name"></code>
                         </div>

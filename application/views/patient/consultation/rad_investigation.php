@@ -1,7 +1,7 @@
  <div class="tab-pane" id="rad_investigation">
      <h6>Radiological Results</h6>
      <div class="tab-pane table-responsive" id="radiology">
-         <button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Radiology for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_radiology/' . $patient->vital_id) ?>">
+         <button class="btn btn-success m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Radiology for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_radiology/' . $this->uri->segment(3)) ?>">
              <i class="fa fa-plus-circle"></i> Add New
          </button>
          <table class="table table-bordered table-striped table-hover dataTable js-exportable">

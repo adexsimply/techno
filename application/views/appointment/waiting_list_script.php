@@ -48,7 +48,7 @@ function listDefaultPatientsWL() {
             // } else {
             //   var buttons = '<button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for " href="<?php echo base_url('nursing/take_vital/'); ?>' + response[i].app_id + '"><i class="icon wb-plus" aria-hidden="true"></i> Take Vitals </button>';
             // }
-            var buttons = '<button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="' + response[i].patient_title + ' ' + response[i].patient_name + '" href="<?php echo base_url('patient/view/'); ?>' + response[i].patient_id+ '"><i class="icon-eye" aria-hidden="true"></i></button>';
+            var buttons = '<button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="' + response[i].patient_title + ' ' + response[i].patient_name + '" href="<?php echo base_url('patient/view/'); ?>' + response[i].patient_id+"/" +response[i].vital_id+ '"><i class="icon-eye" aria-hidden="true"></i></button>';
 
             html += '<tr><td>' + sn++ + '</td> <td>' + response[i].appointment_date +
               '</td> <td>' + response[i].appointment_time +

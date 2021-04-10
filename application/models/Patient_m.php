@@ -41,6 +41,13 @@ class Patient_m extends CI_Model
         $patient_list = $get_patients->row();
         return $patient_list;
     }
+
+    public function get_patient_by_id_vital($patient_id,$vital_id)
+    {
+        $get_patients = $this->db->select('p.*,pn.*,pv.*,pa.appointment_date,pa.appointment_time, pv.id as vital_id, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('patient_vitals as pv', 'pv.patient_id=p.id', 'left')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->where('p.id', $patient_id)->where('pv.id',$vital_id)->get();
+        $patient_list = $get_patients->row();
+        return $patient_list;
+    }
     public function get_patient_billings($patient_id)
     {
         $get_patient_billings = $this->db->select('b.*,u.username')->from('billings b')->join('users as u', 'u.id=b.billed_by', 'left')->where('b.patient_id', $patient_id)->get();

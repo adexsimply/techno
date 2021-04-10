@@ -48,7 +48,7 @@
                                                <!--  <td><input type="checkbox" name=""></td> -->
                                                 <td><?php echo $this->radiology_m->get_subgroup_name($radiology_investigation->ChargeSubGroupID)->Name ?></td>
                                                 <td>
-                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit <?php echo $radiology_investigation->id; ?>" href="<?php echo base_url('radiology/add_investigation/' . $radiology_investigation->id) ?>">
+                                                    <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Edit <?php echo $radiology_investigation->Name; ?>" href="<?php echo base_url('radiology/add_investigation/' . $radiology_investigation->id) ?>">
                                                         <i class="fa fa-pencil"></i>
                                                     </button>
                                                     <button class="btn btn-dark" type="button" onclick="delete_investigation(<?php echo $radiology_investigation->id ?>)">

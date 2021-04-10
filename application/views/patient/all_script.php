@@ -3,6 +3,7 @@ get_pres_lab();
 //console.log($("input[name='patient_id']").value());
 
    $(document).ready(function() {
+    listDefaultConsultationByPatient()
 
 
         var table = $('#example_prescription_filter').DataTable({
@@ -27,7 +28,7 @@ get_pres_lab();
             }
         });
 
-    });
+
     
 function listDefaultConsultationByPatient() {
     var patient_id = document.getElementById('patient_id2').value;
@@ -77,7 +78,9 @@ function listDefaultConsultationByPatient() {
 
       });
 
-    }   
+    } 
+
+    });  
 
     /////Delete
 

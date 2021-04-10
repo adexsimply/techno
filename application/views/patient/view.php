@@ -121,14 +121,14 @@
 				?>
 				<div class="body">
 					<ul class="nav nav-tabs-new2">
-						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#billings">Billings</a></li>
-						<li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="listDefaultConsultationByPatient()" href="#documents">Documents</a></li>
+						<li class="nav-item"><a class="nav-link active" data-toggle="tab" onclick="listDefaultConsultationByPatient()" href="#documents">Documents</a></li>
 						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#otherdocuments">Other Documents</a></li>
 						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#requests">Requests</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#billings">Account</a></li>
 					</ul>
 					<div class="tab-content mt-3">
 
-						<div class="tab-pane" id="documents">
+						<div class="tab-pane active" id="documents">
 
 							<div class="row clearfix">
 								<div class="col-md-12">
@@ -144,9 +144,8 @@
 
 											<!-- Tab panes -->
 											<div class="tab-content m-t-10 padding-0">
-
 												<input type="text" hidden="" id="patient_id2" value="<?php echo $patient->patient_id; ?>" name="">
-												<input type="text" hidden="" id="vital_id" value="<?php echo $patient->vital_id; ?>" name="">
+												<input type="text" hidden id="vital_id" value="<?php echo $patient->vital_id; ?>" name="">
 												<div class="tab-pane table-responsive active show" id="general">
 													<?php if ($patient->appointment_id != NULL && $consultations == Null) { ?>
 														<button class="btn btn-dark m-b-15 m-t-15" type="button" title="add_consultation_btn" data-toggle="modal" data-target="#takeVitals" onclick="consultation_dialog(event)" data-type="black" data-size="l" data-title="New Consultation for <?php echo $patient->patient_name.' '.$patient->appointment_date.' '.$patient->appointment_time; ?>" href="<?php echo base_url('patient/add_consultation/' . $patient->vital_id) ?>">
@@ -687,7 +686,7 @@
 							</div>
 						</div>
 
-						<div class="tab-pane active" id="billings">
+						<div class="tab-pane" id="billings">
 
 							<div>
 								  <!-- <h6>Payment Method</h6>
