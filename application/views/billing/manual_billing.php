@@ -124,7 +124,7 @@
 
                     <div class="input-group" style="margin-top: 10px;">
                         <b>Patient Name: &nbsp;</b>
-                         <input type="text" id="patient_id" class="form-control" value="<?php echo $this->uri->segment(3); ?>" name="patient_id">
+                         <input type="text" id="patient_id" hidden class="form-control" value="<?php echo $this->uri->segment(3); ?>" name="patient_id">
                          <input type="text" id="patient_name" disabled="" class="form-control" value="<?php echo $patient_details->patient_name; ?>" name="patient_name">
                     </div>
 
@@ -143,20 +143,24 @@
                             </select>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 mb-3" id="drug_search">
+                        <div class="col-lg-4 col-md-6 mb-3" id="drug_search">
                             <div class="input-group">
                                 <b>Search:  &nbsp;</b><input type="text" name="" class="form-control" name="search_drug" id="drugSearch" >
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 mb-3" id="lab_search" style="display: none">
+                        <div class="col-lg-4 col-md-6 mb-3" id="lab_search" style="display: none">
                             <div class="input-group">
                                 <b>Search:  &nbsp;</b><input type="text" name="" class="form-control" name="search_lab" id="labSearch" >
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 mb-3" id="general_search" style="display: none">
+                        <div class="col-lg-4 col-md-6 mb-3" id="general_search" style="display: none">
                             <div class="input-group">
                                 <b>Search:  &nbsp;</b><input type="text" name="" class="form-control" name="search_general" id="generalSearch" >
                             </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-6 mb-3">
+                            <button type="button" class="btn btn-xs btn-info btn-block" id="btn_add_manual<?php echo $this->uri->segment(3); ?>" onclick="add_manual_bill(<?php echo $this->uri->segment(3); ?>)"> Manual Bill...</button>
                         </div>
 
 
@@ -514,6 +518,96 @@ function toggle_service() {
                             "<td width='25%'><input type='text' name='quantity[]' hidden value='"+quantity+"'>" + quantity + "</td>" +
                             "<td width='25%'><input type='text' name='item_name[]' hidden value='"+drug_name+"'><input type='text' hidden name='cost[]' value='"+cost+"'>" + payable + "</td>" +
                             "<td width='10%'><button type='button' onclick='removeBill(this, " + id + ");' class='btn btn-sm btn-danger'>Remove</button></td>" +
+                            "</tr>");
+
+
+                    }
+                },
+                cancel: function() {
+                    //close
+                },
+            },
+            onContentReady: function() {
+                // bind to events
+                var jc = this;
+                this.$content.find('form').on('submit', function(e) {
+                    // if the user submits the form by pressing enter in the field.
+                    e.preventDefault();
+                    jc.$$formSubmit.trigger('click'); // reference the button and click it
+                });
+            }
+        });
+    }
+
+    function add_manual_bill(id) {
+
+    // var dataInit = $('#btn_add_drug_bill'+id);
+    //  var drug_name = dataInit.data("drug");
+    //  var cost = dataInit.data("price");
+
+        $.confirm({
+            title: " ",
+            columnClass:"m",
+            content: '' +
+                '<form action="" class="formName">' +
+                '<div class="form-group">' +
+                '<label>Service:</label>' +
+                '<textarea class="service form-control" required /></textarea>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label>Pay As:</label>' +
+                '<select class="pay_as form-control" required ><option value="Deposit">Deposit</option></select>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label>Amount</label>' +
+                '<input type="text" placeholder="Amount" class="quantity form-control" required />' +
+                '</div>' +
+                '</form>',
+            buttons: {
+                formSubmit: {
+                    text: 'OK',
+                    btnClass: 'btn-blue',
+                    action: function() {
+                        var quantity = this.$content.find('.quantity').val();
+                        var service = this.$content.find('.service').val();
+                        var pay_as = this.$content.find('.pay_as').val();
+                        if (!quantity) {
+                            $.alert('Enter Amount');
+                            return false;
+                        }
+
+
+                           $.ajax({
+                          type  : 'post',
+                          url   : '<?php echo base_url('billing/pay_manual_bill'); ?>',
+                          data: {
+                              //status: status,
+                              patient_id: id,
+                              service: service,
+                              debit: quantity
+                            },
+                          async : false,
+                          dataType : 'json',
+                          success : function(response){
+                            console.log(response);
+                            }
+
+                          });
+                        //var payable = Number(cost) * Number(quantity)
+
+                        //$.alert('Your name is ' + price);
+
+                        // $("#items_prescription").append("<input type='' hidden value='1' name='food_id[]'>");
+                        // $("#items_prescription").append("<input hidden name='prescription_id[]' value='" + id + "' id='test_prescription" + id + "'>");
+                        // $("#items_prescription").append("<input hidden name='prescription_value[]' value='" + price + "' id='test_prescription2" + price + "'>");
+
+
+                        $("#billSummaryList tbody").append("<tr>" +
+                            "<td width='25%' class='jaba'>" + service+ "</td>" +
+                            "<td width='25%'>" + quantity+ "</td>" +
+                            "<td width='25%'>1</td>" +
+                            "<td width='25%'>" + quantity + "</td>" +
+                            "<td width='10%'></td>" +
                             "</tr>");
 
 

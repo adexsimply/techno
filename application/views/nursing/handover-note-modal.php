@@ -4,7 +4,7 @@
 			<div class="modal-content">
 		<form id="add-appointment" action="<?php echo base_url('appointment/add_appointment'); ?>" method="post">	
 				<div class="modal-header">
-					<h6 class="modal-title text-primary">New Pharmacy Request</h6>
+					<h6 class="modal-title text-primary">New</h6>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -46,9 +46,7 @@
                                     </div>
                                     <div class="col-lg-12 col-md-6">
                                         <b>Note</b>
-                                        <div class="input-group mb-3">
-											<textarea class="form-control"></textarea>
-                                        </div>
+											<textarea class="form-control" id="ckeditor"></textarea>
                                     </div>
 
 

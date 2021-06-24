@@ -82,6 +82,144 @@ function listDefaultConsultationByPatient() {
 
     });  
 
+
+///////////////////////
+
+  ////////
+
+  ////// Dialog for Adding New Ward
+  function admission_dialog(event) {
+
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var title = element.data('title');
+    var size = element.data('size');
+
+////
+   var admissionDialog = $.confirm({
+        title: 'Prompt!',
+        columnClass:size,
+        content: function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+        buttons: {
+
+            admissionSubmit: {
+                text: "Save",
+                btnClass: "btn-success",
+                action: function () {
+
+                  var confirmsir = "No"
+
+                                    ////Validate form fields
+                                    var formData = $('#add-admission').serialize();
+                                      ///
+                                      var returnData;
+                                      ///
+                                    validate(formData);
+
+                                  function validate(formData) {
+                                  
+                                  $.ajax({
+                                      url: "<?php echo base_url() . 'patient/validate_admission'; ?>",
+                                      async: false,
+                                      type: 'POST',
+                                      data: formData,
+                                      success: function(data, textStatus, jqXHR) {
+                                          returnData = data;
+                                      }
+                                  });
+
+                                    // $('#add-prescription').enable([".action"]);
+                                    // $("button[title='add_prescription']").html("Save changes");
+                                    if (returnData != 'success') {
+                                        // $('#add-prescription').enable([".action"]);
+                                        // $("button[title='add_prescription']").html("Save changes");
+                                        $('.form-control-feedback').html('');
+                                        $('.form-control-feedback').each(function() {
+                                            for (var key in returnData) {
+                                                if ($(this).attr('data-field') == key) {
+                                                    $(this).html(returnData[key]);
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        return 'success';
+                                    }
+                                    //console.log(returnData);
+                                }
+
+                                if (returnData != 'success') {
+                                      return false;
+                                }
+                                else {
+
+                                      $.confirm({
+                                          title: 'Admission',
+                                          content: 'Are you sure you want to Proceed?',
+                                          icon: 'fa fa-check-circle',
+                                          type: 'green',
+                                          buttons: {
+                                              yes: function() {
+
+                                                $.post("<?php echo base_url() . 'patient/save_admission'; ?>", formData).done(function(data) {
+                                                  admissionDialog.close();
+
+                                                });
+                                              },
+                                              no: function() {
+
+                                              }
+                                          }
+                                      });
+
+                                }
+
+
+
+                                      
+                        //console.log(confirmsir);
+                  if (confirmsir=='No') {
+                    return false;
+                  }
+                  else {
+                    return true;
+                  }
+
+
+                }
+            },
+            Close: function () {
+                //close
+                //return false;
+            },
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+    });
+
+}
+
+////////////////
+
     /////Delete
 
 function delete_consultation(rowIndex) {

@@ -5,6 +5,8 @@ $( document ).ready(function() {
 
 listDefaultPatients(); 
 
+listDefaultAdmissionRequests(); 
+
 $('#employeeListing').DataTable({
 "oLanguage": {
         "sEmptyTable": "There are no Patients at the moment"
@@ -12,6 +14,18 @@ $('#employeeListing').DataTable({
 
 
 });
+
+$('#admissionRequestTable').DataTable({
+"oLanguage": {
+        "sEmptyTable": "There are no requests at the moment"
+    }
+
+
+});
+/////
+var wardTable =  $('#wardTable').DataTable({
+        });
+
 function listDefaultPatients() {
       $.ajax({
       type  : 'ajax',
@@ -59,11 +73,44 @@ function listDefaultPatients() {
     }
 
 
+function listDefaultAdmissionRequests() {
+      $.ajax({
+      type  : 'ajax',
+      url   : '<?php echo base_url('nursing/get_default_admission_requests'); ?>',
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        var html = '';
+        var i;
+        var sn =1;
+        for(i=0; i<response.length; i++){
+
+
+            var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
+            var buttons = '<span class="badge badge-success"><a onclick="admit_dialog(event)" data-type="black" data-size="l" data-title="Admission Register" href="<?php echo base_url('nursing/admit_patient/');?>'+ response[i].admission_id +'">Option</a></span>';
+
+            html += '<tr><td>' + sn++ + '</td> <td>' + response[i].request_date +
+              '</td> <td>' + response[i].patient_title + ' ' + response[i].patient_name +
+              '</td> <td>' + response[i].patient_gender +
+              '</td> <td>' + response[i].patient_id_num +
+              '</td> <td>' + response[i].patient_status +
+              '</td> <td>' + response[i].clinic_name +
+              '</td><td>' + fullname +
+              '</td><td>' + buttons + '</td> </tr>';
+          }
+          $('#filtered_admission_requests').html(html);
+        }
+
+      });
+
+    }
+
+
 });
 
-  $('input[name="dates"]').daterangepicker({
-    autoUpdateInput: false
-  });
+  // $('input[name="dates"]').daterangepicker({
+  //   autoUpdateInput: false
+  // });
   // $('yourinput').daterangepicker({
   //   autoUpdateInput: false
   // }
@@ -91,78 +138,404 @@ function listDefaultPatients() {
       })
   }
 
-  $(function() {
-    function log(message) {
-      $("<div>").text(message).prependTo("#log");
-      $("#log").scrollTop(0);
-    }
+  ////////
 
-    $("#city").autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: "<?php echo base_url('appointment/get_patient_list'); ?>",
-          type: 'post',
-          dataType: "json",
-          data: {
-            q: request.term,
-            request: 1
-          },
-          success: function(data) {
-            response(data);
-            // console.log(data);
-          }
-        });
-      },
-      minLength: 1,
-      select: function(event, ui) {
-        $(this).val(ui.item.label)
-        var userid = ui.item.id; // selected id to input
+  ////// Dialog for Adding New Ward
+  function ward_dialog(event) {
 
-        // AJAX
-        $.ajax({
-          url: '<?php echo base_url('appointment/get_patient_list2'); ?>',
-          type: 'post',
-          data: {
-            userid: userid,
-            request: 2
-          },
-          dataType: 'json',
-          success: function(response2) {
-            console.log(response2);
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var title = element.data('title');
+    var size = element.data('size');
 
-            var len = response2.length;
+////
+   var wardDialog = $.confirm({
+        title: 'Prompt!',
+        columnClass:size,
+        content: function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+        buttons: {
 
-            if (len > 0) {
-              var id = userid;
-              var name = response2[0]['name'];
-              var email = response2[0]['email'];
-              var patient_id = response2[0]['id'];
-              // var age = response[0]['age'];
-              // var salary = response[0]['salary'];
+            laboratorySubmit: {
+                text: "Save",
+                btnClass: "btn-dark",
+                action: function () {
 
-              document.getElementById('patient_id').value = patient_id;
-              //document.getElementById('age_'+index).value = age;
-              document.getElementById('email').value = email;
-              //document.getElementById('salary_'+index).value = salary;
+                  var confirmsir = "No"
 
-            }
+                                    ////Validate form fields
+                                    var formData = $('#add-ward').serialize();
+                                      ///
+                                      var returnData;
+                                      ///
+                                    validate(formData);
 
-          }
-        });
+                                  function validate(formData) {
+                                  
+                                  $.ajax({
+                                      url: "<?php echo base_url() . 'nursing/validate_ward'; ?>",
+                                      async: false,
+                                      type: 'POST',
+                                      data: formData,
+                                      success: function(data, textStatus, jqXHR) {
+                                          returnData = data;
+                                      }
+                                  });
 
-        return false;
-      },
-      open: function() {
-        $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-      },
-      close: function() {
-        $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-      }
+                                    // $('#add-prescription').enable([".action"]);
+                                    // $("button[title='add_prescription']").html("Save changes");
+                                    if (returnData != 'success') {
+                                        // $('#add-prescription').enable([".action"]);
+                                        // $("button[title='add_prescription']").html("Save changes");
+                                        $('.form-control-feedback').html('');
+                                        $('.form-control-feedback').each(function() {
+                                            for (var key in returnData) {
+                                                if ($(this).attr('data-field') == key) {
+                                                    $(this).html(returnData[key]);
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        return 'success';
+                                    }
+                                    //console.log(returnData);
+                                }
+
+                                if (returnData != 'success') {
+                                      return false;
+                                }
+                                else {
+
+                                      $.confirm({
+                                          title: 'Ward',
+                                          content: 'Are you sure you want to Proceed?',
+                                          icon: 'fa fa-check-circle',
+                                          type: 'green',
+                                          buttons: {
+                                              yes: function() {
+
+                                                $.post("<?php echo base_url() . 'nursing/save_ward'; ?>", formData).done(function(data) {
+                                                  wardDialog.close();
+
+                                                });
+                                              },
+                                              no: function() {
+
+                                              }
+                                          }
+                                      });
+
+                                }
+
+
+
+                                      
+                        //console.log(confirmsir);
+                  if (confirmsir=='No') {
+                    return false;
+                  }
+                  else {
+                    return true;
+                  }
+
+
+                }
+            },
+            Close: function () {
+                //close
+                //return false;
+            },
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
     });
-  });
+
+}
+
+  ////////
+
+  ////// Dialog for Adding New Ward
+  function admit_dialog(event) {
+
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var title = element.data('title');
+    var size = element.data('size');
+
+////
+   var admitDialog = $.confirm({
+        title: 'Prompt!',
+        columnClass:size,
+        content: function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+        buttons: {
+
+            admitSubmit: {
+                text: "Save",
+                btnClass: "btn-success",
+                action: function () {
+
+                  var confirmsir = "No"
+
+                                    ////Validate form fields
+                                    var formData = $('#admit-patient').serialize();
+                                      ///
+                                      var returnData;
+                                      ///
+                                    validate(formData);
+
+                                  function validate(formData) {
+                                  
+                                  $.ajax({
+                                      url: "<?php echo base_url() . 'nursing/validate_admit'; ?>",
+                                      async: false,
+                                      type: 'POST',
+                                      data: formData,
+                                      success: function(data, textStatus, jqXHR) {
+                                          returnData = data;
+                                      }
+                                  });
+
+                                    // $('#add-prescription').enable([".action"]);
+                                    // $("button[title='add_prescription']").html("Save changes");
+                                    if (returnData != 'success') {
+                                        // $('#add-prescription').enable([".action"]);
+                                        // $("button[title='add_prescription']").html("Save changes");
+                                        $('.form-control-feedback').html('');
+                                        $('.form-control-feedback').each(function() {
+                                            for (var key in returnData) {
+                                                if ($(this).attr('data-field') == key) {
+                                                    $(this).html(returnData[key]);
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        return 'success';
+                                    }
+                                    //console.log(returnData);
+                                }
+
+                                if (returnData != 'success') {
+                                      return false;
+                                }
+                                else {
+
+                                      $.confirm({
+                                          title: 'Admission',
+                                          content: 'Are you sure you want to Proceed?',
+                                          icon: 'fa fa-check-circle',
+                                          type: 'green',
+                                          buttons: {
+                                              yes: function() {
+
+                                                $.post("<?php echo base_url() . 'nursing/save_admit'; ?>", formData).done(function(data) {
+                                                  admitDialog.close();
+
+                                                });
+                                              },
+                                              no: function() {
+
+                                              }
+                                          }
+                                      });
+
+                                }
 
 
 
+                                      
+                        //console.log(confirmsir);
+                  if (confirmsir=='No') {
+                    return false;
+                  }
+                  else {
+                    return true;
+                  }
+
+
+                }
+            },
+            Close: function () {
+                //close
+                //return false;
+            },
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+    });
+
+}
+
+  ////// Dialog for Adding New Ward
+  function discharge_dialog(event) {
+
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var title = element.data('title');
+    var size = element.data('size');
+
+////
+   var admitDialog = $.confirm({
+        title: 'Prompt!',
+        columnClass:size,
+        content: function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+        buttons: {
+
+            admitSubmit: {
+                text: "Save",
+                btnClass: "btn-success",
+                action: function () {
+
+                  var confirmsir = "No"
+
+                                    ////Validate form fields
+                                    var formData = $('#discharge-patient').serialize();
+                                      ///
+                                      var returnData;
+                                      ///
+                                    validate(formData);
+
+                                  function validate(formData) {
+                                  
+                                  $.ajax({
+                                      url: "<?php echo base_url() . 'nursing/validate_discharge'; ?>",
+                                      async: false,
+                                      type: 'POST',
+                                      data: formData,
+                                      success: function(data, textStatus, jqXHR) {
+                                          returnData = data;
+                                      }
+                                  });
+
+                                    // $('#add-prescription').enable([".action"]);
+                                    // $("button[title='add_prescription']").html("Save changes");
+                                    if (returnData != 'success') {
+                                        // $('#add-prescription').enable([".action"]);
+                                        // $("button[title='add_prescription']").html("Save changes");
+                                        $('.form-control-feedback').html('');
+                                        $('.form-control-feedback').each(function() {
+                                            for (var key in returnData) {
+                                                if ($(this).attr('data-field') == key) {
+                                                    $(this).html(returnData[key]);
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        return 'success';
+                                    }
+                                    //console.log(returnData);
+                                }
+
+                                if (returnData != 'success') {
+                                      return false;
+                                }
+                                else {
+
+                                      $.confirm({
+                                          title: 'Admission',
+                                          content: 'Are you sure you want to Proceed?',
+                                          icon: 'fa fa-check-circle',
+                                          type: 'green',
+                                          buttons: {
+                                              yes: function() {
+
+                                                $.post("<?php echo base_url() . 'nursing/save_discharge'; ?>", formData).done(function(data) {
+                                                  admitDialog.close();
+
+                                                });
+                                              },
+                                              no: function() {
+
+                                              }
+                                          }
+                                      });
+
+                                }
+
+
+
+                                      
+                        //console.log(confirmsir);
+                  if (confirmsir=='No') {
+                    return false;
+                  }
+                  else {
+                    return true;
+                  }
+
+
+                }
+            },
+            Close: function () {
+                //close
+                //return false;
+            },
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+    });
+
+}
+
+////////////////
 
   function toggleRadio(flag) {
     if (!flag) {
@@ -320,6 +693,98 @@ function listDefaultPatients() {
 
   }
 
+
+
+  function filter_admission() {
+    $('#admissionRequestTable').dataTable().fnClearTable();
+    //dataTable.fnClearTable();
+    $('#admissionRequestTable').dataTable().fnDraw();
+    $('#admissionRequestTable').dataTable().fnDestroy();
+    //$('#defaultPatients').hide();
+    var status = document.getElementById('status').value;
+   // var doctor_id = document.getElementById('doctor_id').value;
+   // var clinic_id = document.getElementById('clinic_id').value;
+    var date_range_to = document.getElementById('date_range_to').value;
+    var date_range_from = document.getElementById('date_range_from').value;
+
+    listAdmissionRequests();
+
+    //$('#filteredPatients').show();
+    var table = $('#admissionRequestTable').DataTable()  
+    var table2 = $('#admissionRequestTableOA').DataTable()    
+
+
+    // list all employee in datatable
+    function listAdmissionRequests() {
+
+      $.ajax({
+      type  : 'post',
+      url   : '<?php echo base_url('nursing/filter_admission_requests'); ?>',
+      data: {
+          status: status,
+          date_range_from: date_range_from,
+          date_range_to: date_range_to,
+         // clinic_id: clinic_id
+        },
+      async : false,
+      dataType : 'json',
+      success : function(response){
+        console.log(response);
+        var html = '';
+        var i;
+        var sn =1;
+        if (status == 'Pending') {
+
+            $('#pend').show();
+            $('#OA').hide();
+
+            for(i=0; i<response.length; i++){
+
+
+                var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
+                var buttons = '<span class="badge badge-success"><a onclick="admit_dialog(event)" data-type="black" data-size="l" data-title="Admission Register" href="<?php echo base_url('nursing/admit_patient/');?>'+ response[i].admission_id +'">Option</a></span>';
+
+                html += '<tr><td>' + sn++ + '</td> <td>' + response[i].request_date +
+                  '</td> <td>' + response[i].patient_title + ' ' + response[i].patient_name +
+                  '</td> <td>' + response[i].patient_gender +
+                  '</td> <td>' + response[i].patient_id_num +
+                  '</td> <td>' + response[i].patient_status +
+                  '</td> <td>' + response[i].clinic_name +
+                  '</td><td>' + fullname +
+                  '</td><td>' + buttons + '</td> </tr>';
+              }
+              $('#filtered_admission_requests').html(html);
+          }
+          else {
+            $('#OA').show();
+            $('#pend').hide();
+
+            for(i=0; i<response.length; i++){
+                if (response[i].discharged == null) { var discharged = '-' } else {var discharged = response[i].discharged } 
+
+                var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
+                var buttons = '<span class="badge badge-success"><a onclick="admit_dialog(event)" data-type="black" data-size="l" data-title="Admission Register" href="<?php echo base_url('nursing/admit_patient/');?>'+ response[i].admission_id +'">Option</a></span><span class="badge badge-info"><a onclick="discharge_dialog(event)" data-type="black" data-size="l" data-title="Discharge Patient" href="<?php echo base_url('nursing/discharge_patient/');?>'+ response[i].admission_id +'"><i class="fa fa-wheelchair"></i>Discharge</a></span>';
+
+                html += '<tr><td>' + sn++ + '</td> <td>' + response[i].date_admitted +
+                  '</td> <td>' + discharged +
+                  '</td> <td>' + response[i].patient_title + ' ' + response[i].patient_name +
+                  '</td> <td>' + response[i].patient_id_num +
+                  '</td> <td>' + response[i].patient_status +
+                  '</td> <td>' + response[i].ward_name +
+                  '</td><td>' + response[i].diagnosis +
+                  '</td><td>' + buttons + '</td> </tr>';
+              }
+              $('#filtered_admission_requestsOA').html(html);
+          }
+
+        }
+
+      });
+    }
+
+
+  }
+
   function validate(formData) {
     var returnData;
     $('#edit-vital').disable([".action"]);
@@ -389,5 +854,3 @@ function listDefaultPatients() {
     }
   }
 </script>
-
-<script src="<?php echo base_url(); ?>assets/js/jquery.dataTables.min.js"></script>

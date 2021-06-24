@@ -27,6 +27,7 @@ class Patient extends Base_Controller
         $this->load->model('patient_m');
         $this->load->model('nursing_m');
         $this->load->model('billing_m');
+        $this->load->model('department_m');
         $this->data['menu_id'] = 'patient';
     }
     public function index()
@@ -57,12 +58,27 @@ class Patient extends Base_Controller
 
         echo $filepath . $filename;
     }
+
+    public function calculate_age() {
+
+       $age = date_diff(date_create($this->input->post('dob')), date_create('today'))->y;
+
+
+       echo json_encode($age);
+
+
+    }
     public function add_patient()
     {
         $this->data['title'] = "Add Patient";
         $this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
         $this->data['states'] =  $this->patient_m->states();
         $this->data['countries'] =  $this->patient_m->countries();
+        $this->data['next_of_kin_rel'] =  $this->patient_m->next_of_kin_rel();
+        $this->data['salutations'] =  $this->patient_m->salutations();
+        $this->data['occupations'] =  $this->patient_m->occupations();
+        $this->data['religions'] =  $this->patient_m->religions();
+        $this->data['tribes'] =  $this->patient_m->tribes();
 
         if ($this->uri->segment(3)) {
 
@@ -79,6 +95,8 @@ class Patient extends Base_Controller
 
             $this->data['patient'] = $patient = $this->patient_m->get_patient_by_id_vital($this->uri->segment(3),$this->uri->segment(4));
             $this->data['patient_billings'] =  $this->patient_m->get_patient_billings($this->uri->segment(3));
+            $this->data['patient_admissions'] =  $this->patient_m->get_patient_admissions($this->uri->segment(3));
+            $this->data['patient_ledger'] =  $this->patient_m->get_patient_ledger($this->uri->segment(3));
             $this->data['consultations'] = $consultation = $this->patient_m->get_consultations_by_patient_id_and_vital_id($this->uri->segment(3), $this->uri->segment(4));
              $this->data['eye_clinics'] = $eye_clinics = $this->patient_m->get_eye_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $this->uri->segment(4));
             $this->data['dental_clinics'] = $dental_clinics = $this->patient_m->get_dental_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $this->uri->segment(4));
@@ -92,6 +110,8 @@ class Patient extends Base_Controller
             else {
 
             $this->data['patient_billings'] =  $this->patient_m->get_patient_billings($this->uri->segment(3));
+            $this->data['patient_ledger'] =  $this->patient_m->get_patient_ledger($this->uri->segment(3));
+            $this->data['patient_admissions'] =  $this->patient_m->get_patient_admissions($this->uri->segment(3));
             $this->data['patient'] = $patient = $this->patient_m->get_patient_by_id($this->uri->segment(3));
             $this->data['consultations'] = $consultation = $this->patient_m->get_consultations_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
             $this->data['eye_clinics'] = $eye_clinics = $this->patient_m->get_eye_clinics_by_patient_id_and_vital_id($this->uri->segment(3), $patient->vital_id);
@@ -313,6 +333,25 @@ class Patient extends Base_Controller
         }
     }
 
+    public function add_admission()
+    {
+
+        if ($this->uri->segment(3)) {
+            ////////
+            $this->data['admission_details'] =  $this->patient_m->get_admission_by_id($this->uri->segment(3));
+            $this->data['available_wards'] =  $this->nursing_m->get_available_wards_list();
+            $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+            $this->load->view('patient/add_admission_modal', $this->data);
+        }
+        else {
+
+            $this->data['available_wards'] =  $this->nursing_m->get_available_wards_list();
+            $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+            $this->load->view('patient/add_admission_modal', $this->data);
+
+        }
+    }
+
     public function save_med_report()
     {
         $this->patient_m->save_med_report();
@@ -402,32 +441,32 @@ class Patient extends Base_Controller
         }
     }
 
-    public function validate_patient()
-    {
-        $this->form_validation->set_rules('patient_title', 'Title', 'required', array('required' => 'Please select %s.'));
-        $this->form_validation->set_rules('patient_name', 'Patient Name', 'required');
-        $this->form_validation->set_rules('patient_id_num', 'Patient ID', 'required');
-        $this->form_validation->set_rules('patient_gender', 'Gender', 'required');
-        $this->form_validation->set_rules('patient_dob', 'Date of Birth', 'required');
-        $this->form_validation->set_rules('patient_phone', 'Patient Phone Number', 'required');
-        $this->form_validation->set_rules('patient_blood_group', 'Blood Group', 'required');
-        $this->form_validation->set_rules('patient_address', 'Address', 'required');
-        // $this->form_validation->set_rules('patient_occupation', 'Patient Occupation', 'required');
-        $this->form_validation->set_rules('patient_regtype', 'Registration Type', 'required');
-        $this->form_validation->set_rules('nok_title', 'Title', 'required');
-        $this->form_validation->set_rules('nok_name', 'Name', 'required');
-        $this->form_validation->set_rules('nok_phone', 'Phone Number', 'required');
-        $this->form_validation->set_rules('nok_relationship', 'Relationship', 'required');
-        $this->form_validation->set_rules('nok_address', 'Address', 'required');
-        $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
-        if ($this->form_validation->run()) {
-            header("Content-type:application/json");
-            echo json_encode('success');
-        } else {
-            header("Content-type:application/json");
-            echo json_encode($this->form_validation->get_all_errors());
-        }
-    }
+    // public function validate_patient()
+    // {
+    //     $this->form_validation->set_rules('patient_title', 'Title', 'required', array('required' => 'Please select %s.'));
+    //     $this->form_validation->set_rules('patient_name', 'Patient Name', 'required');
+    //     $this->form_validation->set_rules('patient_id_num', 'Patient ID', 'required');
+    //     $this->form_validation->set_rules('patient_gender', 'Gender', 'required');
+    //     $this->form_validation->set_rules('patient_dob', 'Date of Birth', 'required');
+    //     $this->form_validation->set_rules('patient_phone', 'Patient Phone Number', 'required');
+    //     //$this->form_validation->set_rules('patient_blood_group', 'Blood Group', 'required');
+    //     $this->form_validation->set_rules('patient_address', 'Address', 'required');
+    //     // $this->form_validation->set_rules('patient_occupation', 'Patient Occupation', 'required');
+    //     $this->form_validation->set_rules('patient_regtype', 'Registration Type', 'required');
+    //     $this->form_validation->set_rules('nok_title', 'Title', 'required');
+    //     $this->form_validation->set_rules('nok_name', 'Name', 'required');
+    //     $this->form_validation->set_rules('nok_phone', 'Phone Number', 'required');
+    //     $this->form_validation->set_rules('nok_relationship', 'Relationship', 'required');
+    //     $this->form_validation->set_rules('nok_address', 'Address', 'required');
+    //     $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
+    //     if ($this->form_validation->run()) {
+    //         header("Content-type:application/json");
+    //         echo json_encode('success');
+    //     } else {
+    //         header("Content-type:application/json");
+    //         echo json_encode($this->form_validation->get_all_errors());
+    //     }
+    // }
 
     function upload_patient()
     {
@@ -438,7 +477,7 @@ class Patient extends Base_Controller
         $this->form_validation->set_rules('patient_gender', 'Gender', 'required');
         $this->form_validation->set_rules('patient_dob', 'Date of Birth', 'required');
         $this->form_validation->set_rules('patient_phone', 'Patient Phone Number', 'required');
-        $this->form_validation->set_rules('patient_blood_group', 'Blood Group', 'required');
+        //$this->form_validation->set_rules('patient_blood_group', 'Blood Group', 'required');
         $this->form_validation->set_rules('patient_address', 'Address', 'required');
         // $this->form_validation->set_rules('patient_occupation', 'Patient Occupation', 'required');
         $this->form_validation->set_rules('patient_regtype', 'Registration Type', 'required');
@@ -449,10 +488,10 @@ class Patient extends Base_Controller
         $this->form_validation->set_rules('nok_address', 'Address', 'required');
         $this->form_validation->set_error_delimiters('<div style="color: #ff0000;" class="form-control-feedback">', '</div>');
         if ($this->form_validation->run() == TRUE) {
-            if ($_FILES['image']['error'] != 0) {
-                $result['status'] = false;
-                $result['message'] = array("image" => "Select image to upload");
-            } else {
+            // if ($_FILES['image']['error'] != 0) {
+            //     $result['status'] = false;
+            //     $result['message'] = array("image" => "Select image to upload");
+            // } else {
                 $config['upload_path']       = './uploads/';
                 $config['allowed_types']     = 'gif|jpg|jpeg|png';
                 $this->load->library('upload', $config);
@@ -461,7 +500,15 @@ class Patient extends Base_Controller
                     $data['upload_data'] = $this->upload->data('file_name');
                     $image_name = $data['upload_data'];
                 } else {
+
+                    if ($this->input->post('patient_id')) {
+                        $image_name = $this->input->post('patient_image');
+
+                    }
+                    else {
                     $image_name = '';
+
+                    }
                 }
                 if (($this->input->post('patient_status') == 'private')) {
                     $patient_status = 'Private';
@@ -471,16 +518,19 @@ class Patient extends Base_Controller
 
                 $data = array(
 
-                    'patient_name'         => $this->input->post('patient_name'),
+                    'patient_name'         => $this->input->post('patient_name')." ".$this->input->post('patient_other_names'),
                     'patient_id_num'    => $this->input->post('patient_id_num'),
                     'patient_photo'         => $image_name,
                     'patient_title'   => $this->input->post('patient_title'),
                     'patient_address'   => $this->input->post('patient_address'),
                     'patient_status'   => $patient_status,
                     'patient_occupation'   => $this->input->post('patient_occupation'),
+                    'patient_marital_status'   => $this->input->post('marital_status'),
                     'patient_religion'   => $this->input->post('patient_religion'),
                     'patient_tribe'   => $this->input->post('patient_tribe'),
                     'patient_origin'   => $this->input->post('patient_origin'),
+                    'patient_reg_date'   => $this->input->post('patient_reg_date'),
+                    'patient_expiry_date'   => $this->input->post('patient_expiry_date'),
                     'patient_regtype'   => $this->input->post('patient_regtype'),
                     'patient_blood_group'   => $this->input->post('patient_blood_group'),
                     'patient_phone'   => $this->input->post('patient_phone'),
@@ -494,7 +544,25 @@ class Patient extends Base_Controller
 
 
                 $result['status'] = true;
+                if ($this->input->post('patient_id')) {
 
+                    $this->db->where('id', $this->input->post('patient_id'));
+                    $this->db->update('patient_details', $data);
+
+                        $data2 = array(
+
+                            'nok_title'         => $this->input->post('nok_title'),
+                            'nok_name'    => $this->input->post('nok_name'),
+                            'nok_address'   => $this->input->post('nok_address'),
+                            'nok_relationship'   => $this->input->post('nok_relationship'),
+                            'nok_phone'   => $this->input->post('nok_phone'),
+                        );
+
+                    $this->db->where('patient_id', $this->input->post('patient_id'));
+                    $this->db->update('patient_nok', $data2);
+
+                }
+                else {
                 $this->db->insert('patient_details', $data);
                 $last_id = $this->db->insert_id();
 
@@ -509,9 +577,51 @@ class Patient extends Base_Controller
                 );
                 $this->db->insert('patient_nok', $data2);
 
+
+
+                }
+
+               if (!$this->input->post('patient_id')) {
+                ///Create receipt for registration
+                $invoice_id = rand(10000,10000000);
+                $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+                if ($check_if_invoice_exists->num_rows() > 0) {
+                    $invoice_id = rand(10000,10000000);
+                }
+                 $data_invoice = array(
+                        'invoice_id' => $invoice_id
+                    );
+                $insert_invoice = $this->db->insert('invoices', $data_invoice);
+
+                ///Get  the cost of Registration for Patient
+                $check_registration_cost = $this->db->select('service_charge_cost')->from('service_charge_items')->where('id','2302')->get();
+                $registration_cost_row = $check_registration_cost->row()->service_charge_cost;
+
+
+                ///Invoice Table is now Receipt table
+                    $data2 = array(
+                        'patient_id'   => $last_id,
+                        'invoice_id'   => $invoice_id,
+                        'item_name'     => "Registration",
+                        'category'     => "Registration",
+                        'billing_type' => "Debit",
+                        'amount'       => $registration_cost_row,
+                        'billed_by'    => $this->session->userdata('active_user')->id,
+                    );
+
+                    //echo json_encode($this->input->post('prescription_unique_id'));
+
+                   $insert_billings = $this->db->insert('billings', $data2);
+
+               }
+
+
+
+
                 $result['message'] = "Data inserted successfully.";
             }
-        } else {
+       // } 
+        else {
             $result['status'] = false;
             // $result['message'] = validation_errors();
             $result['message'] = $this->form_validation->error_array();
@@ -549,11 +659,68 @@ class Patient extends Base_Controller
             $this->db->delete('vitals_request', array('patient_id' => $id));
         }
     }
+    function discontinue_patient() {
+                    
+                    $id = $this->input->post('id');
+
+                    $data = array(
+
+                        'status'         => 3
+                    );
+
+
+                    $this->db->where('id', $id);
+                    $this->db->update('patient_details', $data);
+    }
 
     function save_billing()
     {
         echo json_encode($this->patient_m->save_billing());
     }
+
+
+    function validate_admission()
+    {
+        $rules = [
+            [
+                'field' => 'request_date',
+                'label' => 'Date',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'clinic',
+                'label' => 'Clinic',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'admission_type',
+                'label' => 'Admission',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'diagnosis',
+                'label' => 'Diagnosis',
+                'rules' => 'trim|required'
+            ],
+
+        ];
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+
+    public function save_admission()
+    {
+        $this->patient_m->create_new_admission();
+        header('Content-Type: application/json');
+        echo json_encode('success');
+    }
+
 
     function add_history()
     {

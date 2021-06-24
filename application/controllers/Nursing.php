@@ -26,6 +26,7 @@ class Nursing extends Base_Controller
 
         $this->load->model('department_m');
         $this->load->model('nursing_m');
+        $this->load->model('patient_m');
         $this->load->model('staff_m');
         $this->load->model('request_m');
         $this->load->model('drug_m');
@@ -84,6 +85,41 @@ class Nursing extends Base_Controller
         $this->db->delete('patient_vitals', array('id' => $id));
     }
 
+    public function discharge_patient()
+    {
+
+        if ($this->uri->segment(3)) {
+            ////////
+            $this->data['admission_details'] =  $this->patient_m->get_admission_by_id($this->uri->segment(3));
+            $this->data['discharge_types'] =  $this->nursing_m->get_discharge_type_list();
+            $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+            $this->load->view('nursing/discharge_patient_modal', $this->data);
+        }
+    }
+
+
+    public function admit_patient()
+    {
+
+        if ($this->uri->segment(3)) {
+            ////////
+
+            $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+            $this->data['admission_details'] =  $this->patient_m->get_admission_by_id($this->uri->segment(3));
+            $this->data['available_wards'] =  $this->nursing_m-> get_available_wards_list2();
+            $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+            $this->load->view('nursing/admit_patient_modal', $this->data);
+        }
+        else {
+
+            $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+            $this->data['available_wards'] =  $this->nursing_m->get_available_wards_list();
+            $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+            $this->load->view('nursing/admit_patient_modal', $this->data);
+
+        }
+    }
+
     public function notes()
     {
         $this->data['title'] = 'Handover Notes';
@@ -129,6 +165,18 @@ class Nursing extends Base_Controller
         $this->load->view('nursing/admission', $this->data);
     }
 
+    public function add_ward()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['wards_type_list'] =  $this->nursing_m->get_wards_type_list();
+            $this->data['ward'] = $t =  $this->nursing_m->get_ward_details_by_id($this->uri->segment(3));
+            $this->load->view('nursing/new_ward_modal', $this->data);
+        } else {
+            $this->data['wards_type_list'] =  $this->nursing_m->get_wards_type_list();
+            $this->load->view('nursing/new_ward_modal', $this->data);
+        }
+    }
+
 
     function validate_new()
     {
@@ -149,23 +197,13 @@ class Nursing extends Base_Controller
                 'rules' => 'trim|required'
             ],
             [
-                'field' => 'HC',
-                'label' => 'HC',
+                'field' => 'BP1',
+                'label' => 'BP1',
                 'rules' => 'trim|required'
             ],
             [
-                'field' => 'MUAC',
-                'label' => 'MUAC',
-                'rules' => 'trim|required'
-            ],
-            [
-                'field' => 'nutritional_status',
-                'label' => 'Nutritional Status',
-                'rules' => 'trim|required'
-            ],
-            [
-                'field' => 'BP',
-                'label' => 'BP',
+                'field' => 'BP2',
+                'label' => 'BP2',
                 'rules' => 'trim|required'
             ],
             [
@@ -203,9 +241,49 @@ class Nursing extends Base_Controller
                 'label' => 'LE',
                 'rules' => 'trim|required'
             ],
+
+        ];
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+
+    function validate_ward()
+    {
+        $rules = [
             [
-                'field' => 'LMP',
-                'label' => 'LMP',
+                'field' => 'ward_name',
+                'label' => 'Ward Name',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'ward_type',
+                'label' => 'Group',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'doc_nurse_fee',
+                'label' => 'Fee',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'feeding',
+                'label' => 'Feeding',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'utility',
+                'label' => 'Utility',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'ward_rate',
+                'label' => 'Ward Rate',
                 'rules' => 'trim|required'
             ],
 
@@ -220,6 +298,13 @@ class Nursing extends Base_Controller
         }
     }
 
+    public function save_ward()
+    {
+        $this->nursing_m->create_new_ward();
+        header('Content-Type: application/json');
+        echo json_encode('success');
+    }
+
     public function add_vital()
     {
         $this->nursing_m->create_new_vital();
@@ -229,6 +314,13 @@ class Nursing extends Base_Controller
     public function filter_appointment()
     {
         $appointment_vitals = $this->nursing_m->get_appointment_vitals();
+
+        header("Content-type:application/json");
+        echo json_encode($appointment_vitals);
+    }
+    public function filter_admission_requests()
+    {
+        $appointment_vitals = $this->nursing_m->get_admission_requests_list_f();
 
         header("Content-type:application/json");
         echo json_encode($appointment_vitals);
@@ -257,4 +349,113 @@ class Nursing extends Base_Controller
         //  header("Content-type:application/json");
         echo json_encode($default_vitals);
     }
+
+    ////Get Default Appointment lists for Vitals Page
+    public function get_default_admission_requests()
+    {
+        $default_requests = $this->nursing_m->get_admission_requests_list_d();
+
+        //  header("Content-type:application/json");
+        echo json_encode($default_requests);
+    }
+
+    ////////Ward Occupation
+
+
+    public function ward_occupation()
+    {
+        if ($this->uri->segment(3)) {
+            $this->data['wards_type_list'] =  $this->nursing_m->get_wards_type_list();
+            $this->data['service'] = $t =  $this->service_m->get_service_charges_by_id($this->uri->segment(3));
+            $this->load->view('service/add', $this->data);
+        } else {
+            $this->data['title'] = 'Ward Occupation Matrix';
+            $this->data['wards_occupation_list'] =  $this->nursing_m->get_wards_list();
+            $this->load->view('nursing/ward_occupation', $this->data);
+
+        }
+    }
+
+
+
+    function validate_admit()
+    {
+        $rules = [
+            [
+                'field' => 'admit_date',
+                'label' => 'Date',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'clinic',
+                'label' => 'Clinic',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'ward',
+                'label' => 'Admission',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'diagnosis',
+                'label' => 'Diagnosis',
+                'rules' => 'trim|required'
+            ],
+
+        ];
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+
+    public function save_admit()
+    {
+        $this->nursing_m->create_new_admit();
+        header('Content-Type: application/json');
+        echo json_encode('success');
+    }
+
+
+    function validate_discharge()
+    {
+        $rules = [
+            [
+                'field' => 'discharge_date',
+                'label' => 'Date',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'discharge_comments',
+                'label' => 'Comment',
+                'rules' => 'trim|required'
+            ],
+            [
+                'field' => 'discharge_type',
+                'label' => 'Discharge Type',
+                'rules' => 'trim|required'
+            ]
+
+        ];
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run()) {
+            header("Content-type:application/json");
+            echo json_encode('success');
+        } else {
+            header("Content-type:application/json");
+            echo json_encode($this->form_validation->get_all_errors());
+        }
+    }
+
+    public function save_discharge()
+    {
+        $this->nursing_m->create_new_discharge();
+        header('Content-Type: application/json');
+        echo json_encode('success');
+    }
+
 }

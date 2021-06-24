@@ -137,26 +137,71 @@ class Billing_m extends CI_Model
                 $this->db->where('id', $billing);
                 $this->db->update('billings', $data3);
 
+
                 $this->db->where('invoice_id', $this->input->post('invoice_id'));
                 $this->db->update('invoices', array('amount_paid' => $this->input->post('displayed_total'),'payment_mode' => $this->input->post('payas')));
 
+                ///Activate patient after registration payment
+                if ($this->input->post('description') =='Registration') {
+
+                $data_status = array(
+                    'status' => '1',
+                );
+                $this->db->where('id', $this->input->post('patient_id'));
+                $this->db->update('patient_details', $data_status);
+
+
+               
+                $data3 = array(
+                    'Registration' => $this->input->post('displayed_total'),
+                    'PatientID' => $this->input->post('patient_id')
+                );
+                $insert = $this->db->insert('receipt_grid', $data3);
+
+
+                }
+                elseif($this->input->post('description') =='Consultation')  {
+                $data3 = array(
+                    'Consultation' => $this->input->post('displayed_total'),
+                    'PatientID' => $this->input->post('patient_id')
+                );
+                $insert = $this->db->insert('receipt_grid', $data3);
+
+                }
+
+
+
                 //$get_drug_name = $this->db->select('drug_item_name')->from('drug_items')->where('invoice_id',$invoice_id)->get()
 
-            // $data = array(
-            //     'patient_id'   => $this->input->post('patient_id'),
-            //     'invoice_id'   => $invoice_id,
-            //     'item_name'     => $result->drug_item_name,
-            //     'category'     => "Prescription",
-            //     'billing_type' => "Debit",
-            //     'amount'       => $array[1] * $result->drug_sell,
-            //     'billed_by'    => $this->session->userdata('active_user')->id,
-            // );
+                // $data = array(
+                //     'patient_id'   => $this->input->post('patient_id'),
+                //     'invoice_id'   => $invoice_id,
+                //     'item_name'     => $result->drug_item_name,
+                //     'category'     => "Prescription",
+                //     'billing_type' => "Debit",
+                //     'amount'       => $array[1] * $result->drug_sell,
+                //     'billed_by'    => $this->session->userdata('active_user')->id,
+                // );
 
-            // //echo json_encode($this->input->post('prescription_unique_id'));
+                // //echo json_encode($this->input->post('prescription_unique_id'));
 
-            // $this->db->insert('billings', $data);
+                // $this->db->insert('billings', $data);
 
             }
+    }
+
+    public function save_manual_payment () {
+
+
+               
+                $data3 = array(
+                    'Description' => $this->input->post('service'),
+                    'Debit' => $this->input->post('debit'),
+                    'patient_id' => $this->input->post('patient_id')
+                );
+                $insert = $this->db->insert('patient_ledger', $data3);
+                return $insert;
+
     }
 
     public function save_bill() {
@@ -227,10 +272,23 @@ class Billing_m extends CI_Model
                 $data[$i]['billing_type'] = "Debit";
                 $data[$i]['amount']       = $cost[$key] * $quantity[$key];
                 $data[$i]['billed_by']    = $this->session->userdata('active_user')->id;
+
+                $data2[$i]['patient_id'] = $patient_id;
+                $data2[$i]['Description'] = $item_name[$key];
+                $data2[$i]['Debit'] = $cost[$key] * $quantity[$key];
+
                 $i++;
             }
 
          $this->db->insert_batch('billings', $data);
+         $this->db->insert_batch('patient_ledger', $data2);
+         
+             $data_ledger = array(
+                    'Credit' => $this->input->post('total_bill_cum'),
+                    'patient_id' => $this->input->post('patient_id'),
+                    'Description' => 'Cash Payment(...)'
+                );
+            $insert_ledger = $this->db->insert('patient_ledger', $data_ledger);
             return $service_type;
     }
 

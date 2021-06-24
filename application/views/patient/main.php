@@ -1,5 +1,13 @@
 <?php $this->load->view('includes/head_2'); ?>
 <?php $this->load->view('includes/sidebar') ?>
+<style type="text/css">
+    
+#patientListTable thead th, #patientListTable tbody td {
+  font-size: 0.89em;
+  padding: 1px !important;
+  height: 15px;
+}
+</style>
 
 <div id="main-content">
     <div class="container-fluid">
@@ -24,18 +32,19 @@
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="patientListTable">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>S/N</th>
                                             <th>Title</th>
-                                            <th>Patient ID</th>
                                             <th>Patient Name</th>
-                                            <th>Blood Group</th>
+                                            <th>Hosp. NO</th>
                                             <th>Age</th>
-                                            <th>Gender</th>
+                                            <th>Sex</th>
                                             <th>Acc Status</th>
-                                            <th>Contact</th>
+                                            <th>MobileNo</th>
+                                            <th>RegDate</th>
+                                            <th>Active</th>
                                             <th>Options</th>
                                         </tr>
                                     </thead>
@@ -46,19 +55,22 @@
                                             <tr>
                                                 <td><?php echo $i; ?></td>
                                                 <!-- <td><span class="list-icon"><img class="patients-img" src="<?php echo base_url('uploads/') . $patient_list->patient_photo; ?>" alt=""></span></td> -->
-                                                <td><?php echo $patient_list->patient_title; ?></td>
-                                                <td><span class="list-name"><?php echo $patient_list->patient_id_num; ?></span></td>
+                                                <td><?php echo $patient_list->title; ?></td>
                                                 <td><?php echo $patient_list->patient_name; ?></td>
-                                                <td><?php echo $patient_list->patient_blood_group; ?></td>
+                                                <td><span class="list-name"><?php echo $patient_list->patient_id_num; ?></span></td>
                                                 <td><?php echo date_diff(date_create($patient_list->patient_dob), date_create('today'))->y; ?></td>
                                                 <td><?php echo $patient_list->patient_gender; ?></td>
                                                 <td><?php echo $patient_list->patient_status ?></td>
                                                 <td><?php echo $patient_list->patient_phone; ?></td>
+                                                <td><?php
+                                                $date = date_create($patient_list->date_added);
+                                                 echo date_format($date, 'Y/m/d'); ?></td>
+                                                <td><?php if($patient_list->status==0) { echo "<span class='badge badge-danger'>Inactive</span>";} elseif($patient_list->status==3)  { echo "<span class='badge badge-info'>Discontinued</span>";} else {echo "<span class='badge badge-success'>Active</span>"; } ?></td>
                                                 <td>
                                                     <!--  <span class="badge badge-success"><a href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>">View More</a></span> -->
-                                                    <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="<?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>"><i class="icon-eye" aria-hidden="true"></i></button>
-                                                    <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="shiEdit(event)" data-type="purple" data-size="xl" data-title="Edit <?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/add_patient/' . $patient_list->p_id); ?>"><i class="icon-pencil" aria-hidden="true" data-toggle="modal" data-target="#addstaff"></i></button>
-                                                    <button class="btn btn-sm btn-icon btn-pure btn-default on-default m-r-5 button-edit" onclick="delete_patient(<?php echo $patient_list->p_id; ?>)"><i class="icon-trash"></i></button>
+                                                    <button class="btn btn-sm btn-icon btn-pure btn-secondary" title="View Patient" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="<?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>"><i class="icon-eye" aria-hidden="true"></i></button>
+                                                    <button title="Edit Patient" class="btn btn-sm btn-icon btn-pure btn-info" onclick="shiEdit(event)" data-type="purple" data-size="xl" data-title="Edit <?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/add_patient/' . $patient_list->p_id); ?>"><i class="icon-pencil" aria-hidden="true" data-toggle="modal" data-target="#addstaff"></i></button>
+                                                    <button title="Discontinue Patient" class="btn btn-sm btn-icon btn-pure btn-danger" onclick="delete_patient(<?php echo $patient_list->p_id; ?>)"><i class="icon-ban"></i></button>
                                                 </td>
                                             </tr>
                                         <?php
@@ -79,3 +91,12 @@
 <?php $this->load->view('menu/submenu-modal'); ?>
 <?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('patient/script2'); ?>
+<script type="text/javascript">
+    
+$(document).ready(function () {
+
+     var patientListTable =  $('#patientListTable').DataTable({
+        });
+
+});
+</script>

@@ -58,6 +58,7 @@ class appointment extends Base_Controller
     {
         $this->data['title'] = "Add Appointment";
         $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+        $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         //$this->data['clinic_list'] =  $this->department_m->get_clinic_list();
         //$this->data['enrollee_type_list'] =  $this->patient_m->get_enrollee_type_list();
 
@@ -166,16 +167,50 @@ class appointment extends Base_Controller
         $user_id = $this->session->userdata('active_user')->id;
         $data = array(
 
-            'patient_id'         => $this->input->post('patient_id'),
+            'patient_id'         => $this->input->post('select_patient'),
             'appointment_date'    => $this->input->post('appointment_date'),
             'appointment_time'         => $this->input->post('appointment_time'),
             'clinic_id'   => $this->input->post('clinic')
         );
 
 
+
+
         $result['status'] = true;
 
         $this->db->insert('patient_appointments', $data);
+
+
+                ///Create receipt for registration
+                $invoice_id = rand(10000,10000000);
+                $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+                if ($check_if_invoice_exists->num_rows() > 0) {
+                    $invoice_id = rand(10000,10000000);
+                }
+                 $data_invoice = array(
+                        'invoice_id' => $invoice_id
+                    );
+                $insert_invoice = $this->db->insert('invoices', $data_invoice);
+
+                ///Get  the cost of Registration for Patient
+                $check_consultation_cost = $this->db->select('service_charge_cost')->from('service_charge_items')->where('id','2479')->get();
+                $consultation_cost_row = $check_consultation_cost->row()->service_charge_cost;
+
+
+                ///Invoice Table is now Receipt table
+                    $data2 = array(
+                        'patient_id'   => $this->input->post('select_patient'),
+                        'invoice_id'   => $invoice_id,
+                        'item_name'     => "Consultation",
+                        'category'     => "Consultation",
+                        'billing_type' => "Debit",
+                        'amount'       => $consultation_cost_row,
+                        'billed_by'    => $this->session->userdata('active_user')->id,
+                    );
+
+                    //echo json_encode($this->input->post('prescription_unique_id'));
+
+                   $insert_billings = $this->db->insert('billings', $data2);
 
         // $last_id = $this->db->insert_id();
         // if (!empty($this->input->post('vital_signs'))) {

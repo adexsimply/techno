@@ -73,7 +73,7 @@
                                                     <?php } ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <span data-toggle="modal" data-target="#view<?php echo $appointment->app_id ?>" class="badge badge-success" style="cursor:pointer">View</span>
+                                                    <!-- <span data-toggle="modal" data-target="#view<?php echo $appointment->app_id ?>" class="badge badge-success" style="cursor:pointer">View</span> -->
                                                     <span onclick="delete_appointment_name(<?php echo $appointment->app_id ?>)" class="badge badge-danger" style="cursor:pointer">Delete</span>
                                                 </td>
                                                 <!-- <td>
@@ -97,44 +97,7 @@
     </div>
 </div>
 
-<!-- View Modal -->
-<div class="modal fade" id="view<?php echo $appointment->app_id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Appointment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Patient Name</label>
-                        <input type="text" class="form-control" readonly value="<?php echo $appointment->patient_title . " " . $appointment->patient_name;; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Appointment Date</label>
-                        <input type="text" class="form-control" readonly value="<?php $ini_date = date_create($appointment->appointment_date);
-                                                                                echo date_format($ini_date, "D M d, Y"); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Appointment Time</label>
-                        <input type="text" class="form-control" readonly value="<?php $ini_date = date_create($appointment->appointment_time);
-                                                                                echo date_format($ini_date, "h:i A"); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Clinic</label>
-                        <input type="text" class="form-control" readonly value="<?php echo $appointment->clinic_name; ?>">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <?php $this->load->view('includes/footer_2'); ?>
 <?php $this->load->view('appointment/script'); ?>
 <?php $this->load->view('appointment/add_appointment_script'); ?>

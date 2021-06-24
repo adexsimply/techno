@@ -4,7 +4,7 @@ class Patient_m extends CI_Model
 
     public function get_patient_list()
     {
-        $get_patients = $this->db->select('p.*,pn.*, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->order_by('p.id', 'DESC')->get();
+        $get_patients = $this->db->select('p.*,pn.*,s.title, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('salutations as s', 's.id=p.patient_title', 'left')->order_by('p.id', 'DESC')->get();
         $patient_list = $get_patients->result();
         return $patient_list;
     }
@@ -21,6 +21,36 @@ class Patient_m extends CI_Model
         $states = $this->db->select('*')->from('states')->order_by('id', 'ASC')->get();
         $states_list = $states->result();
         return $states_list;
+    }
+    public function next_of_kin_rel()
+    {
+        $next_of_kin_rel = $this->db->select('*')->from('next_of_kin_rel')->order_by('id', 'ASC')->get();
+        $rel_list = $next_of_kin_rel->result();
+        return $rel_list;
+    }
+    public function salutations()
+    {
+        $salutations = $this->db->select('*')->from('salutations')->order_by('title', 'ASC')->get();
+        $salutation_list = $salutations->result();
+        return $salutation_list;
+    }
+    public function occupations()
+    {
+        $occupations = $this->db->select('*')->from('occupation')->order_by('occupation_name', 'ASC')->get();
+        $occupation_list = $occupations->result();
+        return $occupation_list;
+    }
+    public function tribes()
+    {
+        $tribes = $this->db->select('*')->from('tribes')->order_by('tribe_name', 'ASC')->get();
+        $tribe_list = $tribes->result();
+        return $tribe_list;
+    }
+    public function religions()
+    {
+        $religions = $this->db->select('*')->from('religions')->order_by('religion_name', 'ASC')->get();
+        $religion_list = $religions->result();
+        return $religion_list;
     }
     public function countries()
     {
@@ -53,6 +83,24 @@ class Patient_m extends CI_Model
         $get_patient_billings = $this->db->select('b.*,u.username')->from('billings b')->join('users as u', 'u.id=b.billed_by', 'left')->where('b.patient_id', $patient_id)->get();
         $patient_billings = $get_patient_billings->result();
         return $patient_billings;
+    }
+    public function get_patient_admissions($patient_id)
+    {
+        $get_patient_admission = $this->db->select('ar.*,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date, ar.status as admission_status, ar.id as admission_id')->from('admission_requests ar')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->where('patient_id', $patient_id)->get();;
+        $patient_admission = $get_patient_admission->result();
+        return $patient_admission;
+    }
+    public function get_admission_by_id($admission_id)
+    {
+        $get_patient_admission = $this->db->select('ar.*,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date, ar.id as admission_id, ar.status as admission_status')->from('admission_requests ar')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->where('ar.id', $admission_id)->get();;
+        $patient_admission = $get_patient_admission->row();
+        return $patient_admission;
+    }
+    public function get_patient_ledger($patient_id)
+    {
+        $get_patient_ledger = $this->db->select('b.*')->from('patient_ledger b')->where('b.patient_id', $patient_id)->get();
+        $patient_ledger = $get_patient_ledger->result();
+        return $patient_ledger;
     }
     public function get_patient_history_by_id($patient_id)
     {
@@ -154,6 +202,34 @@ class Patient_m extends CI_Model
         $consultation = $get_consultation->row();
         return $consultation;
     }
+
+    public function create_new_admission() {
+        if ($this->input->post('admission_id')) {
+            $data = array(
+                'request_date' => $this->input->post('request_date'),
+                'clinic_id' => $this->input->post('clinic'),
+                'admission_type' => $this->input->post('admission_type'),
+                'diagnosis' => $this->input->post('diagnosis'),
+                'operation' => $this->input->post('operations'),
+                'remarks' => $this->input->post('remarks'),
+            );
+            $this->db->where('id', $this->input->post('admission_id'));
+            $update = $this->db->update('admission_requests', $data);
+        } else {
+            $data = array(
+                'request_date' => $this->input->post('request_date'),
+                'clinic_id' => $this->input->post('clinic'),
+                'admission_type' => $this->input->post('admission_type'),
+                'diagnosis' => $this->input->post('diagnosis'),
+                'operation' => $this->input->post('operations'),
+                'remarks' => $this->input->post('remarks'),
+            );
+            $insert = $this->db->insert('admission_requests', $data);
+            return $insert;
+        }
+
+    }
+
 
     public function save_eye_clinic()
     {
@@ -789,6 +865,17 @@ class Patient_m extends CI_Model
                 $this->db->insert_batch('patient_prescriptions2', $data);
         }
     }
+
+    public function calculate_age2($dob) {
+
+       $age = date_diff(date_create($dob), date_create('today'))->y;
+
+
+       echo json_encode($age);
+
+
+    }
+
 
     public function get_prescription_by_patient_id_and_vital_id($patient_id, $vital_id)
     {

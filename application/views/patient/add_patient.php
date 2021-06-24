@@ -75,7 +75,7 @@
 											<input type="text" class="form-control" id="patient_phone" name="patient_phone" placeholder="Enter Number">
 											<span style="color:#ff0000;" class="error patient_phone"></span>
 										</div>
-										<div class="form-group col-md-4">
+									<!-- 	<div class="form-group col-md-4">
 											<label for="docName">Blood Group</label>
 											<select class="form-control" name="patient_blood_group" id="exampleFormControlSelect1">
 												<option value="">Select Blood Group</option>
@@ -83,7 +83,7 @@
 												<option value="B">B</option>
 											</select>
 											<span style="color:#ff0000;" class="error patient_blood_group"></span>
-										</div>
+										</div> -->
 										<div class="form-group col-md-4">
 											<label for="docEmail">Patient Address</label>
 											<input type="text" class="form-control" id="patient_address" name="patient_address" placeholder="Enter Address">

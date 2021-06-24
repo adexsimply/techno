@@ -1,5 +1,5 @@
 <!-- Add new history Modal -->
-	<div class="modal fade" id="addappointment" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
+<div class="modal fade" id="addappointment" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 		<form id="add-appointment" action="<?php echo base_url('appointment/add_appointment'); ?>" method="post">	

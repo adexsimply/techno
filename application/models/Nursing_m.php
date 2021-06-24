@@ -16,6 +16,120 @@ class Nursing_m extends CI_Model
         return $clinic_list;
     }
 
+
+    public function get_discharge_type_list()
+    {
+        $get_clinics = $this->db->select('*')->from('discharge_type')->get();
+        $clinic_list = $get_clinics->result();
+        return $clinic_list;
+    }
+
+
+    public function get_wards_type_list()
+    {
+        $get_wards_type = $this->db->select('*')->from('ward_type')->get();
+        $wards_list = $get_wards_type->result();
+        return $wards_list;
+    }
+
+
+    public function get_available_wards_list()
+    {
+        $get_wards_type = $this->db->select('count(*) as num_avail,w.*,wt.ward_type_name')->from('wards as w')->join('ward_type as wt', 'w.ward_type_id=wt.id', 'left')->group_by('ward_type_id')->where('w.status','Free')->get();
+        $wards_list = $get_wards_type->result();
+        return $wards_list;
+    }
+
+
+
+    public function get_wards_list()
+    {
+        $get_wards_type = $this->db->select('w.*,wt.ward_type_name')->from('wards as w')->join('ward_type as wt', 'w.ward_type_id=wt.id', 'left')->get();
+        $wards_list = $get_wards_type->result();
+        return $wards_list;
+    }
+
+    public function get_available_wards_list2()
+    {
+        $get_wards_type = $this->db->select('w.*,wt.ward_type_name')->from('wards as w')->join('ward_type as wt', 'w.ward_type_id=wt.id', 'left')->where('w.status','Free')->get();
+        $wards_list = $get_wards_type->result();
+        return $wards_list;
+    }
+
+
+    public function get_ward_details_by_id($id)
+    {
+        $get_wards_type = $this->db->select('w.*,wt.ward_type_name, w.id as ward_id')->from('wards as w')->join('ward_type as wt', 'w.ward_type_id=wt.id', 'left')->where('w.id',$id)->get();
+        $wards_list = $get_wards_type->row();
+        return $wards_list;
+    }
+
+    public function create_new_admit() {
+        if ($this->input->post('admission_id')) {
+            $data = array(
+                'date_admitted' => $this->input->post('admit_date'),
+                'clinic_id' => $this->input->post('clinic'),
+                'admission_request_id' => $this->input->post('admission_id'),
+                'ward_id' => $this->input->post('ward'),
+                'diagnosis' => $this->input->post('diagnosis')
+            );
+            $data2 = array(
+                'status' => "On Admission"
+            );
+            $data3 = array(
+                'status' => "Occupied"
+            );
+            $this->db->where('id', $this->input->post('admission_id'));
+            $update = $this->db->update('admission_requests', $data2);
+            ///////Remove ward
+            $this->db->where('id', $this->input->post('ward'));
+            $update = $this->db->update('wards', $data3);
+            $insert = $this->db->insert('admission_status', $data);
+        } else {
+            $data = array(
+                'request_date' => $this->input->post('admit_date'),
+                'clinic_id' => $this->input->post('clinic'),
+                'diagnosis' => $this->input->post('diagnosis'),
+                'patient_id' => $this->input->post('select_patient'),
+                'sender_id' => $this->session->userdata('active_user')->id,
+                'status' => "On Admission"
+            );
+            $insert = $this->db->insert('admission_requests', $data);
+            $data2 = array(
+                'date_admitted' => $this->input->post('admit_date'),
+                'clinic_id' => $this->input->post('clinic'),
+                'admission_request_id' => $this->db->insert_id(),
+                'patient_id' => $this->input->post('select_patient'),
+                'ward_id' => $this->input->post('ward'),
+                'diagnosis' => $this->input->post('diagnosis')
+            );
+            $insert2 = $this->db->insert('admission_status', $data2);
+            return $insert2;
+        }
+
+    }
+
+    public function create_new_discharge() {
+        if ($this->input->post('admission_id')) {
+            $data = array(
+                'discharged' => $this->input->post('discharge_date'),
+                'discharge_comment' => $this->input->post('discharge_comments'),
+                'discharge_type' => $this->input->post('discharge_type')
+            );
+            $data2 = array(
+                'status' => "Discharged"
+            );
+            $this->db->where('id', $this->input->post('admission_id'));
+            $update = $this->db->update('admission_requests', $data2);
+
+            $this->db->where('admission_request_id', $this->input->post('admission_id'));
+            $update2 = $this->db->update('admission_status', $data);
+
+            return $update;
+        } 
+
+    }
+
     public function get_appointment_list()
     {
         $get_appointments = $this->db->select('p.*,pd.*, p.id as p_id')->from('patient_appointments as p')->join('patient_details as pd', 'p.patient_id=pd.id', 'left')->order_by('p.id', 'DESC')->get();
@@ -53,7 +167,17 @@ class Nursing_m extends CI_Model
     }
     public function get_admission_requests_list()
     {
-        $get_admission_requests = $this->db->select('ar.*,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date')->from('admission_requests ar')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->get();
+        $get_admission_requests = $this->db->select('ar.*,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date, ar.id as admission_id')->from('admission_requests ar')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->get();
+        $admission_requests = $get_admission_requests->result();
+        return $admission_requests;
+    }
+
+    public function get_admission_requests_list_d()
+    {
+        $date = new DateTime("now");
+        $curr_date = $date->format('Y-m-d ');
+
+        $get_admission_requests = $this->db->select('ar.*,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date, ar.id as admission_id')->from('admission_requests ar')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->where('ar.status', 'Pending')->where('DATE(ar.request_date)',$curr_date)->get();
         $admission_requests = $get_admission_requests->result();
         return $admission_requests;
     }
@@ -84,7 +208,7 @@ class Nursing_m extends CI_Model
             'HC' => $this->input->post('HC'),
             'MUAC' => $this->input->post('MUAC'),
             'nutritional_status' => $this->input->post('nutritional_status'),
-            'BP' => $this->input->post('BP'),
+            'BP' => $this->input->post('BP1').'/'.$this->input->post('BP2'),
             'temp' => $this->input->post('temp'),
             'ANC' => $this->input->post('ANC'),
             'respiration' => $this->input->post('respiration'),
@@ -106,6 +230,33 @@ class Nursing_m extends CI_Model
             $insert = $this->db->insert('patient_vitals', $data2);
             return $insert;
         }
+    }
+
+    public function create_new_ward() {
+        if ($this->input->post('ward_id')) {
+            $data = array(
+                'ward_name' => $this->input->post('ward_name'),
+                'ward_type_id' => $this->input->post('ward_type'),
+                'doctor_nurse_fee' => $this->input->post('doc_nurse_fee'),
+                'feeding' => $this->input->post('feeding'),
+                'utility' => $this->input->post('utility'),
+                'ward_rate' => $this->input->post('ward_rate'),
+            );
+            $this->db->where('id', $this->input->post('ward_id'));
+            $update = $this->db->update('wards', $data);
+        } else {
+            $data = array(
+                'ward_name' => $this->input->post('ward_name'),
+                'ward_type_id' => $this->input->post('ward_type'),
+                'doctor_nurse_fee' => $this->input->post('doc_nurse_fee'),
+                'feeding' => $this->input->post('feeding'),
+                'utility' => $this->input->post('utility'),
+                'ward_rate' => $this->input->post('ward_rate'),
+            );
+            $insert = $this->db->insert('wards', $data);
+            return $insert;
+        }
+
     }
 
 
@@ -139,6 +290,53 @@ class Nursing_m extends CI_Model
         $appointment_list = $get_appointments->result();
         return $appointment_list;
     }
+
+    public function get_admission_requests_list_f()
+    {
+        if ($this->input->post('status')) {
+            $status = $this->input->post('status'); 
+            if ($status == 'Pending') {
+                $cond = array('ar.status' => $status);
+            } elseif ($status == 'On Admission') {
+                $cond = array('ar.status' => $status);
+            } elseif ($status == 'Discharged') {
+                $cond = array('ar.status' => $status);
+            } else {
+                $cond = '1=1';
+            }
+        }
+
+        // if ($this->input->post('clinic_id')) {
+        //     $clinic_id = $this->input->post('clinic_id');
+        //     if ($clinic_id != 'all') {
+        //         $clinic_cond = 'ar.clinic_id IN (SELECT clinic_id FROM admission_requests WHERE clinic_id=' . $clinic_id . ')';
+        //         //$doctor_cond = 'pa.doctor_id',
+        //         //$doctor_cond = explode(',', $doctor_cond);
+        //     } else {
+        //         $clinic_cond = '1=1';
+        //     }
+        // }
+
+        $today_date = date('Y-m-d');
+
+        if ($this->input->post('date_range_from') != $today_date) {
+
+            $first_date = $this->input->post('date_range_from');
+            $second_date =  $this->input->post('date_range_to');
+
+            $date_range = array('request_date >=' => $first_date, 'request_date <=' => $second_date);
+        } else {
+
+           $date_range = array('request_date' => $today_date);
+
+        }
+
+
+        $get_admission_requests = $this->db->select('ar.*,as.*,w.ward_name,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date, ar.id as admission_id')->from('admission_requests ar')->join('admission_status as as', 'ar.id=as.admission_request_id', 'left')->join('wards as w', 'w.id=as.ward_id', 'left')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->where($cond)->where($date_range)->get();
+        $admission_requests = $get_admission_requests->result();
+        return $admission_requests;
+    }
+
 
     public function get_appointment_vitals()
     {

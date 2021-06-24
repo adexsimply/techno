@@ -22,7 +22,7 @@ font-size: 13px;
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 mb-3">
-                            <b>Invoice Number</b>
+                            <b>Receipt Number</b>
                             <div class="input-group">
                                 <input type="text" class="form-control time24" disabled="" value="<?php echo $this->uri->segment(3); ?>">
                             </div>
@@ -42,42 +42,41 @@ font-size: 13px;
                         <hr>
 
 
-						<table id="invoiceList" style="font-size: 13px;padding: 0;" class="table table-striped">
-							<thead class="thead-dark">
-								<tr>
-									<th>Date</th>
-									<th>Amount Due</th>
-									<th>Description</th>
-									<th>Pay</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								$i = 1;
-								foreach ($patient_invoice as $invoice) {
-								?>
-									<tr>
-										<td><?php $ini_date = date_create($invoice->date_added);
-											echo date_format($ini_date, "d-M-Y h:i a"); ?></td>
-										<td><?php echo $invoice->amount; ?></td>
-										<td><?php echo $invoice->item_name; ?></td>
-										<td><input type="" name="billing_id[]" hidden value="<?php echo $invoice->id; ?>"><input type="checkbox" class="checkbox_check" id="<?php echo "inv".$invoice->id; ?>" onclick="toggle_total_pay(<?php echo $invoice->id.",".$invoice->amount; ?>)" checked name=""></td>
-									</tr>
-								<?php $i++;
-								} ?>
-							</tbody>
-						</table>
+              						<table id="invoiceList" style="font-size: 13px;padding: 0;" class="table table-striped">
+              							<thead class="thead-dark">
+              								<tr>
+              									<th>Date</th>
+              									<th>Amount Due</th>
+              									<th>Description</th>
+              									<th>Pay</th>
+              								</tr>
+              							</thead>
+              							<tbody>
+              								<?php
+              								$i = 1;
+              								foreach ($patient_invoice as $invoice) {
+              								?>
+              									<tr>
+              										<td><?php $ini_date = date_create($invoice->date_added);
+              											echo date_format($ini_date, "d-M-Y h:i a"); ?></td>
+              										<td><?php echo $invoice->amount; ?></td>
+              										<td><?php echo $invoice->item_name; ?><input type="text" value="<?php echo $invoice->item_name; ?>" hidden name="description"></td>
+              										<td><input type="text" name="patient_id" hidden value="<?php echo $invoice->patient_id; ?>"><input type="" name="billing_id[]" hidden value="<?php echo $invoice->id; ?>"><input type="checkbox" class="checkbox_check" id="<?php echo "inv".$invoice->id; ?>" onclick="toggle_total_pay(<?php echo $invoice->id.",".$invoice->amount; ?>)" checked name=""></td>
+              									</tr>
+              								<?php $i++;
+              								} ?>
+              							</tbody>
+              						</table>
                 </div>
-        </div>
                 <div class="row clearfix">
                    
                         <div class="col-lg-6 col-md-6 mb-3">
                             <b>Pay As</b>
                             <div class="input-group">
-                            	<select class="form-control" name="payas" id="payas">
-                            		<option value=""></option>
-                            		<option selected="" value="cash">Cash</option>
-                            	</select>
+                              <select class="form-control" name="payas" id="payas">
+                                <option value=""></option>
+                                <option selected="" value="cash">Cash</option>
+                              </select>
 
                             </div>
                         </div>
@@ -88,6 +87,7 @@ font-size: 13px;
                             </div>
                         </div>
                 </div>
+        </div>
             </form>
     </div>
 <script type="text/javascript">

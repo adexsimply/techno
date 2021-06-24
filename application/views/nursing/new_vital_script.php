@@ -71,15 +71,15 @@
     //////////////Add session form ends
 
     //Number only
-    jQuery('.numbersOnly').keyup(function() {
-        this.value = this.value.replace(/[^0-9\.]/g, '');
-    });
+    // jQuery('.numbersOnly').keyup(function() {
+    //     this.value = this.value.replace(/[^0-9\.]/g, '');
+    // });
 
-    $('.bp_input_tag').keyup(function() {
-        var foo = $(this).val().split("/").join(""); // remove hyphens  if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,3}', 'g')).join("/");
-        $(this).val(foo);
-    }, );
+    // $('.bp_input_tag').keyup(function() {
+    //     var foo = $(this).val().split("/").join(""); // remove hyphens  if (foo.length > 0) {
+    //     foo = foo.match(new RegExp('.{1,3}', 'g')).join("/");
+    //     $(this).val(foo);
+    // }, );
 
     function weight_not_empty() {
         document.getElementById('error-h').innerHTML = "";

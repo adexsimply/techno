@@ -25,16 +25,8 @@
   height: 12px;
   font-size: 12px;
 }
-
 </style>
 <div class="container-fluid">
-<!-- 	<div class="block-header">
-		<div class="row">
-			<div class="col-lg-6 col-md-8 col-sm-12">
-				<h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Patient Profile</h2>
-			</div>
-		</div>
-	</div> -->
 
 	<div class="row clearfix">
 		<?php //var_dump($patient) 
@@ -79,52 +71,17 @@
 					</ul>
 				</div>
 			</div>
-<!-- 			<div class="card">
-				                        <div class="header">
-				                            <h2>General Report</h2>
-				                        </div>
-				                        <div class="body">
-				                            <ul class="list-unstyled">
-				                                <li>
-				                                    <div>Blood Pressure</div>
-				                                    <div class="progress m-b-20">
-				                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span class="sr-only">40% Complete (success)</span> </div>
-				                                    </div>
-				                                </li>
-				                                <li>
-				                                    <div>Heart Beat</div>
-				                                    <div class="progress m-b-20">
-				                                        <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%"> <span class="sr-only">20% Complete</span> </div>
-				                                    </div>
-				                                </li>
-				                                <li>
-				                                    <div>Haemoglobin</div>
-				                                    <div class="progress m-b-20">
-				                                        <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%"> <span class="sr-only">60% Complete (warning)</span> </div>
-				                                    </div>
-				                                </li>
-				                                <li>
-				                                    <div>Sugar</div>
-				                                    <div class="progress">
-				                                        <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%"> <span class="sr-only">80% Complete (danger)</span> </div>
-				                                    </div>
-				                                </li>
-				                            </ul>
-				                        </div>
-				                    </div> -->
 		</div>
 		<div class="col-lg-9 col-md-12">
 			<div class="card">
 
-
-				<?php //var_dump($patient); 
-				?>
 				<div class="body">
 					<ul class="nav nav-tabs-new2">
 						<li class="nav-item"><a class="nav-link active" data-toggle="tab" onclick="listDefaultConsultationByPatient()" href="#documents">Documents</a></li>
 						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#otherdocuments">Other Documents</a></li>
 						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#requests">Requests</a></li>
-						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#billings">Account</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#billings">Billings</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#account">Account</a></li>
 					</ul>
 					<div class="tab-content mt-3">
 
@@ -467,27 +424,33 @@
 														    </table>
 												</div>
 												<div class="tab-pane table-responsive" id="admission">
-													<?php if ($patient->appointment_id != NULL) { ?>
-														<button class="btn btn-warning m-b-15 m-t-15" type="button" data-toggle="modal" data-target="#takeVitals" onclick="shiNew(event)" data-type="black" data-size="m" data-title="Add Dental Clinic for <?php echo $patient->patient_name; ?>" href="<?php echo base_url('patient/add_dental/' . $patient->vital_id) ?>">
-															<i class="fa fa-plus-circle"></i> Add New
+													
+														<button class="btn btn-warning m-b-15 m-t-15" onclick="admission_dialog(event)" data-type="black" data-size="l" data-title="Admission/Surgical Procedure Request" href="<?php echo base_url('patient/add_admission');?>">
+															<i class="fa fa-bed"></i> Create
 														</button>
-													<?php } ?>
 													<table class="table m-b-0 table-hover">
 														<thead class="thead-warning">
 															<tr>
-																<th>Media</th>
-																<th>Patients ID</th>
-																<th>Name</th>
-																<th>Age</th>
-																<th>Address</th>
-																<th>Number</th>
-																<th>Last Visit</th>
-																<th>Status</th>
+																<th>Date</th>
+																<th>Sender</th>
+																<th>Diagnosis</th>
+																<th>Status</th>			
+																<th>Actions</th>	
 															</tr>
 														</thead>
 														<tbody>
+															<?php foreach($patient_admissions as $admission)
+															{
+															 ?>
 															<tr>
+																<td><?php echo date('jS \of F Y', strtotime($admission->request_date)); ?></td>
+																<td><?php echo $admission->staff_firstname . " " . $admission->staff_lastname; ?></td>
+																<td><?php echo $admission->diagnosis; ?></td>
+																<td><?php echo $admission->admission_status; ?></td>
+																<td> <button title="Edit Patient" class="btn btn-sm btn-icon btn-pure btn-info" onclick="admission_dialog(event)" data-type="purple" data-size="l" data-title="Edit" href="<?php echo base_url('patient/add_admission/'.$admission->admission_id);?>"><i class="icon-pencil"></i></button>
+                                                    <button title="Delete" class="btn btn-sm btn-icon btn-pure btn-danger" onclick="delete_admission(<?php echo $admission->admission_id; ?>)"><i class="icon-trash"></i></button></td>
 															</tr>
+															<?php } ?>
 														</tbody>
 													</table>
 												</div>
@@ -766,6 +729,62 @@
 																<td><?php echo $patient_billing->invoice_id; ?></td>
 																<td><?php echo $patient_billing->status; ?></td>
 																<td><?php echo $patient_billing->amount; ?></td>
+															</tr>
+														<?php $i++;
+														} ?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+									<!-- <h6>Balance:<span style="color: red"><?php echo $credit - $debit; ?> </span> </h6> -->
+								</div>
+							</div>
+
+						</div>
+
+
+						<div class="tab-pane" id="account">
+							<div class="row clearfix">
+								<div class="col-lg-12">
+									<div class="card" style="max-height: 500px; overflow: scroll;">
+
+										<div class="body">
+											<div class="table-responsive">
+												<table id="billingList" style="font-size: 13px;padding: 0;" class="table table-striped">
+													<thead class="thead-dark">
+														<tr>
+															<th>S/N</th>
+															<th>Date</th>
+															<th>Particulars</th>
+															<th>Amount Billed</th>
+															<th>Amount Paid</th>
+															<th>Balance</th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php
+														$i = 1;
+														$debit = 0;
+														$credit = 0;
+														$amount =0;
+														foreach ($patient_ledger as $ledger) {
+															// if ($patient_billing->billing_type == 'Debit') {
+															$amount += $ledger->Debit; 
+															$amount -=$ledger->Credit;
+															// 	$debit += $patient_billing->amount;
+															// } elseif ($patient_billing->billing_type == 'Credit') {
+															// 	$credit += $patient_billing->amount;
+															// }
+														?>
+															<tr>
+																<td><?php echo $i; ?></td>
+																<td><?php $ini_date = date_create($ledger->Date);
+																	echo date_format($ini_date, "d-M-Y h:i a"); ?></td>
+																<td><?php echo $ledger->Description; ?></td>
+																<td><?php echo $ledger->Debit; ?></td>
+																<td><?php echo $ledger->Credit; ?></td>
+																<td><?php echo $amount ?></td>
 															</tr>
 														<?php $i++;
 														} ?>

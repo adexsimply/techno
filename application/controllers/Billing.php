@@ -143,6 +143,11 @@ class Billing extends Base_Controller {
     {
         echo json_encode($this->billing_m->save_payment());
     }
+
+    function pay_manual_bill()
+    {
+        echo json_encode($this->billing_m->save_manual_payment());
+    }
     function save_bill()
     {
         echo json_encode($this->billing_m->save_bill());

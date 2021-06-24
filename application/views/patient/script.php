@@ -188,7 +188,7 @@
         $("button[title='add_patient']").html("Saving data, please wait...");
         //console.log(formData)
         $.post("<?php echo base_url() . 'patient/save_patient'; ?>", formData).done(function(data) {
-            //console.log(data);
+            console.log(data);
 
             window.location = "<?php echo base_url('appointment/waiting_list'); ?>";
         });
@@ -197,10 +197,11 @@
     function form_routes_patient(action) {
         if (action == 'add_patient') {
             var formData = $('#add-patient').serialize();
+            console.log(formData);
             if (validate(formData) == 'success') {
                 $.confirm({
-                    title: 'Add patient Test',
-                    content: 'Are you sure you want to add new patient Test?',
+                    title: 'Add patient',
+                    content: 'Are you sure you want to Save?',
                     icon: 'fa fa-check-circle',
                     type: 'green',
                     buttons: {
