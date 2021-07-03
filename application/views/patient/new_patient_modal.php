@@ -1,267 +1,265 @@
+<style type="text/css">
+	.error {
+		font-size: 11px;
+	}
+</style>
 <div class="col-12">
 	<div class="card box-margin">
-		<div class="card-body">
+		<div class="card-body" style="padding:0;">
 			<form id="add-patient" action="<?php echo base_url('patient/upload_patient'); ?>" method="post" enctype="multipart/form-data">
+            <div class="form-group">
 				<div class="row clearfix">
 					<div class="col-lg-10 col-md-12" style="border-right: 1px solid #ced4da;">
-						<fieldset style="border: 1px solid #01b2c6; padding: 20px;">
+						<fieldset style="border: 1px solid #01b2c6; padding: 0px 20px 6px 20px">
 							<input hidden name="patient_id" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->p_id; ?>" <?php } ?> class="form-control" id="patient_id" placeholder="">
 							<div class="form-row mt-2">
-								<div class="form-group col-md-3">
-									<label for="docEmail">Hospital Number</label><span style="color: red">*</span>
-									<input type="text" name="patient_id_num" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_id_num; ?>" <?php } ?> class="form-control" id="patient_id_num" placeholder="HMS/0001/005">
-									<span style="color:#ff0000;" class="error patient_id_num"></span>
+								<div class="form-inline col-md-4">
+									<label for="docEmail" class="col-md-4"><span style="color: red">*</span>Hospital&nbsp;Number:&nbsp;</label>
+									<input type="text" name="patient_id_num" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_id_num; ?>" <?php } ?> class="form-control col-md-8" id="patient_id_num" placeholder="HMS/0001/005" tabindex="1">
+									<label class="col-md-4"></label><span style="color:#ff0000;" class="error patient_id_num col-md-8"></span>
 								</div>
-								<div class="form-group col-md-3">
-									<label for="docEmail">Reg Date</label>
-									<div class="input-group date" id="regDatePicker" data-target-input="nearest">
+								<div class="form-inline col-md-4">
+									<label for="docEmail" class="col-md-2">Reg&nbsp;Date:</label>
+									<div class="input-group date col-md-10" id="regDatePicker" data-target-input="nearest">
 										<div class="input-group-append" data-target="#casedatepicker1" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
-										<input id="patient_reg_date" type="date" name="patient_reg_date" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_reg_date; ?>" <?php } ?> class="form-control datetimepicker-input" />
+										<input id="patient_reg_date" type="date" name="patient_reg_date" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_reg_date; ?>" <?php } ?> class="form-control datetimepicker-input" tabindex="2"/>
 									</div>
-									<span style="color:#ff0000;" class="error patient_reg_date"></span>
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_reg_date col-md-10"></span>
 								</div>
-								<div class="form-group col-md-3">
-									<label for="docEmail">Expiry Date</label>
-									<div class="input-group date" id="casedatepicker1" data-target-input="nearest">
+								<div class="form-inline col-md-4">
+									<label for="docEmail" class="col-md-2">Expires&nbsp;on: </label>
+									<div class="input-group date col-md-10" id="casedatepicker1" data-target-input="nearest">
 										<div class="input-group-append" data-target="#casedatepicker1" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
-										<input type="date" name="patient_expiry_date" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_expiry_date; ?>" <?php } ?> class="form-control datetimepicker-input" />
+										<input type="date" name="patient_expiry_date" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_expiry_date; ?>" <?php } ?> class="form-control datetimepicker-input" tabindex="3" />
 									</div>
-									<span style="color:#ff0000;" class="error patient_expiry_date"></span>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="docName">Gender</label>
-									<select class="form-control" name="patient_gender" id="exampleFormControlSelect2">
-										<option value="">Select Gender</option>
-										<option value="Male" <?php if ($this->uri->segment(3)) {
-																	if ($patient_details->patient_gender == 'Male') { ?> selected <?php } 											} ?>>Male</option>
-										<option value="Female" <?php if ($this->uri->segment(3)) {
-																	if ($patient_details->patient_gender == 'Female') { ?> selected <?php } 										} ?>>Female</option>
-									</select>
-									<span style="color:#ff0000;" class="error patient_gender"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_gender"></code>
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_expiry_date col-md-10"></span>
 								</div>
 							</div>
 
 						</fieldset>
-						<fieldset style="border: 1px solid #01b2c6; padding: 20px;">
-							<legend>Personal Details:</legend>
+						<fieldset style="border: 1px solid #01b2c6; padding: 0px 20px 5px 20px">
+							<legend style="font-size: 18px;"><strong>Personal Info:</strong></legend>
 							<div class="form-row mt-2">
-								<div class="form-group col-md-4">
-									<label for="docName">Title</label><span style="color: red">*</span>
-									<select class="form-control" name="patient_title" id="exampleFormControlSelect1">
+								<div class="form-inline col-md-2">
+									<label for="docName" class="col-md-3"><span style="color: red">*</span>Title</label>
+									<select class="form-control col-md-9" name="patient_title" id="exampleFormControlSelect1" tabindex="4">
 										<option value="">Select Title</option>
 										<?php foreach ($salutations as $salutation) { ?>
 										<option value="<?php echo $salutation->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_title == $salutation->id) { ?> selected <?php } 	} ?>><?php echo $salutation->title; ?></option>
 										<?php } ?>
 										
 									</select>
-									<span style="color:#ff0000;" class="error patient_title"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_title"></code>
+									<label class="col-md-3"></label><span style="color:#ff0000;" class="error patient_title col-md-9"></span>
 								</div>
-								<div class="form-group col-md-4">
-									<label for="docName">SurnName</label><span style="color: red">*</span>
-									<input type="text" class="form-control" id="patient_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_name; ?>" <?php } ?> name="patient_name" placeholder="Enter Name">
-									<span style="color:#ff0000;" class="error patient_name"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_name"></code>
+								<div class="form-inline col-md-5">
+									<label for="docName" class="col-md-2"><span style="color: red">*</span>SurnName</label>
+									<input type="text" class="form-control col-md-10" id="patient_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_name; ?>" <?php } ?> name="patient_name" placeholder="Enter Name" tabindex="5">
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_name col-md-10"></span>
 								</div>
-								<div class="form-group col-md-4">
-									<label for="docEmail">Marital Status</label>
-									<select class="form-control" name="marital_status" id="exampleFormControlSelect2">
+								<div class="form-inline col-md-5">
+									<label for="docEmail" class="col-md-3"><span style="color: red">*</span>Other&nbsp;Names</label>
+									<input type="text" class="form-control col-md-9" id="patient_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_name; ?>" <?php } ?> name="patient_other_names" placeholder="Enter Name" tabindex="6">
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_other_names col-md-10"></span>
+								</div>
+							</div>
+							<div class="form-row mt-2">
+								<div class="form-inline col-md-3">
+									<label for="docpassword" class="col-md-3"><span style="color: red">*</span>Date&nbsp;of&nbsp;Birth</label>
+									<div class="input-group date col-md-9" id="casedatepicker1" data-target-input="nearest">
+										<div class="input-group-append" data-target="#casedatepicker1" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<input onchange="calculate_age()" type="date" id="dob" name="patient_dob" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_dob; ?>" <?php } ?> class="form-control datetimepicker-input" tabindex="7" />
+									</div>
+									<label class="col-md-3"></label><span style="color:#ff0000;" class="error patient_dob col-md-9"></span>
+								</div>
+								<div class="form-inline col-md-2">
+									<label class="col-md-4">Age&nbsp;(Yrs)</label>
+									<input disabled type="text" id="age" <?php if ($this->uri->segment(3)) { ?> value =" <?php echo $this->patient_m->calculate_age2($patient_details->patient_dob);  } ?>" class="form-control datetimepicker-input col-md-8" />
+								</div>
+								<div class="form-inline col-md-3">
+									<label for="docName" class="col-md-2">Sex</label>
+									<select class="form-control col-md-10" name="patient_gender" id="exampleFormControlSelect2" tabindex="8">
+										<option value="">Select Gender</option>
+										<option value="Male" <?php if ($this->uri->segment(3)) {
+																	if ($patient_details->patient_gender == 'Male') { ?> selected <?php } 											} ?>>Male</option>
+										<option value="Female" <?php if ($this->uri->segment(3)) {
+																	if ($patient_details->patient_gender == 'Female') { ?> selected <?php } 										} ?>>Female</option>
+									</select>
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_gender col-md-10"></span>
+								</div>
+								<div class="form-inline col-md-4">
+									<label for="docEmail" class="col-md-3">Marital&nbsp;Status</label>
+									<select class="form-control col-md-9" name="marital_status" id="exampleFormControlSelect2" tabindex="9">
 										<option value="">Select Status</option>
 										<option <?php if ($this->uri->segment(3)) { if ($patient_details->patient_marital_status == 'Single') { ?> selected <?php } 	} ?> value="Single">Single</option>
 										<option <?php if ($this->uri->segment(3)) { if ($patient_details->patient_marital_status == 'Married') { ?> selected <?php } 	} ?> value="Married">Married</option>
 									</select>
-									<span style="color:#ff0000;" class="error marital_status"></span>
+									<label class="col-md-3"></label><span style="color:#ff0000;" class="error marital_status col-md-9"></span>
 								</div>
 							</div>
+
 							<div class="form-row mt-2">
-								<div class="form-group col-md-4">
-									<label for="docEmail">Other Names</label><span style="color: red">*</span>
-									<input type="text" class="form-control" id="patient_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_name; ?>" <?php } ?> name="patient_other_names" placeholder="Enter Name">
-									<span style="color:#ff0000;" class="error patient_other_names"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_other_names"></code>
+								<div class="form-inline col-md-4">
+									<label for="docEmail" class="col-md-3">Email&nbsp;Address</label>
+									<input type="email" class="form-control col-md-9" id="patient_email" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_email; ?>" <?php } ?> name="patient_email" placeholder="Enter Email Address" tabindex="10">
 								</div>
-								<div class="form-group col-md-4">
-									<label for="docName">Tribe</label>
-									<select class="form-control" name="patient_tribe" id="exampleFormControlSelect4">
-										<option value="">Select Tribe</option>
-										<?php foreach ($tribes as $tribe) { ?>
-										<option value="<?php echo $tribe->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_tribe == $tribe->id) { ?> selected <?php }  } ?>><?php echo $tribe->tribe_name; ?></option>
-										<?php } ?>
-									</select>
-									<span style="color:#ff0000;" class="error patient_tribe"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_tribe"></code>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="docpassword">Date of Birth</label>
-									<div class="input-group date" id="casedatepicker1" data-target-input="nearest">
-										<div class="input-group-append" data-target="#casedatepicker1" data-toggle="datetimepicker">
-											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-										</div>
-										<input onchange="calculate_age()" type="date" id="dob" name="patient_dob" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_dob; ?>" <?php } ?> class="form-control datetimepicker-input" />
-									</div>
-									<span style="color:#ff0000;" class="error patient_dob"></span>
-								</div>
-								<div class="form-group col-md-1">
-									<label>&nbsp;</label>
-									<div id="age" style="color:#ff0000;"><?php if ($this->uri->segment(3)) { echo $this->patient_m->calculate_age2($patient_details->patient_dob);  } ?> Yr(s)</div>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="docEmail">Email Address</label>
-									<input type="email" class="form-control" id="patient_email" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_email; ?>" <?php } ?> name="patient_email" placeholder="Enter Email Address">
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_email"></code>
-								</div>
-								<div class="form-group col-md-3">
-									<label for="docName">Religion</label>
-									<select class="form-control" name="patient_religion" id="exampleFormControlSelect5">
+								<div class="form-inline col-md-4">
+									<label for="docName" class="col-md-2">Religion</label>
+									<select class="form-control col-md-10" name="patient_religion" id="exampleFormControlSelect5" tabindex="11">
 										<option value="">Select Religion</option>
 										<?php foreach ($religions as $religion) { ?>
 										<option value="<?php echo $religion->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_religion == $religion->id) { ?> selected <?php } } ?>><?php echo $religion->religion_name; ?></option>
 										<?php } ?>
 									</select>
-									<span style="color:#ff0000;" class="error patient_religion"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_religion"></code>
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_religion col-md-10"></span>
 								</div>
-								<div class="form-group col-md-3">
-									<label for="docName">Reg Type</label>
-									<select class="form-control" name="patient_regtype" id="exampleFormControlSelect7">
-										<option value="">Select Reg Type</option>
-										<option value="Walk-In" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_regtype == 'Walk-In') { ?> selected <?php }																				} ?>>Walk-In</option>
-										<option value="Outpatient" <?php if ($this->uri->segment(3)) {
-																		if ($patient_details->patient_regtype == 'Outpatient') { ?> selected <?php }														} ?>>Outpatient</option>
-									</select>
-									<span style="color:#ff0000;" class="error patient_regtype"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_regtype"></code>
-								</div>
-							<!-- 	<div class="form-group col-md-4">
-									<label for="docEmail">Blood Group</label>
-									<input type="text" class="form-control" id="patient_blood_group" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_blood_group; ?>" <?php } ?> name="patient_blood_group" placeholder="Enter Patient Blood Group">
-								</div> -->
-								<div class="form-group col-md-3">
-									<label for="docEmail">Occupation</label>
-									<select class="form-control" name="patient_occupation" id="patient_occupation">
+								<div class="form-inline col-md-4">
+									<label for="docEmail" class="col-md-3">Occupation</label>
+									<select class="form-control col-md-9" name="patient_occupation" id="patient_occupation" tabindex="12">
 										<option value="">Select Occupation</option>
 										<?php foreach ($occupations as $occupation) { ?>
 										<option value="<?php echo $occupation->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_occupation == $occupation->id) { ?> selected <?php } 	} ?>><?php echo $occupation->occupation_name; ?></option>
 										<?php } ?>
 										
 									</select>
-									<!-- <input type="text" class="form-control" id="patient_occupation" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_occupation; ?>" <?php } ?> name="patient_occupation" placeholder="Enter Patient Occupation"> -->
 								</div>
+							</div>
+							<div class="form-row mt-2">
+								<div class="form-inline col-md-6">
+									<label for="docName" class="col-md-2">Tribe: </label>
+									<select class="form-control col-md-10" name="patient_tribe" id="exampleFormControlSelect4" tabindex="13">
+										<option value="">Select Tribe</option>
+										<?php foreach ($tribes as $tribe) { ?>
+										<option value="<?php echo $tribe->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_tribe == $tribe->id) { ?> selected <?php }  } ?>><?php echo $tribe->tribe_name; ?></option>
+										<?php } ?>
+									</select>
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_tribe col-md-10"></span>
+								</div>
+								<div class="form-inline col-md-6">
+									<label for="docName" class="col-md-2">Reg Type: </label>
+									<select class="form-control col-md-10" name="patient_regtype" id="exampleFormControlSelect7" tabindex="14">
+										<option value="">Select Reg Type</option>
+										<option value="Walk-In" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_regtype == 'Walk-In') { ?> selected <?php }																				} ?>>Walk-In</option>
+										<option value="Outpatient" <?php if ($this->uri->segment(3)) {
+																		if ($patient_details->patient_regtype == 'Outpatient') { ?> selected <?php }														} ?>>Outpatient</option>
+									</select>
+									<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_regtype col-md-10"></span>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="col-lg-2 col-md-12">
+						<div id="results" style="font-size: 12px;">Your captured image will appear here...</div>
+						<!-- A button for taking snaps -->
+						<div id="my_camera"></div>
+
+						<button type=button class="btn btn-primary" id="openCamera" onClick="take_snapshot2()"><i class="fa fa-camera"></i> Open Camera </button>
+						<button style="display: none;" id="takeSnapshot" type=button class="btn btn-warning" onClick="take_snapshot()"><i class="fa fa-camera-retro"></i> Take Snapshot </button>
+						<!-- <input type=button value="Take Snapshot 2" onClick="take_snapshot()"> -->
+						<h5>OR</h5>
+						<?php if ($this->uri->segment(3)) { if (isset($patient_details->patient_photo)) { ?>
+							<input hidden type="text" name="patient_image" value="<?php echo $patient_details->patient_photo; ?>">
+						<?php } } ?> 
+						<input type='file' class="form-control" name="image" id="user_image" onchange="readURL(this);" />
+						<img id="blah" src="<?php if ($this->uri->segment(3)) { if (isset($patient_details->patient_photo)) { echo base_url('uploads/' . $patient_details->patient_photo); } } ?>" alt="" class="mt-3" />
+					</div>
+					<div class="col-lg-12 col-md-12">
+
+						<fieldset class="my-3" style="border: 1px solid #01b2c6; padding: 0px 20px 5px 20px">
+							<legend style="font-size: 18px;"><strong> Address & other contact information</strong></legend>
+
+							<div class="row clearfix">
+								<div class="col-lg-6 col-md-12">
+
+									<div class="form-inline col-md-12">
+										<label for="docEmail" class="col-md-3"><span style="color: red">*</span>Res&nbsp;Address</label>
+										<textarea class="form-control col-md-9" id="patient_address" name="patient_address" tabindex="15"><?php if ($this->uri->segment(3)) { ?><?php echo $patient_details->patient_address; ?> <?php } ?></textarea>
+										<label class="col-md-2"></label><span style="color:#ff0000;" class="error patient_address col-md-10"></span>
+									</div>
+
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docName" class="col-md-3"><span style="color: red">*</span>Next&nbsp;of&nbsp;Kin</label>
+										<input type="text" class="form-control col-md-9" id="nok_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_name; ?>" <?php } ?> name="nok_name" placeholder="Enter Name" tabindex="17">
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error nok_name col-md-9"></span>
+									</div>
+
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docEmail" class="col-md-3"><span style="color: red">*</span>Next of Kin Address</label>
+										<input type="text" name="nok_address" class="form-control col-md-9" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_address; ?>" <?php } ?> id="nok_address" placeholder="Enter Address" tabindex="18">
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error nok_address col-md-9"></span>
+									</div>
+
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docName" class="col-md-3"><span style="color: red">*</span>Next of Kin Tel: </label>
+										<input type="text" maxlength="11" class="form-control col-md-9" id="nok_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_phone; ?>" <?php } ?> name="nok_phone" placeholder="Enter Number" tabindex="19">
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error nok_phone col-md-9"></span>
+									</div>
+
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docEmail" class="col-md-3"><span style="color: red">*</span>Next&nbsp;of&nbsp;Kin&nbsp;R/ship:</label>
+										<select class="form-control col-md-9"  name="nok_relationship" id="nok_relationship" tabindex="20">
+											<option value="">Select Relationship</option>
+											<?php foreach ($next_of_kin_rel as $relationship) { ?>
+												<option value="<?php echo $relationship->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->nok_relationship == $relationship->id) { ?> selected <?php } } ?>><?php echo $relationship->rel_name; ?></option>
+											<?php } ?>
+										</select>
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error nok_relationship col-md-9"></span>
+									</div>
+
+								</div>
+								<div class="col-lg-6 col-md-12">
+
+									<div class="form-inline col-md-12">
+										<label for="docEmail" class="col-md-3">Phone&nbsp;Number: </label>
+										<input maxlength="11" type="text" class="form-control col-md-9" id="patient_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_phone; ?>" <?php } ?> name="patient_phone" placeholder="Enter Number" tabindex="16">
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error patient_phone col-md-9"></span>
+									</div>
+
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docEmail" class="col-md-3">City Area</label>
+										<input type="text" class="form-control col-md-9" id="patient_city" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_city; ?>" <?php } ?> name="patient_city" placeholder="Area" tabindex="21">
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error patient_city col-md-9"></span>
+									</div>
+
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docEmail" class="col-md-3">Country: </label>
+										<select class="form-control col-md-9" name="patient_country" id="exampleFormControlSelect6" tabindex="22">
+											<option value="">Select Country</option>
+											<?php foreach ($countries as $country) { ?>
+												<option <?php if ($country->id=='156'){ echo "selected"; } ?> value="<?php echo $country->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_country == $country->id) { ?> selected <?php }																			} ?>><?php echo $country->name; ?></option>
+											<?php } ?>
+										</select>
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error patient_country col-md-9"></span>
+									</div>
+
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docEmail" class="col-md-3">State: </label>
+										<select class="form-control col-md-9" name="patient_state" id="exampleFormControlSelect6" tabindex="23">
+											<option value="">Select State</option>
+											<?php foreach ($states as $state) { ?>
+												<option value="<?php echo $state->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_state == $state->id) { ?> selected <?php }																				} ?>><?php echo $state->name; ?></option>
+											<?php } ?>
+										</select>
+										<label class="col-md-3"></label><span style="color:#ff0000;" class="error patient_state col-md-9"></span>
+									</div>
+									<div class="form-inline col-md-12" style="margin-top: 5px; ">
+										<label for="docName" class="col-md-3">Outside Nigeria: </label>
+										<input type="text" maxlength="11" class="form-control col-md-9" id="outside" name="outside" placeholder="" tabindex="24">
+									</div>
+
+								</div>
+
 							</div>
 						</fieldset>
 
 						<fieldset class="my-3" style="border: 1px solid #01b2c6; padding: 20px;">
-							<legend> Address & other contact information</legend>
-							<div class="form-row mt-2">
-								<div class="form-group col-md-6">
-									<label for="docEmail">Phone Number</label>
-									<input maxlength="11" type="text" class="form-control" id="patient_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_phone; ?>" <?php } ?> name="patient_phone" placeholder="Enter Number">
-									<span style="color:#ff0000;" class="error patient_phone"></span>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docName">Next of Kin Title</label><span style="color: red">*</span>
-									<select class="form-control" name="nok_title" id="exampleFormControlSelect1">
-										<option value="">Select Title</option>
-										<?php foreach ($salutations as $salutation) { ?>
-										<option value="<?php echo $salutation->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->nok_title == $salutation->id) { ?> selected <?php } 	} ?>><?php echo $salutation->title; ?></option>
-										<?php } ?>
-									</select>
-									<span style="color:#ff0000;" class="error nok_title"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="nok_title"></code>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docEmail">City Area</label>
-									<input type="text" class="form-control" id="patient_city" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->patient_city; ?>" <?php } ?> name="patient_city" placeholder="Area">
-									<span style="color:#ff0000;" class="error patient_city"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_city"></code>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docName">Next of Kin Name</label><span style="color: red">*</span>
-									<input type="text" class="form-control" id="nok_name" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_name; ?>" <?php } ?> name="nok_name" placeholder="Enter Name">
-									<span style="color:#ff0000;" class="error nok_name"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="nok_name"></code>
-								</div>
-								<!-- <div class="form-group col-md-6">
-									<label for="docEmail">Occupation</label>
-									<select class="form-control" name="patient_occupation" id="patient_occupation">
-										<option value="">Select Status</option>
-										<option value="Lawyer" <?php if ($this->uri->segment(3)) {
-																	if ($patient_details->patient_occupation == 'Lawyer') { ?> selected <?php }
-																																} ?>>Lawyer</option>
-										<option value="Soldier" <?php if ($this->uri->segment(3)) {
-																	if ($patient_details->patient_occupation == 'Soldier') { ?> selected <?php }
-																																	} ?>>Soldier</option>
-										<option value="Farmer" <?php if ($this->uri->segment(3)) {
-																	if ($patient_details->patient_occupation == 'Farmer') { ?> selected <?php }
-																																} ?>>Farmer</option>
-										<option value="A" <?php if ($this->uri->segment(3)) {
-																if ($patient_details->patient_occupation == 'A') { ?> selected <?php }
-																														} ?>>A</option>
-									</select>
-									<span style="color:#ff0000;" class="error patient_occupation"></span>
-								</div> -->
-								<div class="form-group col-md-6">
-									<label for="docEmail">State</label>
-									<select class="form-control" name="patient_state" id="exampleFormControlSelect6">
-										<option value="">Select State</option>
-										<?php foreach ($states as $state) { ?>
-											<option value="<?php echo $state->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_state == $state->id) { ?> selected <?php }																				} ?>><?php echo $state->name; ?></option>
-										<?php } ?>
-									</select>
-									<span style="color:#ff0000;" class="error patient_state"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_state"></code>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docEmail">Next of Kin Relationship</label><span style="color: red">*</span>
-									<select class="form-control"  name="nok_relationship" id="nok_relationship">
-										<option value="">Select Relationship</option>
-										<?php foreach ($next_of_kin_rel as $relationship) { ?>
-											<option value="<?php echo $relationship->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->nok_relationship == $relationship->id) { ?> selected <?php } } ?>><?php echo $relationship->rel_name; ?></option>
-										<?php } ?>
-									</select>
-									<!-- <input type="text" name="nok_relationship" class="form-control" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_relationship; ?>" <?php } ?> id="nok_relationship" placeholder="Enter Relationship"> -->
-									<span style="color:#ff0000;" class="error nok_relationship"></span>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docEmail">Country</label>
-									<select class="form-control" name="patient_country" id="exampleFormControlSelect6">
-										<option value="">Select Country</option>
-										<?php foreach ($countries as $country) { ?>
-											<option value="<?php echo $country->id; ?>" <?php if ($this->uri->segment(3)) { if ($patient_details->patient_country == $country->id) { ?> selected <?php }																			} ?>><?php echo $country->name; ?></option>
-										<?php } ?>
-									</select>
-									<span style="color:#ff0000;" class="error patient_country"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_country"></code>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docName">Next of Kin Number</label><span style="color: red">*</span>
-									<input type="text" maxlength="11" class="form-control" id="nok_phone" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_phone; ?>" <?php } ?> name="nok_phone" placeholder="Enter Number">
-									<span style="color:#ff0000;" class="error nok_phone"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="nok_phone"></code>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docEmail">Address</label>
-									<textarea class="form-control" id="patient_address" name="patient_address"><?php if ($this->uri->segment(3)) { ?><?php echo $patient_details->patient_address; ?> <?php } ?></textarea>
-									<!-- <input type="text" class="form-control" id="patient_address" name="patient_address" placeholder="Enter Address"> -->
-									<span style="color:#ff0000;" class="error patient_address"></span>
-									<code style="color: #ff0000;font-size: 14px;" class="text-center form-control-feedback" data-field="patient_address"></code>
-								</div>
-								<div class="form-group col-md-6">
-									<label for="docEmail">Next of Kin Address</label><span style="color: red">*</span>
-									<input type="text" name="nok_address" class="form-control" <?php if ($this->uri->segment(3)) { ?>value="<?php echo $patient_details->nok_address; ?>" <?php } ?> id="nok_address" placeholder="Enter Address">
-									<span style="color:#ff0000;" class="error nok_address"></span>
-								</div>
-							</div>
-						</fieldset>
-
-						<fieldset class="my-3" style="border: 1px solid #01b2c6; padding: 20px;">
-							<legend>Account Status</legend>
-							<div class="form-row mt-2">
+							<legend>Patient Category</legend>
+							<div class="form-row mt-2" tabindex="25">
 								<div class="form-group col-md-3">
 									<label class="fancy-radio">
 										<input type="radio" <?php if ($this->uri->segment(3) && $patient_details->patient_status == 'Private') { ?> checked <?php } ?> name="patient_status" onclick="toggleRadio(false)" value="private">
@@ -269,7 +267,7 @@
 									</label>
 								</div>
 							</div>
-							<div class="form-row mt-2">
+							<div class="form-row mt-2" tabindex="26">
 								<div class="form-group col-md-3">
 									<label class="fancy-radio">
 										<input type="radio" <?php if ($this->uri->segment(3) && $patient_details->patient_status != 'Private') { ?> checked <?php } ?> name="patient_status" onclick="toggleRadio(true)" value="Retainer/HMO">
@@ -277,14 +275,14 @@
 									</label>
 									<p id="error-radio"></p>
 								</div>
-								<div class="form-group col-md-9">
+								<div class="form-group col-md-9" tabindex="27">
 									<select class="form-control" disabled="" name="patient_status2" id="patient_status">
 										<option value="">Select Retainer</option>
 										<option value="A">Lawyer</option>
 									</select>
 								</div>
 							</div>
-							<div class="form-row mt-2">
+							<div class="form-row mt-2" tabindex="28">
 								<div class="form-group">
 									<label class="fancy-checkbox">
 										<input type="checkbox" onclick="togglenhis()" id="nhis" name="managed_healthcare">
@@ -292,7 +290,7 @@
 									</label>
 								</div>
 							</div>
-							<div class="form-row mt-2">
+							<div class="form-row mt-2" tabindex="29">
 								<div class="form-group col-md-4">
 									<label for="docName">Enrollee Type</label>
 									<select class="form-control" name="enrollee_type" disabled="" id="enrollee_type">
@@ -302,11 +300,11 @@
 										<?php } ?>
 									</select>
 								</div>
-								<div class="form-group col-md-4">
+								<div class="form-group col-md-4" tabindex="30">
 									<label for="docName">Company/Ministry</label>
 									<input type="text" class="form-control" id="company" disabled="" name="company" placeholder="Enter Name">
 								</div>
-								<div class="form-group col-md-4">
+								<div class="form-group col-md-4" tabindex="31">
 									<label for="docEmail">Enrollee No</label>
 									<input type="text" name="enrollee_no" class="form-control" disabled="" id="enrollee_no" placeholder="Enrollee No">
 								</div>
@@ -317,27 +315,6 @@
 							<!-- <input type="submit" title="add_patient" class="btn btn-primary px-4 m-2" value="Save"> -->
 							<button type="submit" class="btn btn-primary px-4 m-2" title="add_patient">Save</button>
 						</div>
-					</div>
-					<div class="col-lg-2 col-md-12">
-						<div id="results">Your captured image will appear here...</div>
-						<!-- A button for taking snaps -->
-						<div id="my_camera"></div>
-
-						<button type=button class="btn btn-primary" id="openCamera" onClick="take_snapshot2()"><i class="fa fa-camera"></i> Open Camera </button>
-						<button style="display: none;" id="takeSnapshot" type=button class="btn btn-warning" onClick="take_snapshot()"><i class="fa fa-camera-retro"></i> Take Snapshot </button>
-						<hr>
-						<!-- <input type=button value="Take Snapshot 2" onClick="take_snapshot()"> -->
-						<h2>OR</h2>
-						<hr>
-						<?php if ($this->uri->segment(3)) { if (isset($patient_details->patient_photo)) { ?>
-							<input hidden type="text" name="patient_image" value="<?php echo $patient_details->patient_photo; ?>">
-						<?php } } ?> 
-						<input type='file' class="form-control" name="image" id="user_image" onchange="readURL(this);" />
-						<img id="blah" src="<?php if ($this->uri->segment(3)) {
-												if (isset($patient_details->patient_photo)) {
-													echo base_url('uploads/' . $patient_details->patient_photo);
-												}
-											} ?>" alt="" class="mt-3" />
 					</div>
 			</form>
 		</div>
@@ -384,7 +361,7 @@
           dataType : 'json',
           data: {dob: dob},
           success: function(data){
-            $('#age').text(data+" Yr(s)");
+            $('#age').val(data);
 
 
             console.log(data);
