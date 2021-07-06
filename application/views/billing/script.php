@@ -46,22 +46,22 @@ function listDefaultPaymentList() {
           var invoice_id = response[i].invoice_id;
           var response3 ="";
 
-            $.ajax({
-          type  : 'post',
-          url   : '<?php echo base_url('billing/invoice_total'); ?>',
-          data: {
-              patient_id: patient_id,
-              invoice_id: invoice_id
-            },
-          async : false,
-          dataType : 'json',
-          success : function(response2){
-            //console.log(response2);
+          //   $.ajax({
+          // type  : 'post',
+          // url   : '<?php echo base_url('billing/invoice_total'); ?>',
+          // data: {
+          //     patient_id: patient_id,
+          //     invoice_id: invoice_id
+          //   },
+          // async : false,
+          // dataType : 'json',
+          // success : function(response2){
+          //   //console.log(response2);
 
-            response3 = response2
-            }
+          //   response3 = response2
+          //   }
 
-          });
+          // });
             //console.log(response3)
 
 
@@ -73,7 +73,7 @@ function listDefaultPaymentList() {
               '</td> <td>' + response[i].patient_name +
               '</td> <td>' + response[i].patient_id_num +
               '</td> <td>' + response[i].invoice_id +
-              '</td> <td>' + response3.amount +
+              '</td> <td>' + response[i].amount_total +
               //'</td><td>' + vital_status +
               '</td><td>' + buttons + '</td> </tr>';
           }
@@ -379,22 +379,22 @@ function listPayment() {
           var invoice_id = response[i].invoice_id;
           var response3 ="";
 
-            $.ajax({
-          type  : 'post',
-          url   : '<?php echo base_url('billing/invoice_total'); ?>',
-          data: {
-              patient_id: patient_id,
-              invoice_id: invoice_id
-            },
-          async : false,
-          dataType : 'json',
-          success : function(response2){
-            //console.log(response2);
+            //   $.ajax({
+            // type  : 'post',
+            // url   : '<?php echo base_url('billing/invoice_total'); ?>',
+            // data: {
+            //     patient_id: patient_id,
+            //     invoice_id: invoice_id
+            //   },
+            // async : false,
+            // dataType : 'json',
+            // success : function(response2){
+            //   //console.log(response2);
 
-            response3 = response2
-            }
+            //   response3 = response2
+            //   }
 
-          });
+            // });
             //console.log(response3)
 
 
@@ -404,7 +404,7 @@ function listPayment() {
               '</td> <td>' + response[i].patient_name +
               '</td> <td>' + response[i].patient_id_num +
               '</td> <td>' + response[i].invoice_id +
-              '</td> <td>' + response3.amount +
+              '</td> <td>' + response[i].amount_total +
               //'</td><td>' + vital_status +
               '</td><td>' + buttons + '</td> </tr>';
           }

@@ -104,7 +104,7 @@
                                                                                     } ?>" disabled="">
                         </div>
                     </div>
-                    <?php if ($vital_details->status == "Prescription" || $vital_details->status == "Treated") { ?>
+                    <?php if ($vital_details->prescription_status == "Prescription" || $vital_details->prescription_status == "Treated") { ?>
                     <div class="col-lg-12 col-md-12 mb-3 mt-2">
                         <fieldset>
                             <legend style="font-size: 15px;"><strong>Account</strong></legend>
@@ -167,7 +167,7 @@
                                                         <td><?php echo $patient_prescription_test->drug_item_name; ?></td>
                                                         <td><?php echo $patient_prescription_test->quantity_in_stock; ?></td>
 
-                                                        <?php if ($vital_details->status == "Treated") { ?>
+                                                        <?php if ($vital_details->prescription_status == "Treated") { ?>
                                                             <td><?php echo $patient_prescription_test->qty_given; ?></td>
                                                         <?php } else { ?>
                                                             <td style="background-color: coral;" <?php if ($patient_prescription_test->quantity_in_stock > 0) {
@@ -194,7 +194,7 @@
             </div>
             <div class="row col-lg-12 col-md-12 mb-3 mt-2">
                 <div class="col-6">
-                    <?php if ($vital_details->status == "Pending") { ?>
+                    <?php if ($vital_details->prescription_status == "Pending") { ?>
                         <button type="button" class="btn btn-primary" id="get-bill">Get Bill</button>
                         <h6>Total: ₦<span id="amount"></span></h6>
                         <div class="text-danger" id="amt_error"></div>
@@ -216,18 +216,18 @@
                             <input type="hidden" name="prescription_id" value="<?php echo $vital_details->prescription_id ?>">
                             <input type="hidden" name="patient_id" id="patient_id" value="<?php echo $vital_details->patient_id ?>">
                         <?php } ?>
-                        <?php if ($vital_details->status == "Pending") { ?>
+                        <?php if ($vital_details->prescription_status == "Pending") { ?>
                             <input type="hidden" name="Pending" id="patient_id2" value="Pending">
                         <?php } ?>
-                        <?php if ($vital_details->status == "Prescription") { ?>
+                        <?php if ($vital_details->prescription_status == "Prescription") { ?>
                             <input hidden="" name="Prescription" id="patient_id345" value="Prescription">
                         <?php } ?>
                         <input type="hidden" id="main_amount" name="main_amount">
-                        <?php if ($vital_details->status == "Pending") { ?>
+                        <?php if ($vital_details->prescription_status == "Pending") { ?>
                             <!-- <button type="button" class="btn btn-success" onclick="send_for_payment('send_payment')" title="send_payment">Send For Payment</button> -->
-                        <?php } else if ($vital_details->status == "Prescription") { ?>
+                        <?php } else if ($vital_details->prescription_status == "Prescription") { ?>
                             <!-- <button type="button" class="btn btn-success" onclick="treated('send_payment')" title="send_payment">Treat Prescription</button> -->
-                        <?php } else if ($vital_details->status == "Treated") { ?>
+                        <?php } else if ($vital_details->prescription_status == "Treated") { ?>
                         <?php } ?>
                     </form>
                 </div>

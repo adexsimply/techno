@@ -15,7 +15,7 @@ class Billing_m extends CI_Model
     {
          $date = new DateTime("now");
         $curr_date = $date->format('Y-m-d ');
-        $get_patient_billings = $this->db->select('b.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num')->from('billings b')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where('DATE(b.date_added)',$curr_date)->where('b.status','Pending')->get();
+        $get_patient_billings = $this->db->select('b.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num, SUM(b.amount) as amount_total')->from('billings b')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where('DATE(b.date_added)',$curr_date)->where('b.status','Pending')->get();
         $patient_billings = $get_patient_billings->result();
         return $patient_billings;
     }
@@ -79,7 +79,8 @@ class Billing_m extends CI_Model
 
         }
 
-        $get_patient_billings = $this->db->select('b.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num')->from('billings b')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where($cond)->where($date_range)->get();
+        $get_patient_billings = $this->db->select('b.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num,SUM(b.amount) as amount_total')->from('billings b')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where($cond)->where($date_range)->get();
+        // $get_patient_billings = $this->db->select('b.*,p.patient_title,p.patient_name,p.patient_status,p.patient_id_num')->from('billings b')->join('patient_details as p', 'p.id=b.patient_id', 'left')->group_by('b.invoice_id')->where($cond)->where($date_range)->get();
         $patient_billings = $get_patient_billings->result();
         return $patient_billings;
     }
@@ -135,6 +136,8 @@ class Billing_m extends CI_Model
     }
 
     public function save_payment () {
+
+            //  $get
 
             foreach ($this->input->post('billing_id[]') as $billing) {
                

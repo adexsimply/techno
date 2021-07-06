@@ -60,8 +60,8 @@ font-size: 13px;
               										<td><?php $ini_date = date_create($invoice->date_added);
               											echo date_format($ini_date, "d-M-Y h:i a"); ?></td>
               										<td><?php echo $invoice->amount; ?></td>
-              										<td><?php echo $invoice->item_name; ?><input type="text" value="<?php echo $invoice->item_name; ?>" hidden name="description"></td>
-              										<td><input type="text" name="patient_id" hidden value="<?php echo $invoice->patient_id; ?>"><input type="" name="billing_id[]" hidden value="<?php echo $invoice->id; ?>"><input type="checkbox" class="checkbox_check" id="<?php echo "inv".$invoice->id; ?>" onclick="toggle_total_pay(<?php echo $invoice->id.",".$invoice->amount; ?>)" checked name=""></td>
+              										<td><?php echo $invoice->item_name; ?><input type="text" value="<?php echo $invoice->item_name; ?>" hidden name="description[]"></td>
+              										<td><input type="text" name="patient_id" hidden value="<?php echo $invoice->patient_id; ?>"><input type="" name="billing_id[]" value="<?php echo $invoice->id; ?>"><input type="checkbox" class="checkbox_check" id="<?php echo "inv".$invoice->id; ?>" onclick="toggle_total_pay(<?php echo $invoice->id.",".$invoice->amount; ?>)" checked name=""></td>
               									</tr>
               								<?php $i++;
               								} ?>
@@ -82,7 +82,7 @@ font-size: 13px;
                         </div>
                         <div class="col-lg-6 col-md-6 mb-3">
                             <b>Full Payment</b>
-                            <div class="input-group"><input type="" hidden name="invoice_id" value="<?php echo $this->uri->segment(3); ?>"><input type="text" hidden="" id="total_payment" value="<?php echo $this->billing_m->invoice_total2($this->uri->segment(3)); ?>"  name="displayed_total">
+                            <div class="input-group"><input type="" name="invoice_id" value="<?php echo $this->uri->segment(3); ?>"><input type="text" hidden="" id="total_payment" value="<?php echo $this->billing_m->invoice_total2($this->uri->segment(3)); ?>"  name="displayed_total">
                                 <input type="text" class="form-control time12" id="displayed_total" value="₦<?php echo number_format($this->billing_m->invoice_total2($this->uri->segment(3))); ?>" disabled="">
                             </div>
                         </div>

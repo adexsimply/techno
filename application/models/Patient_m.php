@@ -885,7 +885,7 @@ class Patient_m extends CI_Model
     }
     public function get_prescription_by_id($id)
     {
-        $get_consultation = $this->db->select('p.*,pv.*,pd.*, p.id as prescription_id, p.date_added as date, s.staff_firstname,s.staff_middlename,s.staff_lastname, cl.clinic_name as clinic_name')->from('patient_prescriptions2 p')->join('patient_vitals as pv', 'pv.patient_id=p.patient_id', 'left')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('patient_details as pd', 'pd.id=p.patient_id', 'left')->join('clinics as cl', 'cl.id=pv.clinic_id', 'left')->where('p.prescription_unique_id', $id)->group_by('p.prescription_unique_id')->get();
+        $get_consultation = $this->db->select('p.*,pv.*,pd.*, p.id as prescription_id, p.date_added as date, s.staff_firstname,s.staff_middlename,s.staff_lastname, cl.clinic_name as clinic_name,p.status as prescription_status')->from('patient_prescriptions2 p')->join('patient_vitals as pv', 'pv.patient_id=p.patient_id', 'left')->join('staff as s', 's.user_id=p.doctor_id', 'left')->join('patient_details as pd', 'pd.id=p.patient_id', 'left')->join('clinics as cl', 'cl.id=pv.clinic_id', 'left')->where('p.prescription_unique_id', $id)->group_by('p.prescription_unique_id')->get();
         $consultation = $get_consultation->row();
         return $consultation;
     }

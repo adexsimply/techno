@@ -39,11 +39,11 @@ class Billing extends Base_Controller {
     public function payment ()
     {   
         $this->data['title'] = 'Payment List';
-        $this->data['payment_list'] =  $this->billing_m->get_patient_payment();
-        $this->data['patient_billings'] =  $this->patient_m->get_patient_billings(9);
-        $this->data['drug_list'] =  $this->drug_m->get_drug_items();
-        $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
-        $this->data['request_destinations_list'] =  $this->request_m->get_request_destinations_list();
+       // $this->data['payment_list'] =  $this->billing_m->get_patient_payment();
+        //$this->data['patient_billings'] =  $this->patient_m->get_patient_billings(9);
+        //$this->data['drug_list'] =  $this->drug_m->get_drug_items();
+        //$this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
+        //$this->data['request_destinations_list'] =  $this->request_m->get_request_destinations_list();
         $this->load->view('billing/payment', $this->data);
 
     }
