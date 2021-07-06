@@ -42,7 +42,7 @@ font-size: 13px;
                         <hr>
 
 
-              						<table id="invoiceList" style="font-size: 13px;padding: 0;" class="table table-striped">
+              						<table id="invoiceList" style="font-size: 13px;padding: 0;" class="table table-bordered">
               							<thead class="thead-dark">
               								<tr>
               									<th>Date</th>

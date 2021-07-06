@@ -212,11 +212,6 @@ class Nursing extends Base_Controller
                 'rules' => 'trim|required'
             ],
             [
-                'field' => 'ANC',
-                'label' => 'Urine(ANC)',
-                'rules' => 'trim|required'
-            ],
-            [
                 'field' => 'respiration',
                 'label' => 'Respiration',
                 'rules' => 'trim|required'

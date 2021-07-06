@@ -48,11 +48,13 @@
                                     <li><a href="<?php echo base_url('staff') ?>">Staff List</a></li>
                                 </ul>
                             </li>
-                            <li <?php if ($menu_id == 'appointment') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-calendar"></i>Appointment</a>
+                            <li <?php if ($menu_id == 'appointment' && base_url(uri_string()) != base_url('/appointment/waiting_list')) { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-calendar"></i>Appointment</a>
                                 <ul>
                                     <li><a href="<?php echo base_url('appointment') ?>">View Appointments</a></li>
                                     <li><a href="<?php echo base_url('appointment/waiting_list') ?>">Waiting List</a></li>
                                 </ul>
+                            </li>
+                            <li <?php if (base_url(uri_string()) == base_url('/appointment/waiting_list')) { ?> class="active" <?php } ?>><a href="<?php echo base_url('appointment/waiting_list') ?>" ><i class="icon-calendar"></i>Waiting List</a>
                             </li>
                             <li <?php if ($menu_id == 'nursing') { ?> class="active" <?php } ?>><a href="javascript:void(0);" class="has-arrow"><i class="icon-user-female"></i>Nursing Care</a>
                                 <ul>

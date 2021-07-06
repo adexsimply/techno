@@ -88,7 +88,7 @@ function listDefaultPaymentList() {
 function listDefaultReceiptList() {
       $.ajax({
       type  : 'ajax',
-      url   : '<?php echo base_url('billing/get_payment_list_default_receipt'); ?>',
+      url   : '<?php echo base_url('billing/get_receipt_list_default'); ?>',
       async : false,
       dataType : 'json',
       success : function(response){
@@ -126,33 +126,33 @@ function listDefaultReceiptList() {
             var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].invoice_id+ '"> <i class="fa fa-pencil"></i></button> '
 
             html += '<tr><td>' + sn++ +
-              '</td><td>' + response[i].patient_name +
-              '</td><td>' + response[i].patient_id_num +
-              '</td><td>' + response[i].invoice_id +
-              '</td><td>' + response3.amount +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
-              '</td><td>0' +
+              '</td><td>' + response[i].date+
+              '</td><td>' + response[i].ReceiptNo +
+              '</td><td>' + response[i].HospNo +
+              '</td><td>' + response[i].Name +
+              '</td><td>' + response[i].TransType +
+              '</td><td>' + response[i].Service +
+              '</td><td>' + response[i].Total +
+              '</td><td>' + response[i].PartPayment +
+              '</td><td>' + response[i].Debt +
+              '</td><td>' + response[i].DebtPaid +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
+              '</td><td>' +
               '</td><td>' + buttons + '</td> </tr>';
           }
           $('#receiptList').html(html);
@@ -417,6 +417,16 @@ function listPayment() {
 
   }
 
+        function printDiv() {
+            var divContents = document.getElementById("invoiceList").innerHTML;
+            var a = window.open('', '', 'height=500, width=500');
+            a.document.write('<html>');
+            a.document.write('<body >');
+            a.document.write(divContents);
+            a.document.write('</body></html>');
+            a.document.close();
+            a.print();
+        }
 function payment_dialog(event) {
 
     event.preventDefault();
@@ -468,9 +478,35 @@ function payment_dialog(event) {
                                         yes: function() {
                                             $.post("<?php echo base_url() .  'billing/save_payment'; ?>", formData).done(function(data) {
                                             });
+
+
+                            // if (amount != '') {
+                                $.confirm({
+                                    title: 'Print Receipt',
+                                    content: 'Are you sure you want to Print?',
+                                    icon: 'fa fa-check-circle',
+                                    type: 'green',
+                                    buttons: {
+                                        yes: function() {
+
+                                            printDiv()
                                             ///Close Big Dialog
-                                            location.reload()
+                                            //location.reload()
                                             a.close();
+                                            ///Refresh Prescription Table
+                                        //filter_prescriptions()
+                                        },
+                                        no: function() {
+
+                                        }
+                                    }
+                                });
+
+
+
+                                            ///Close Big Dialog
+                                            // location.reload()
+                                            // a.close();
                                             ///Refresh Prescription Table
                                         //filter_prescriptions()
                                         },

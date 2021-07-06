@@ -51,7 +51,7 @@ function listDefaultPatients() {
                 '<span class="btn btn-sm btn-icon btn-pure btn-warning on-default m-r-5 button-edit" style="font-weight:bolder" data-toggle="modal" data-target="#ViewVital' + response[i].vital_id + '" style="cursor: pointer;">View Vitals</span>' +
                 '<span class="btn btn-sm btn-icon btn-pure btn-danger on-default m-r-5 button-edit" style="font-weight:bolder" onclick="delete_vital_now(' + response[i].vital_id + ')" style="cursor: pointer;">Delete Vitals</span>';
             } else {
-              var buttons = '<button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for " href="<?php echo base_url('nursing/take_vital/'); ?>' + response[i].app_id + '"><i class="icon wb-plus" aria-hidden="true"></i> Take Vitals </button>';
+              var buttons = '<button class="btn btn-primary m-b-15" type="button" onclick="shiNew(event)" data-type="purple" data-size="m" data-title="Take Vital for '+response[i].patient_name+' " href="<?php echo base_url('nursing/take_vital/'); ?>' + response[i].app_id + '"><i class="icon wb-plus" aria-hidden="true"></i> Take Vitals </button>';
             }
 
             html += '<tr><td>' + sn++ + '</td> <td>' + response[i].appointment_date +

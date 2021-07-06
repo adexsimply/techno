@@ -257,8 +257,8 @@
 							</div>
 						</fieldset>
 
-						<fieldset class="my-3" style="border: 1px solid #01b2c6; padding: 20px;">
-							<legend>Patient Category</legend>
+						<fieldset class="my-3" style="border: 1px solid #01b2c6; padding: 0px 20px 5px 20px;">
+							<legend style="font-size: 18px"><strong>Patient Category</strong></legend>
 							<div class="form-row mt-2" tabindex="25">
 								<div class="form-group col-md-3">
 									<label class="fancy-radio">

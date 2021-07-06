@@ -29,6 +29,40 @@
                     <div class="body">
                         <!-- Nav tabs -->
 
+            <div class="row clearfix">
+                <div class="col-md-12">
+                    <div class="card patients-list">
+                        <div class="header">
+                            <h2>Raise Receipts</h2>
+                        </div>
+                        <div class="body">               <div class="box">
+                            <div class="box-body">
+                                <form class="form-horizontal">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <!-- Date and time range -->
+                                                <!-- Currency -->
+                                                <div class="col-md-6">
+                                                    <label for="currency">Status</label>
+                                                    <select class="form-control select2" name="currency" id="status">
+                                                        <option value="All">All</option>
+                                                            <option selected="" value="Active">Active</option>
+                                                            <option value="Inactive">Inactive</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="currency">Search</label>
+                                                   <input type="text" class="form-control" placeholder="Start Typing" id="patientListSearch" name="">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
                         <!-- Tab panes -->
                         <div class="tab-content m-t-10 padding-0">
                             <div class="tab-pane table-responsive active show" id="All">
@@ -65,12 +99,11 @@
                                                 <td><?php
                                                 $date = date_create($patient_list->date_added);
                                                  echo date_format($date, 'Y/m/d'); ?></td>
-                                                <td><?php if($patient_list->status==0) { echo "<span class='badge badge-danger'>Inactive</span>";} elseif($patient_list->status==3)  { echo "<span class='badge badge-info'>Discontinued</span>";} else {echo "<span class='badge badge-success'>Active</span>"; } ?></td>
-                                                <td>
-                                                    <!--  <span class="badge badge-success"><a href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>">View More</a></span> -->
+                                                <td><?php if($patient_list->status==0) { echo "<span class='badge badge-danger'>Inactive</span>";}  else {echo "<span class='badge badge-success'>Active</span>"; } ?></td>
+                                                <td> 
                                                     <button class="btn btn-sm btn-icon btn-pure btn-secondary" title="View Patient" onclick="shiNew(event)" data-type="purple" data-size="xl" data-title="<?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/view/') . $patient_list->p_id; ?>"><i class="icon-eye" aria-hidden="true"></i></button>
                                                     <button title="Edit Patient" class="btn btn-sm btn-icon btn-pure btn-info" onclick="shiEdit(event)" data-type="purple" data-size="xl" data-title="Edit <?php echo $patient_list->patient_name; ?>" href="<?php echo base_url('patient/add_patient/' . $patient_list->p_id); ?>"><i class="icon-pencil" aria-hidden="true" data-toggle="modal" data-target="#addstaff"></i></button>
-                                                    <button title="Discontinue Patient" class="btn btn-sm btn-icon btn-pure btn-danger" onclick="delete_patient(<?php echo $patient_list->p_id; ?>)"><i class="icon-ban"></i></button>
+                                                   <!--  <button title="Discontinue Patient" class="btn btn-sm btn-icon btn-pure btn-danger" onclick="delete_patient(<?php echo $patient_list->p_id; ?>)"><i class="icon-ban"></i></button> -->
                                                 </td>
                                             </tr>
                                         <?php
@@ -96,7 +129,23 @@
 $(document).ready(function () {
 
      var patientListTable =  $('#patientListTable').DataTable({
+            dom: 'lrtip',
+            "lengthChange": false
         });
+     var regex = '^Active$';
+    patientListTable.columns(9).search(regex,true,false).draw();
+    $('#patientListSearch').on( 'keyup', function () {
+        patientListTable.search( this.value ).draw();
+    } );
+    $('#status').on('change', function () {
+        if (this.value =="All") {
+          var regex2 = "";
+        }
+        else {
+        var regex2 = '^'+this.value+'$';
+        }
+        patientListTable.columns(9).search(regex2,true,false ).draw();
+    } );
 
 });
 </script>

@@ -30,6 +30,7 @@ class appointment extends Base_Controller
         $this->load->model('nursing_m');
         $this->load->model('staff_m');
         $this->data['menu_id'] = 'appointment';
+        $this->data['menu_id2'] = 'waiting_list';
     }
     public function index()
     {

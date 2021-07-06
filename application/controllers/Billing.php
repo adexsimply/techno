@@ -52,6 +52,7 @@ class Billing extends Base_Controller {
         $this->data['title'] = 'Receipt Details';
         $this->data['payment_list'] =  $this->billing_m->get_patient_payment();
         $this->data['patient_billings'] =  $this->patient_m->get_patient_billings(9);
+     //   $this->data['receipt_list'] =  $this->patient_m->get_all_receipts(9);
         $this->data['drug_list'] =  $this->drug_m->get_drug_items();
         $this->data['doctors_list'] =  $this->staff_m->get_doctors_list();
         $this->data['request_destinations_list'] =  $this->request_m->get_request_destinations_list();
@@ -122,6 +123,11 @@ class Billing extends Base_Controller {
     public function get_payment_list_default_receipt()
     {
         $payment_list = $this->billing_m->get_patient_payment_receipt();
+        echo json_encode($payment_list);
+    }
+    public function get_receipt_list_default()
+    {
+        $payment_list = $this->billing_m->get_default_receipt_list();
         echo json_encode($payment_list);
     }
     public function get_payment_list_filtered_receipt()

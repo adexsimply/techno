@@ -127,6 +127,13 @@ class Billing_m extends CI_Model
         return $pharmacy_request_list;
     }
 
+    public function get_default_receipt_list()
+    {
+        $get_pharmacy_request = $this->db->select('*')->from('receipt_grid')->get();
+        $pharmacy_request_list = $get_pharmacy_request->result();
+        return $pharmacy_request_list;
+    }
+
     public function save_payment () {
 
             foreach ($this->input->post('billing_id[]') as $billing) {
@@ -161,6 +168,14 @@ class Billing_m extends CI_Model
 
                 }
                 elseif($this->input->post('description') =='Consultation')  {
+
+                $data_appointment = array(
+                    'paid' => 'Yes',
+                );
+                $this->db->where('patient_id', $this->input->post('patient_id'));
+                $this->db->update('patient_appointments', $data_appointment);
+
+
                 $data3 = array(
                     'Consultation' => $this->input->post('displayed_total'),
                     'PatientID' => $this->input->post('patient_id')
