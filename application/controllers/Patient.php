@@ -481,7 +481,7 @@ class Patient extends Base_Controller
         $this->form_validation->set_rules('patient_address', 'Address', 'required');
         // $this->form_validation->set_rules('patient_occupation', 'Patient Occupation', 'required');
         $this->form_validation->set_rules('patient_regtype', 'Registration Type', 'required');
-        $this->form_validation->set_rules('nok_title', 'Title', 'required');
+        //$this->form_validation->set_rules('nok_title', 'Title', 'required');
         $this->form_validation->set_rules('nok_name', 'Name', 'required');
         $this->form_validation->set_rules('nok_phone', 'Phone Number', 'required');
         $this->form_validation->set_rules('nok_relationship', 'Relationship', 'required');
@@ -551,7 +551,6 @@ class Patient extends Base_Controller
 
                         $data2 = array(
 
-                            'nok_title'         => $this->input->post('nok_title'),
                             'nok_name'    => $this->input->post('nok_name'),
                             'nok_address'   => $this->input->post('nok_address'),
                             'nok_relationship'   => $this->input->post('nok_relationship'),
@@ -568,7 +567,6 @@ class Patient extends Base_Controller
 
                 $data2 = array(
 
-                    'nok_title'         => $this->input->post('nok_title'),
                     'nok_name'    => $this->input->post('nok_name'),
                     'nok_address'   => $this->input->post('nok_address'),
                     'nok_relationship'   => $this->input->post('nok_relationship'),
@@ -582,16 +580,20 @@ class Patient extends Base_Controller
                 }
 
                if (!$this->input->post('patient_id')) {
-                ///Create receipt for registration
+                //Generate invoice number for registration
                 $invoice_id = rand(10000,10000000);
-                $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+                $check_if_invoice_exists = $this->db->select('invoice_id')->from('billings')->where('invoice_id',$invoice_id)->get();
                 if ($check_if_invoice_exists->num_rows() > 0) {
                     $invoice_id = rand(10000,10000000);
                 }
-                 $data_invoice = array(
-                        'invoice_id' => $invoice_id
-                    );
-                $insert_invoice = $this->db->insert('invoices', $data_invoice);
+                //Generate unique number for items_group
+                $items_group_id2 = rand(1000,100000);
+                $items_group_id = "22".$items_group_id2;
+                $check_if_group_id_exists = $this->db->select('items_group_id')->from('billings')->where('items_group_id',$items_group_id)->get();
+                if ($check_if_group_id_exists->num_rows() > 0) {
+                    $items_group_id2 = rand(1000,100000);
+                }
+
 
                 ///Get  the cost of Registration for Patient
                 $check_registration_cost = $this->db->select('service_charge_cost')->from('service_charge_items')->where('id','2302')->get();
@@ -602,6 +604,7 @@ class Patient extends Base_Controller
                     $data2 = array(
                         'patient_id'   => $last_id,
                         'invoice_id'   => $invoice_id,
+                        'items_group_id'   => $items_group_id,
                         'item_name'     => "Registration",
                         'category'     => "Registration",
                         'billing_type' => "Debit",

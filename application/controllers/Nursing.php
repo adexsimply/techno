@@ -225,17 +225,7 @@ class Nursing extends Base_Controller
                 'field' => 'SPO2',
                 'label' => 'SPO2',
                 'rules' => 'trim|required'
-            ],
-            [
-                'field' => 'RE',
-                'label' => 'RE',
-                'rules' => 'trim|required'
-            ],
-            [
-                'field' => 'LE',
-                'label' => 'LE',
-                'rules' => 'trim|required'
-            ],
+            ]
 
         ];
         $this->form_validation->set_rules($rules);

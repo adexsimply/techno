@@ -67,14 +67,14 @@ class Patient_m extends CI_Model
 
     public function get_patient_by_id($patient_id)
     {
-        $get_patients = $this->db->select('p.*,pn.*,pv.*,pa.appointment_date,pa.appointment_time, pv.id as vital_id, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('patient_vitals as pv', 'pv.patient_id=p.id', 'left')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->where('p.id', $patient_id)->get();
+        $get_patients = $this->db->select('p.*,sa.title,pn.*,pv.*,pa.appointment_date,pa.appointment_time, pv.id as vital_id, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('salutations as sa', 'sa.id=p.patient_title', 'left')->join('patient_vitals as pv', 'pv.patient_id=p.id', 'left')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->where('p.id', $patient_id)->get();
         $patient_list = $get_patients->row();
         return $patient_list;
     }
 
     public function get_patient_by_id_vital($patient_id,$vital_id)
     {
-        $get_patients = $this->db->select('p.*,pn.*,pv.*,pa.appointment_date,pa.appointment_time, pv.id as vital_id, p.id as p_id')->from('patient_details p')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('patient_vitals as pv', 'pv.patient_id=p.id', 'left')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->where('p.id', $patient_id)->where('pv.id',$vital_id)->get();
+        $get_patients = $this->db->select('p.*,sa.title,pn.*,pv.*,pa.appointment_date,pa.appointment_time, pv.id as vital_id, p.id as p_id')->from('patient_details p')->join('salutations as sa', 'sa.id=p.patient_title', 'left')->join('patient_nok as pn', 'p.id=pn.patient_id', 'left')->join('patient_vitals as pv', 'pv.patient_id=p.id', 'left')->join('patient_appointments as pa', 'pa.id=pv.appointment_id', 'left')->where('p.id', $patient_id)->where('pv.id',$vital_id)->get();
         $patient_list = $get_patients->row();
         return $patient_list;
     }
@@ -406,6 +406,16 @@ class Patient_m extends CI_Model
     {
         $this->load->helper('string');
 
+                //Generate unique number for items_group
+                $items_group_id2 = rand(1000,100000);
+                $items_group_id = "22".$items_group_id2;
+                $check_if_group_id_exists = $this->db->select('items_group_id')->from('billings')->where('items_group_id',$items_group_id)->get();
+                if ($check_if_group_id_exists->num_rows() > 0) {
+                    $items_group_id2 = rand(1000,100000);
+                }
+
+
+
         if ($this->input->post('edit_lab_id')) {
             $edit_lab_id = $this->input->post('edit_lab_id');
             $ids = $this->input->post('lab_id');
@@ -428,15 +438,23 @@ class Patient_m extends CI_Model
             $this->db->select('*')->from('patient_lab_tests')->where('lab_test_unique_id', $edit_lab_id)->where('patient_id', $this->input->post('patient_id'))->where_not_in('lab_test_id', $ids)->delete();
         } else {
 
-            $invoice_id = rand(10000,10000000);
-            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
-            if ($check_if_invoice_exists->num_rows() > 0) {
+            // $invoice_id = rand(10000,10000000);
+            // $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            // if ($check_if_invoice_exists->num_rows() > 0) {
+            //     $invoice_id = rand(10000,10000000);
+            // }
+            //  $data_invoice = array(
+            //         'invoice_id' => $invoice_id
+            //     );
+            // $insert_invoice = $this->db->insert('invoices', $data_invoice);
+            //Generate invoice number for each Radiology Item
                 $invoice_id = rand(10000,10000000);
-            }
-             $data_invoice = array(
-                    'invoice_id' => $invoice_id
-                );
-            $insert_invoice = $this->db->insert('invoices', $data_invoice);
+                $check_if_invoice_exists = $this->db->select('invoice_id')->from('billings')->where('invoice_id',$invoice_id)->get();
+                if ($check_if_invoice_exists->num_rows() > 0) {
+                    $invoice_id = rand(10000,10000000);
+                }
+                /////////////////////
+
             $unique = random_string('numeric', 4);
             foreach ($this->input->post('lab_id') as $e_id) {
                 $data = array(
@@ -456,6 +474,7 @@ class Patient_m extends CI_Model
                 $data2 = array(
                     'patient_id'   => $this->input->post('patient_id'),
                     'invoice_id'   => $invoice_id,
+                    'items_group_id'   => $items_group_id,
                     'item_name'     => $result->lab_test_name,
                     'category'     => "Laboratory",
                     'billing_type' => "Debit",
@@ -514,21 +533,32 @@ class Patient_m extends CI_Model
     public function save_radiology()
     {
         $this->load->helper('string');
-            $invoice_id = rand(10000,10000000);
-            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
-            if ($check_if_invoice_exists->num_rows() > 0) {
-                $invoice_id = rand(10000,10000000);
-            }
-             $data_invoice = array(
-                    'invoice_id' => $invoice_id
-                );
-            $insert_invoice = $this->db->insert('invoices', $data_invoice);
+            // $invoice_id = rand(10000,10000000);
+            // $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            // if ($check_if_invoice_exists->num_rows() > 0) {
+            //     $invoice_id = rand(10000,10000000);
+            // }
+            //  $data_invoice = array(
+            //         'invoice_id' => $invoice_id
+            //     );
+            // $insert_invoice = $this->db->insert('invoices', $data_invoice);
+
+                //Generate unique number for items_group
+                $items_group_id2 = rand(1000,100000);
+                $items_group_id = "22".$items_group_id2;
+                $check_if_group_id_exists = $this->db->select('items_group_id')->from('billings')->where('items_group_id',$items_group_id)->get();
+                if ($check_if_group_id_exists->num_rows() > 0) {
+                    $items_group_id2 = rand(1000,100000);
+                }
+
+
         if ($this->input->post('edit_radiolody_id')) {
             //echo json_encode($this->input->post('special_instuction'));
             $edit_radiolody_id = $this->input->post('edit_radiolody_id');
             $ids = $this->input->post('radiology_id');
             $patient_id = $this->input->post('patient_id');
             foreach ($ids as $e_id) {
+
                 $array = array('radiology_test_unique_id' => $edit_radiolody_id, 'patient_id' => $patient_id, 'radiology_test_id' => $e_id);
                 $result = $this->db->select('*')->from('patient_radiology_tests')->where($array)->get();
                 if ($result->num_rows() == 0) {
@@ -553,6 +583,14 @@ class Patient_m extends CI_Model
             $unique = random_string('numeric', 4);
             foreach ($this->input->post('radiology_id') as $e_id) {
 
+                //Generate invoice number for each Radiology Item
+                $invoice_id = rand(10000,10000000);
+                $check_if_invoice_exists = $this->db->select('invoice_id')->from('billings')->where('invoice_id',$invoice_id)->get();
+                if ($check_if_invoice_exists->num_rows() > 0) {
+                    $invoice_id = rand(10000,10000000);
+                }
+                /////////////////////
+
                 ///////
 
                 //$array = explode(',', $e_id);
@@ -565,8 +603,9 @@ class Patient_m extends CI_Model
                 $data2 = array(
                     'patient_id'   => $this->input->post('patient_id'),
                     'invoice_id'   => $invoice_id,
+                    'items_group_id'   => $items_group_id,
                     'item_name'     => $result->Name,
-                    'category'     => "Radilogy",
+                    'category'     => "Radiology",
                     'billing_type' => "Debit",
                     'amount'       => $result->service_charge_cost,
                     'billed_by'    => $this->session->userdata('active_user')->id,

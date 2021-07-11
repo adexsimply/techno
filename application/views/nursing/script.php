@@ -23,6 +23,10 @@ $('#admissionRequestTable').DataTable({
 
 });
 /////
+var vitalsTable =  $('#vitalsTable').DataTable({
+        });
+
+/////
 var wardTable =  $('#wardTable').DataTable({
         });
 
@@ -56,7 +60,7 @@ function listDefaultPatients() {
 
             html += '<tr><td>' + sn++ + '</td> <td>' + response[i].appointment_date +
               '</td> <td>' + response[i].appointment_time +
-              '</td> <td>' + response[i].patient_title + ' ' + response[i].patient_name +
+              '</td> <td>' + response[i].title + ' ' + response[i].patient_name +
               '</td> <td>' + response[i].patient_gender +
               '</td> <td>' + response[i].patient_id_num +
               '</td> <td>' + response[i].patient_status +
@@ -675,7 +679,7 @@ function listDefaultAdmissionRequests() {
 
             html += '<tr><td>' + sn++ + '</td> <td>' + response[i].appointment_date +
               '</td> <td>' + response[i].appointment_time +
-              '</td> <td>' + response[i].patient_title + ' ' + response[i].patient_name +
+              '</td> <td>' + response[i].title + ' ' + response[i].patient_name +
               '</td> <td>' + response[i].patient_gender +
               '</td> <td>' + response[i].patient_id_num +
               '</td> <td>' + response[i].patient_status +

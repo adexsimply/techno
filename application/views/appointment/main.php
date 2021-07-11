@@ -1,5 +1,14 @@
 <?php $this->load->view('includes/head_2'); ?>
 <?php $this->load->view('includes/sidebar') ?>
+<style type="text/css">
+    
+#js-exportable2 thead th, #js-exportable2 tbody td {
+  font-size: 0.89em;
+  padding: 1px !important;
+  height: 15px;
+}
+</style>
+
 
 <div id="main-content">
     <div class="container-fluid">

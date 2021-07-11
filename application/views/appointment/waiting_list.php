@@ -1,5 +1,13 @@
 <?php $this->load->view('includes/head_2'); ?>
 <?php $this->load->view('includes/sidebar') ?>
+<style type="text/css">
+    
+#waitingList thead th, #waitingList tbody td {
+  font-size: 0.89em;
+  padding: 1px !important;
+  height: 15px;
+}
+</style>
 <link src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" rel="stylesheet">
 <link src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js" rel="stylesheet">
 

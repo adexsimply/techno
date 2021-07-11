@@ -76,7 +76,7 @@
                                                 <th>S/N</th>
                                                 <th>Name</th>
                                                 <th>Hospital Number</th>
-                                                <th>Receipt Number</th>
+                                               <!--  <th>Receipt Number</th> -->
                                                 <th>Total</th>
                                                 <th>Action</th>
                                             </tr>

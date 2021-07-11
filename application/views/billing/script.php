@@ -67,12 +67,11 @@ function listDefaultPaymentList() {
 
 
 
-            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].invoice_id+ '"> <i class="fa fa-pencil"></i></button> '
+            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].items_group_id+ '"> <i class="fa fa-pencil"></i></button> '
 
             html += '<tr><td>' + sn++ +
               '</td> <td>' + response[i].patient_name +
               '</td> <td>' + response[i].patient_id_num +
-              '</td> <td>' + response[i].invoice_id +
               '</td> <td>' + response[i].amount_total +
               //'</td><td>' + vital_status +
               '</td><td>' + buttons + '</td> </tr>';
@@ -398,12 +397,12 @@ function listPayment() {
             //console.log(response3)
 
 
-            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].invoice_id+ '"> <i class="fa fa-pencil"></i></button> '
+            var buttons = '<button class="btn btn-dark" type="button" data-toggle="modal" data-target="#takeVitals" data-status="'+response[i].status+'" onclick="payment_dialog(event)" data-type="black" data-size="l" data-title="Receipts" href="<?php echo base_url('billing/cash_payment/'); ?>' + response[i].items_group_id+ '"> <i class="fa fa-pencil"></i></button> '
 
             html += '<tr><td>' + sn++ +
               '</td> <td>' + response[i].patient_name +
               '</td> <td>' + response[i].patient_id_num +
-              '</td> <td>' + response[i].invoice_id +
+              // '</td> <td>' + response[i].invoice_id +
               '</td> <td>' + response[i].amount_total +
               //'</td><td>' + vital_status +
               '</td><td>' + buttons + '</td> </tr>';
@@ -491,7 +490,7 @@ function payment_dialog(event) {
 
                                             printDiv()
                                             ///Close Big Dialog
-                                            //location.reload()
+                                            location.reload()
                                             a.close();
                                             ///Refresh Prescription Table
                                         //filter_prescriptions()

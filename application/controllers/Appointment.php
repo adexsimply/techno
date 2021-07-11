@@ -183,15 +183,21 @@ class appointment extends Base_Controller
 
 
                 ///Create receipt for registration
+              
                 $invoice_id = rand(10000,10000000);
-                $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+                $check_if_invoice_exists = $this->db->select('invoice_id')->from('billings')->where('invoice_id',$invoice_id)->get();
                 if ($check_if_invoice_exists->num_rows() > 0) {
                     $invoice_id = rand(10000,10000000);
                 }
-                 $data_invoice = array(
-                        'invoice_id' => $invoice_id
-                    );
-                $insert_invoice = $this->db->insert('invoices', $data_invoice);
+                //Generate unique number for items_group
+                $items_group_id2 = rand(1000,100000);
+                $items_group_id = "11".$items_group_id2;
+                $check_if_group_id_exists = $this->db->select('items_group_id')->from('billings')->where('items_group_id',$items_group_id)->get();
+                if ($check_if_group_id_exists->num_rows() > 0) {
+                    $items_group_id2 = rand(1000,100000);
+                }
+
+
 
                 ///Get  the cost of Registration for Patient
                 $check_consultation_cost = $this->db->select('service_charge_cost')->from('service_charge_items')->where('id','2479')->get();
@@ -202,6 +208,7 @@ class appointment extends Base_Controller
                     $data2 = array(
                         'patient_id'   => $this->input->post('select_patient'),
                         'invoice_id'   => $invoice_id,
+                        'items_group_id'   => $items_group_id,
                         'item_name'     => "Consultation",
                         'category'     => "Consultation",
                         'billing_type' => "Debit",

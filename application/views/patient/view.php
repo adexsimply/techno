@@ -34,7 +34,7 @@
 		<div class="col-lg-3 col-md-12">
 			<div class="card member-card">
 				<div class="header l-coral">
-					<h4 class="m-t-10 text-light" style="font-size: 1.2rem"><?php echo $patient->patient_title . " " . $patient->patient_name ?></h4>
+					<h4 class="m-t-10 text-light" style="font-size: 1.2rem"><?php echo $patient->title . " " . $patient->patient_name ?></h4>
 				</div>
 				<div class="member-img">
 					<a href="patient-invoice.html">
@@ -65,7 +65,7 @@
 					<hr>
 					<strong>Next of Kin</strong>
 					<ul class="social-links list-unstyled">
-						<li>Name : <?php echo $patient->nok_title . " " . $patient->nok_name; ?></li><br>
+						<li>Name : <?php echo $patient->nok_name; ?></li><br>
 						<li>Address : <?php echo $patient->nok_address; ?></li><br>
 						<li>Relationship : <?php echo $patient->nok_relationship; ?></li>
 					</ul>
