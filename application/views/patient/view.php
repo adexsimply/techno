@@ -425,7 +425,7 @@
 												</div>
 												<div class="tab-pane table-responsive" id="admission">
 													
-														<button class="btn btn-warning m-b-15 m-t-15" onclick="admission_dialog(event)" data-type="black" data-size="l" data-title="Admission/Surgical Procedure Request" href="<?php echo base_url('patient/add_admission');?>">
+														<button class="btn btn-warning m-b-15 m-t-15" onclick="admission_dialog(event)" data-type="black" data-size="l" data-title="Admission/Surgical Procedure Request" href="<?php echo base_url('patient/add_admission/'.$patient->p_id);?>">
 															<i class="fa fa-bed"></i> Create
 														</button>
 													<table class="table m-b-0 table-hover">
@@ -447,7 +447,7 @@
 																<td><?php echo $admission->staff_firstname . " " . $admission->staff_lastname; ?></td>
 																<td><?php echo $admission->diagnosis; ?></td>
 																<td><?php echo $admission->admission_status; ?></td>
-																<td> <button title="Edit Patient" class="btn btn-sm btn-icon btn-pure btn-info" onclick="admission_dialog(event)" data-type="purple" data-size="l" data-title="Edit" href="<?php echo base_url('patient/add_admission/'.$admission->admission_id);?>"><i class="icon-pencil"></i></button>
+																<td> <button title="Edit Patient" class="btn btn-sm btn-icon btn-pure btn-info" onclick="admission_dialog(event)" data-type="purple" data-size="l" data-title="Edit" href="<?php echo base_url('patient/add_admission/'.$patient->p_id.'/'.$admission->admission_id);?>"><i class="icon-pencil"></i></button>
                                                     <button title="Delete" class="btn btn-sm btn-icon btn-pure btn-danger" onclick="delete_admission(<?php echo $admission->admission_id; ?>)"><i class="icon-trash"></i></button></td>
 															</tr>
 															<?php } ?>

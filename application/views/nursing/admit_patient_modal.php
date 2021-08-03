@@ -34,6 +34,7 @@
 							<?php } ?>
 						</select>
                     </div>
+                    <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="clinic"></code>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <b>Ward</b>
@@ -45,6 +46,7 @@
 							<?php } ?>
 						</select>
                     </div>
+                    <code style="color: #ff0000;font-size: 12px;" class="form-control-feedback" data-field="ward"></code>
                 </div>
                 <div class="col-lg-12 col-md-6">
                     <b>Diagnosis</b>
@@ -55,7 +57,7 @@
             </div>
 
 
-
+            <?php if (!$this->uri->segment(3)) { ?>
             <div class="col-lg-12 col-md-6 mb-3">
                 <b>Find Patient...</b>
                 <div class="input-group">
@@ -114,6 +116,7 @@
                         </div>
                 </div>
             </div>
+            <?php  } ?>
 	</div>
 </form>
 <script type="text/javascript">

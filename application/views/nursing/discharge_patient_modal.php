@@ -2,6 +2,7 @@
 	<div class="modal-body edit-doc-profile">	
             <div class="row clearfix">
                 <div class="col-lg-6 col-md-6">
+                    <?php //var_dump($admission_details); ?>
                     <b>Date</b>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -17,6 +18,8 @@
                     <b>Name</b>
                     <div class="input-group mb-3">
                         <input type="text" <?php if ($this->uri->segment(3)) { ?> value="<?php echo $admission_details->patient_name; ?>" <?php } ?> class="form-control time12" disabled="">
+                        <input type="text" name="patient_id" hidden value="<?php echo $admission_details->patient_id; ?>">
+                        <input type="text" name="ward_id" value="<?php echo $admission_details->ward_id; ?>">
                     </div>
                 </div>
               <!--   <div class="col-lg-6 col-md-6">

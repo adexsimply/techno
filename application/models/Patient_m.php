@@ -92,7 +92,7 @@ class Patient_m extends CI_Model
     }
     public function get_admission_by_id($admission_id)
     {
-        $get_patient_admission = $this->db->select('ar.*,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date, ar.id as admission_id, ar.status as admission_status')->from('admission_requests ar')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->where('ar.id', $admission_id)->get();;
+        $get_patient_admission = $this->db->select('ar.*,as.ward_id,p.*,c.clinic_name,s.staff_firstname,s.staff_lastname,ar.date_created as ad_date, ar.id as admission_id, ar.status as admission_status')->from('admission_requests ar')->join('admission_status as as', 'ar.id=as.admission_request_id', 'left')->join('patient_details as p', 'p.id=ar.patient_id', 'left')->join('clinics as c', 'ar.clinic_id=c.id', 'left')->join('staff as s', 's.user_id=ar.sender_id')->where('ar.id', $admission_id)->get();;
         $patient_admission = $get_patient_admission->row();
         return $patient_admission;
     }
@@ -209,6 +209,8 @@ class Patient_m extends CI_Model
                 'request_date' => $this->input->post('request_date'),
                 'clinic_id' => $this->input->post('clinic'),
                 'admission_type' => $this->input->post('admission_type'),
+                'patient_id' => $this->input->post('patient_id'),
+                'sender_id' =>  $this->session->userdata('active_user')->id,
                 'diagnosis' => $this->input->post('diagnosis'),
                 'operation' => $this->input->post('operations'),
                 'remarks' => $this->input->post('remarks'),
@@ -220,6 +222,8 @@ class Patient_m extends CI_Model
                 'request_date' => $this->input->post('request_date'),
                 'clinic_id' => $this->input->post('clinic'),
                 'admission_type' => $this->input->post('admission_type'),
+                'patient_id' => $this->input->post('patient_id'),
+                'sender_id' =>  $this->session->userdata('active_user')->id,
                 'diagnosis' => $this->input->post('diagnosis'),
                 'operation' => $this->input->post('operations'),
                 'remarks' => $this->input->post('remarks'),
@@ -758,21 +762,37 @@ class Patient_m extends CI_Model
     {
         if ($this->input->post('Pending')) {
 
-            $invoice_id = rand(10000,10000000);
-            $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
-            if ($check_if_invoice_exists->num_rows() > 0) {
-                $invoice_id = rand(10000,10000000);
-            }
-             $data_invoice = array(
-                    'invoice_id' => $invoice_id
-                );
-            $insert_invoice = $this->db->insert('invoices', $data_invoice);
+            // $invoice_id = rand(10000,10000000);
+            // $check_if_invoice_exists = $this->db->select('*')->from('invoices')->where('invoice_id',$invoice_id)->get();
+            // if ($check_if_invoice_exists->num_rows() > 0) {
+            //     $invoice_id = rand(10000,10000000);
+            // }
+            //  $data_invoice = array(
+            //         'invoice_id' => $invoice_id
+            //     );
+            // $insert_invoice = $this->db->insert('invoices', $data_invoice);
             //echo json_encode($insert_invoice);
+
+                //Generate unique number for items_group
+                $items_group_id2 = rand(1000,100000);
+                $items_group_id = "22".$items_group_id2;
+                $check_if_group_id_exists = $this->db->select('items_group_id')->from('billings')->where('items_group_id',$items_group_id)->get();
+                if ($check_if_group_id_exists->num_rows() > 0) {
+                    $items_group_id2 = rand(1000,100000);
+                }
 
            // echo json_encode($this->input->post('Pending'));
             $drug_id = $this->input->post('drug_ids[]');
 
             foreach ($this->input->post('drug_ids[]') as $drug_id) {
+            
+                //Generate invoice number for registration
+                $invoice_id = rand(10000,10000000);
+                $check_if_invoice_exists = $this->db->select('invoice_id')->from('billings')->where('invoice_id',$invoice_id)->get();
+                if ($check_if_invoice_exists->num_rows() > 0) {
+                    $invoice_id = rand(10000,10000000);
+                }
+                ////////
                 $array = explode(',', $drug_id);
                 $get = $this->db->select('*')->from('drug_items')->where('id', $array[0])->get();
                 $result = $get->row();
@@ -792,6 +812,7 @@ class Patient_m extends CI_Model
             $data = array(
                 'patient_id'   => $this->input->post('patient_id'),
                 'invoice_id'   => $invoice_id,
+                'items_group_id'   => $items_group_id,
                 'item_name'     => $result->drug_item_name,
                 'category'     => "Prescription",
                 'billing_type' => "Debit",

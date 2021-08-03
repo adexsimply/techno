@@ -84,6 +84,7 @@ function listDefaultAdmissionRequests() {
       async : false,
       dataType : 'json',
       success : function(response){
+        console.log(response);
         var html = '';
         var i;
         var sn =1;

@@ -111,19 +111,66 @@ class Nursing_m extends CI_Model
 
     public function create_new_discharge() {
         if ($this->input->post('admission_id')) {
+
+            //Generate unique number for items_group
+            $items_group_id2 = rand(1000,100000);
+            $items_group_id = "22".$items_group_id2;
+            $check_if_group_id_exists = $this->db->select('items_group_id')->from('billings')->where('items_group_id',$items_group_id)->get();
+            if ($check_if_group_id_exists->num_rows() > 0) {
+                $items_group_id2 = rand(1000,100000);
+            }
+
+            $get_ward_bills = $this->db->select('*')->from('wards')->where('id',$this->input->post('ward_id'))->get();
+            $ward_bills = $get_ward_bills->row();
+            /////
+            $ward_rate = $ward_bills->ward_rate;
+            $feeding = $ward_bills->feeding;
+            $utility = $ward_bills->utility;
+            $doctor_nurse = $ward_bills->doctor_nurse_fee;
+
+            $array_ward_bills = array('Ward' =>$ward_rate ,'Feeding' => $feeding, 'Utility' =>$utility, 'DoctorNurse' => $doctor_nurse);
+            foreach ($array_ward_bills as $category => $amount) {
+            //Generate invoice number for each Radiology Item
+                $invoice_id = rand(10000,10000000);
+                $check_if_invoice_exists = $this->db->select('invoice_id')->from('billings')->where('invoice_id',$invoice_id)->get();
+                if ($check_if_invoice_exists->num_rows() > 0) {
+                    $invoice_id = rand(10000,10000000);
+                }
+                /////////////////////
+                $data_ward_bills = array(
+                    'category' => $category,
+                    'item_name' => $category,
+                    'patient_id' => $this->input->post('patient_id'),
+                    'billing_type' => 'Debit',
+                    'amount' => $amount,
+                    'invoice_id' => $invoice_id,
+                    'items_group_id' => $items_group_id,
+                    'billed_by' => $this->session->userdata('active_user')->id
+                );
+                $insert_ward_bills = $this->db->insert('billings',$data_ward_bills);
+
+            }
             $data = array(
                 'discharged' => $this->input->post('discharge_date'),
                 'discharge_comment' => $this->input->post('discharge_comments'),
+                'patient_id' => $this->input->post('patient_id'),
                 'discharge_type' => $this->input->post('discharge_type')
             );
             $data2 = array(
                 'status' => "Discharged"
+            );
+            $data3 = array(
+                'status' => "Free"
             );
             $this->db->where('id', $this->input->post('admission_id'));
             $update = $this->db->update('admission_requests', $data2);
 
             $this->db->where('admission_request_id', $this->input->post('admission_id'));
             $update2 = $this->db->update('admission_status', $data);
+
+            //Update ward to Free
+            $this->db->where('id', $this->input->post('ward_id'));
+            $update2 = $this->db->update('wards', $data3);
 
             return $update;
         } 

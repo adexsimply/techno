@@ -336,15 +336,15 @@ class Patient extends Base_Controller
     public function add_admission()
     {
 
-        if ($this->uri->segment(3)) {
+        if ($this->uri->segment(4)) {
             ////////
-            $this->data['admission_details'] =  $this->patient_m->get_admission_by_id($this->uri->segment(3));
+            $this->data['admission_details'] =  $this->patient_m->get_admission_by_id($this->uri->segment(4));
             $this->data['available_wards'] =  $this->nursing_m->get_available_wards_list();
             $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
             $this->load->view('patient/add_admission_modal', $this->data);
         }
         else {
-
+            ////////
             $this->data['available_wards'] =  $this->nursing_m->get_available_wards_list();
             $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
             $this->load->view('patient/add_admission_modal', $this->data);

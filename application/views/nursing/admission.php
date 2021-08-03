@@ -41,29 +41,17 @@
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <!-- Date and time range -->
-                                                <div class="col-md-2">
+                                                <div class="col-md-3">
                                                     <label>From</label>
                                                     <input type="date" placeholder="From" class="form-control" onchange="filter_admission()" id="date_range_from" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>">
                                                    <!--  <input type="" class="form-control" name="dates" placeholder="Select Date Range" onchange="filter_vitals()" id="date_range"> -->
                                                 </div>
-                                                <div class="col-md-2"> 
+                                                <div class="col-md-3"> 
                                                     <label>To</label>
                                                     <input type="date" class="form-control" onchange="filter_admission()" id="date_range_to" placeholder="From" name="" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>"> 
                                                 </div>
 
-
-                                                <!-- Currency -->
-                                           <!--      <div class="col-md-4">
-                                                    <label for="currency">Clinic</label>
-                                                    <select class="form-control select2" onchange="filter_admission()" name="currency" id="clinic_id">
-                                                        <option value="all" selected>All</option>
-                                                        <?php foreach ($clinic_list as $clinic) { ?>
-                                                            <option value="<?php echo $clinic->id ?>"><?php echo $clinic->clinic_name ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div> -->
-
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label for="status">Status</label>
                                                     <select onchange="filter_admission()" class="form-control select2" name="status" id="status">
                                                         <option value="all">All</option>
@@ -98,26 +86,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="filtered_admission_requests">
-                                            <?php 
-                                            //var_dump($doctors_list);
-                                            $i=1;
-                                             foreach ($admission_requests_list as $operation) { 
-                                                //var_dump($operation);
-                                                ?>
-                                         <!--    <tr>
-                                                <td><?php echo $i; ?></td>
-                                                <td><span class="list-name"><?php  $ini_date = date_create( $operation->ad_date); echo date_format($ini_date,"D M d, Y");?></span></td>
-                                                <td><?php echo $operation->patient_title." ".$operation->patient_name;; ?></td>
-                                                <td><?php echo $operation->patient_gender; ?></td>
-                                                <td><?php echo $operation->patient_id_num; ?></td>
-                                                <td><?php echo $operation->patient_status ?></td>
-                                                <td><?php echo $operation->clinic_name; ?></td>
-                                                <td><span class="list-name"><?php echo $operation->staff_firstname; ?></span></td>
-                                                <td><span class="badge badge-success"><a onclick="admit_dialog(event)" data-type="black" data-size="l" data-title="Admission Register" href="<?php echo base_url('nursing/admit_patient/'.$operation->admission_id);?>">Option</a></span></td>
-                                            </tr> -->
-                                               <?php 
-                                               $i++;
-                                           } ?>
+                                            
                                         </tbody>
                                     </table>                            
                                 </div>
