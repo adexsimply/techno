@@ -539,6 +539,66 @@ function listDefaultAdmissionRequests() {
     });
 
 }
+//////Admission Documentations
+
+  ////////
+
+  ////// Dialog for Adding New Ward
+  function admission_docs_dialog(event) {
+
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var url = element.attr('href');
+    var title = element.data('title');
+    var size = element.data('size');
+
+////
+   var admitDialog = $.confirm({
+        title: 'Prompt!',
+        columnClass:size,
+        content: function () {
+                  var self = this;
+                  return $.ajax({
+                      url: url,
+                      method: 'get',
+                  }).done(function (data) {
+                      self.setContent(data);
+                      self.setTitle(title);
+                  }).fail(function(){
+                      self.setContent('Something went wrong');
+                  });
+              },
+        buttons: {
+            Close: function () {
+                //close
+                //return false;
+            },
+        },
+        onContentReady: function () {
+
+                              // $('.card a').click(function(e) {
+
+                              //     $('.card.active-menu').removeClass('active-menu');
+
+                              //     var $parent = $(this).parent();
+                              //     //console.log($parent)
+                              //     $parent.addClass('active-menu');
+                              //     e.preventDefault();
+                              // });
+
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+    });
+
+}
+
 
 ////////////////
 
@@ -747,6 +807,7 @@ function listDefaultAdmissionRequests() {
 
 
                 var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
+                var patient_fullname = response[i].patient_title + ' ' + response[i].patient_name
                 var buttons = '<span class="badge badge-success"><a onclick="admit_dialog(event)" data-type="black" data-size="l" data-title="Admission Register" href="<?php echo base_url('nursing/admit_patient/');?>'+ response[i].admission_id +'">Option</a></span>';
 
                 html += '<tr><td>' + sn++ + '</td> <td>' + response[i].request_date +
@@ -768,7 +829,8 @@ function listDefaultAdmissionRequests() {
                 if (response[i].discharged == null) { var discharged = '-' } else {var discharged = response[i].discharged } 
 
                 var fullname = response[i].staff_firstname + ' ' + response[i].staff_lastname;
-                var buttons = '<span class="badge badge-success"><a onclick="admit_dialog(event)" data-type="black" data-size="l" data-title="Admission Register" href="<?php echo base_url('nursing/admit_patient/');?>'+ response[i].admission_id +'">Option</a></span><span class="badge badge-info"><a onclick="discharge_dialog(event)" data-type="black" data-size="l" data-title="Discharge Patient" href="<?php echo base_url('nursing/discharge_patient/');?>'+ response[i].admission_id +'"><i class="fa fa-wheelchair"></i>Discharge</a></span>';
+                var patient_fullname = response[i].patient_title + ' ' + response[i].patient_name
+                var buttons = '<span class="badge badge-success"><a onclick="admit_dialog(event)" data-type="black" data-size="l" data-title="Admission Register" href="<?php echo base_url('nursing/admit_patient/');?>'+ response[i].admission_id +'">Option</a></span><span class="badge badge-info"><a onclick="discharge_dialog(event)" data-type="black" data-size="l" data-title="Discharge Patient" href="<?php echo base_url('nursing/discharge_patient/');?>'+ response[i].admission_id +'"><i class="fa fa-wheelchair"></i>Discharge</a></span><span class="badge badge-primary"><a onclick="admission_docs_dialog(event)" data-type="black" data-size="xl" data-title="'+response[i].patient_name+'" href="<?php echo base_url('nursing/admission_docs/');?>'+ response[i].admission_id +'"><i class="fa fa-edit"></i>Docs</a></span>';
 
                 html += '<tr><td>' + sn++ + '</td> <td>' + response[i].date_admitted +
                   '</td> <td>' + discharged +
@@ -858,4 +920,58 @@ function listDefaultAdmissionRequests() {
       cancel();
     }
   }
+
+  ///////Script for Modal Inpatient Documents Nav Content
+    function openSecond () {
+    $('#firstTab').hide();
+    $('#thirdTab').hide();
+    $('#fourthTab').hide();
+    $('#fifthTab').hide();
+    $('#sixthTab').hide();
+    $('#secondTab').show();
+  }
+  function openFirst () {
+    $('#firstTab').show();
+    $('#thirdTab').hide();
+    $('#fourthTab').hide();
+    $('#fifthTab').hide();
+    $('#sixthTab').hide();
+    $('#secondTab').hide();
+  }
+  function openThird () {
+    $('#firstTab').hide();
+    $('#thirdTab').show();
+    $('#fourthTab').hide();
+    $('#fifthTab').hide();
+    $('#sixthTab').hide();
+    $('#secondTab').hide();
+  }
+  function openFourth () {
+    $('#firstTab').hide();
+    $('#thirdTab').hide();
+    $('#fourthTab').show();
+    $('#fifthTab').hide();
+    $('#sixthTab').hide();
+    $('#secondTab').hide();
+  }
+  function openFifth () {
+    $('#firstTab').hide();
+    $('#thirdTab').hide();
+    $('#fourthTab').hide();
+    $('#fifthTab').show();
+    $('#sixthTab').hide();
+    $('#secondTab').hide();
+  }
+  function openSixth () {
+    $('#firstTab').hide();
+    $('#thirdTab').hide();
+    $('#fourthTab').hide();
+    $('#fifthTab').hide();
+    $('#sixthTab').show();
+    $('#secondTab').hide();
+  }
 </script>
+<?php $this->load->view('nursing/inpatient/script/general_consultation_script'); ?>
+<?php $this->load->view('nursing/inpatient/script/anc_script'); ?>
+<?php $this->load->view('nursing/inpatient/script/ward_notes_script'); ?>
+<?php $this->load->view('nursing/inpatient/script/documentation_script'); ?>

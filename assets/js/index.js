@@ -69,7 +69,7 @@ $(function() {
         },
         axisY: {
             labelInterpolationFnc: function(value) {
-                return (value / 100) + 'K';
+                return (value/100) + 'M';
             }
         },
         lineSmooth: true,

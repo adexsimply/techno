@@ -120,6 +120,89 @@ class Nursing extends Base_Controller
         }
     }
 
+
+    public function admission_docs()
+    {
+
+        if ($this->uri->segment(3)) {
+            ////////
+
+           // $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+            $this->data['admission_details'] =  $this->patient_m->get_admission_by_id($this->uri->segment(3));
+          //  $this->data['available_wards'] =  $this->nursing_m-> get_available_wards_list2();
+       //     $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+            $this->load->view('nursing/admission_docs_modal', $this->data);
+        }
+        else {
+
+            // $this->data['patients_list'] =  $this->patient_m->get_patient_list();
+            // $this->data['available_wards'] =  $this->nursing_m->get_available_wards_list();
+            // $this->data['clinic_list'] =  $this->department_m->get_clinic_list();
+            // $this->load->view('nursing/admit_patient_modal', $this->data);
+
+            show_404();
+
+        }
+    }
+    public function general_consultation()
+    {
+
+        if ($this->uri->segment(3)) {
+            ///Get 
+            $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+            $this->load->view('nursing/inpatient/dialog/general_consultation_modal', $this->data);
+        }
+        else {
+            
+            show_404();
+
+        }
+    }
+    public function anc()
+    {
+
+        if ($this->uri->segment(3)) {
+            ///Get 
+            $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+            $this->load->view('nursing/inpatient/dialog/anc_modal', $this->data);
+        }
+        else {
+            
+            show_404();
+
+        }
+    }
+
+    public function ward_notes()
+    {
+
+        if ($this->uri->segment(3)) {
+            ///Get 
+            $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+            $this->load->view('nursing/inpatient/dialog/ward_notes_modal', $this->data);
+        }
+        else {
+            
+            show_404();
+
+        }
+    }
+
+    public function documentation()
+    {
+
+        if ($this->uri->segment(3)) {
+            ///Get 
+            $this->data['patient_details'] = $this->patient_m->get_patient_by_id($this->uri->segment(3));
+            $this->load->view('nursing/inpatient/dialog/documentation_modal', $this->data);
+        }
+        else {
+            
+            show_404();
+
+        }
+    }
+
     public function notes()
     {
         $this->data['title'] = 'Handover Notes';
