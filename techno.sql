@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 05, 2021 at 07:54 AM
+-- Generation Time: Sep 25, 2021 at 05:11 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.30
 
@@ -30,10 +30,14 @@ SET time_zone = "+00:00";
 CREATE TABLE `admission_requests` (
   `id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
+  `request_date` date NOT NULL,
   `clinic_id` int(11) NOT NULL,
   `sender_id` int(11) NOT NULL,
-  `operation` varchar(5) NOT NULL DEFAULT 'No',
-  `diagnosis` text NOT NULL,
+  `operation` varchar(100) DEFAULT 'No',
+  `admission_type` varchar(50) DEFAULT NULL,
+  `diagnosis` text DEFAULT NULL,
+  `remarks` varchar(100) DEFAULT NULL,
+  `status` enum('Pending','On Admission','Discharged') NOT NULL DEFAULT 'Pending',
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -41,8 +45,45 @@ CREATE TABLE `admission_requests` (
 -- Dumping data for table `admission_requests`
 --
 
-INSERT INTO `admission_requests` (`id`, `patient_id`, `clinic_id`, `sender_id`, `operation`, `diagnosis`, `date_created`) VALUES
-(1, 7, 1, 1, 'No', 'BeriBeri', '2020-10-20 04:05:56');
+INSERT INTO `admission_requests` (`id`, `patient_id`, `request_date`, `clinic_id`, `sender_id`, `operation`, `admission_type`, `diagnosis`, `remarks`, `status`, `date_created`) VALUES
+(1, 16, '2021-06-23', 1, 1, 'No', NULL, 'OK SIre', NULL, 'Discharged', '2021-06-23 03:27:43'),
+(2, 25, '2021-06-23', 1, 1, 'OPERATIONS', 'For Admission Only', ' diagnoOPERATIONS', ' TYTTT', 'On Admission', '2021-06-23 12:16:02'),
+(3, 30, '2021-07-06', 1, 1, 'Note', 'For Admission Only', ' Note', 'Remarks ', 'Pending', '2021-07-06 17:11:05'),
+(4, 30, '2021-07-11', 2, 1, 'OK', 'For Admission Only', ' Welcome', 'Sir ', 'Pending', '2021-07-11 22:48:07'),
+(5, 30, '2021-07-12', 1, 1, 'Wololo Wololo ', 'For Admission Only', 'Wololo Wololo ', 'Wololo Wololo  ', 'Pending', '2021-07-12 13:38:37'),
+(6, 30, '2021-07-13', 2, 1, ' Provisional2', 'For Admission Only', ' Provisional', ' Provisional3 ', 'Discharged', '2021-07-13 12:44:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admission_status`
+--
+
+CREATE TABLE `admission_status` (
+  `id` int(11) NOT NULL,
+  `admission_request_id` int(11) NOT NULL,
+  `patient_id` int(11) DEFAULT NULL,
+  `clinic_id` int(11) DEFAULT NULL,
+  `date_admitted` date DEFAULT NULL,
+  `discharged` datetime DEFAULT NULL,
+  `admitted` datetime DEFAULT NULL,
+  `ward_id` int(11) DEFAULT NULL,
+  `status` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `discharge_comment` text COLLATE utf8_bin DEFAULT NULL,
+  `diagnosis` varchar(100) COLLATE utf8_bin NOT NULL,
+  `treatPlan` longtext COLLATE utf8_bin DEFAULT NULL,
+  `discharge_type` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `date_added` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `admission_status`
+--
+
+INSERT INTO `admission_status` (`id`, `admission_request_id`, `patient_id`, `clinic_id`, `date_admitted`, `discharged`, `admitted`, `ward_id`, `status`, `discharge_comment`, `diagnosis`, `treatPlan`, `discharge_type`, `date_added`) VALUES
+(1, 1, 16, 1, '2021-06-23', '2021-07-13 00:00:00', NULL, 1, NULL, 'OK', 'OK SIre', NULL, '1', '2021-06-23 03:27:43'),
+(2, 2, NULL, 1, '2021-06-23', NULL, NULL, 3, NULL, NULL, ' diagnoOPERATIONS', NULL, NULL, '2021-06-23 12:23:07'),
+(3, 6, NULL, 2, '2021-07-13', '2021-07-13 00:00:00', NULL, 4, NULL, 'OK', ' Provisional', NULL, '1', '2021-07-13 13:15:11');
 
 -- --------------------------------------------------------
 
@@ -102,7 +143,9 @@ CREATE TABLE `billings` (
   `billing_type` varchar(20) NOT NULL,
   `amount` varchar(20) NOT NULL,
   `discount` varchar(4) DEFAULT NULL,
-  `invoice_id` int(11) NOT NULL,
+  `invoice_id` int(11) DEFAULT NULL,
+  `receipt_id` int(11) DEFAULT NULL,
+  `items_group_id` int(11) DEFAULT NULL,
   `status` enum('Paid','Pending') NOT NULL DEFAULT 'Pending',
   `billed_by` int(11) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT current_timestamp()
@@ -112,73 +155,13 @@ CREATE TABLE `billings` (
 -- Dumping data for table `billings`
 --
 
-INSERT INTO `billings` (`id`, `category`, `item_name`, `patient_id`, `billing_type`, `amount`, `discount`, `invoice_id`, `status`, `billed_by`, `date_added`) VALUES
-(1, 'Prescription', 'ARTENIF (ARTEMETHER LUMEFANTRIN)', 10, 'Debit', '5', NULL, 1234567, 'Pending', 1, '2021-03-18 00:21:35'),
-(2, 'Prescription', '3G CREAM TUBE', 10, 'Debit', '1580', NULL, 1814432, 'Paid', 1, '2021-03-18 00:23:39'),
-(3, 'Prescription', 'BROMAZEPAM 3mg TABS', 10, 'Debit', '1580', NULL, 1814432, 'Paid', 1, '2021-03-18 00:23:39'),
-(6, 'Prescription', 'BROMAZEPAM 3mg TABS', 12, 'Debit', '800', NULL, 4443569, 'Paid', 1, '2021-03-18 01:14:03'),
-(7, 'Prescription', 'ARTENIF (ARTEMETHER LUMEFANTRIN)', 12, 'Debit', '9000', NULL, 4443569, 'Paid', 1, '2021-03-18 01:14:03'),
-(8, 'Prescription', 'PARACETAMOL TABLET 500mg ', 12, 'Debit', '10000000', NULL, 1826036, 'Paid', 1, '2021-03-18 01:18:25'),
-(9, 'Prescription', 'AMPICLOX CAPSULE', 12, 'Debit', '35000', NULL, 1826036, 'Paid', 1, '2021-03-18 01:18:25'),
-(10, 'Prescription', 'BROMAZEPAM 3mg TABS', 10, 'Debit', '150', NULL, 9989881, 'Paid', 1, '2021-03-20 15:55:56'),
-(11, 'Prescription', 'PARACETAMOL INJ AMP', 10, 'Debit', '0', NULL, 9989881, 'Paid', 1, '2021-03-20 15:55:56'),
-(12, 'Prescription', 'ARTEMETER /LUMEFENTRINE 80/480 TABS (COARTEM)', 10, 'Debit', '2700', NULL, 9989881, 'Paid', 1, '2021-03-20 15:55:56'),
-(13, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '40.0000', NULL, 4895570, 'Pending', 1, '2021-03-30 03:59:24'),
-(14, 'Prescription', 'PARACETAMOL TABLET 500mg ', 12, 'Debit', '20000', NULL, 8468413, 'Pending', 1, '2021-03-30 04:07:40'),
-(15, 'Prescription', 'PARACETAMOL TABLET 500mg ', 12, 'Debit', '20000', NULL, 8468413, 'Pending', 1, '2021-03-30 04:07:40'),
-(16, 'Prescription', '10% DEXTROSE WATER VIALS', 12, 'Debit', '1050', NULL, 650725, 'Pending', 1, '2021-03-30 04:09:48'),
-(17, 'Prescription', '10% DEXTROSE WATER VIALS', 12, 'Debit', '1050', NULL, 650725, 'Pending', 1, '2021-03-30 04:09:48'),
-(25, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '320', NULL, 4254028, 'Pending', 1, '2021-03-30 04:19:39'),
-(26, 'Prescription', '10% DEXTROSE WATER VIALS', 12, 'Debit', '3150', NULL, 4254028, 'Pending', 1, '2021-03-30 04:19:39'),
-(27, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '360', NULL, 9122215, 'Pending', 1, '2021-03-30 04:22:09'),
-(28, 'Prescription', '10% DEXTROSE WATER VIALS', 12, 'Debit', '2800', NULL, 9122215, 'Pending', 1, '2021-03-30 04:22:09'),
-(29, 'Prescription', '20ml SYRINGES', 12, 'Debit', '400', NULL, 9122215, 'Pending', 1, '2021-03-30 04:22:09'),
-(30, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '400', NULL, 2976717, 'Paid', 1, '2021-03-30 04:24:48'),
-(31, 'Prescription', '10% DEXTROSE WATER VIALS', 12, 'Debit', '3500', NULL, 2976717, 'Paid', 1, '2021-03-30 04:24:48'),
-(32, 'Prescription', '20ml SYRINGES', 12, 'Debit', '500', NULL, 2976717, 'Paid', 1, '2021-03-30 04:24:48'),
-(33, 'Prescription', '20ml SYRINGES', 12, 'Debit', '1000', NULL, 8484479, 'Pending', 1, '2021-03-30 04:27:12'),
-(34, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '1160', NULL, 8484479, 'Pending', 1, '2021-03-30 04:27:12'),
-(35, 'Prescription', '10% DEXTROSE WATER VIALS', 12, 'Debit', '10150', NULL, 8484479, 'Pending', 1, '2021-03-30 04:27:12'),
-(36, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '200', NULL, 448598, 'Pending', 1, '2021-03-30 04:28:15'),
-(37, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '2000', NULL, 3673558, 'Pending', 1, '2021-03-30 04:30:28'),
-(38, 'Prescription', '3G CREAM TUBE', 12, 'Debit', '7000', NULL, 3673558, 'Pending', 1, '2021-03-30 04:30:28'),
-(39, 'Prescription', '4.3% DEXTROSE SALINE   VIALS', 12, 'Debit', '5000', NULL, 3673558, 'Pending', 1, '2021-03-30 04:30:28'),
-(40, 'Laboratory', '0.5ML SYRINGES', 12, 'Debit', '800', NULL, 6833360, 'Pending', 1, '2021-03-30 09:27:24'),
-(41, 'Laboratory', 'Follow up', 12, 'Debit', '1000', NULL, 6833360, 'Pending', 1, '2021-03-30 09:27:24'),
-(42, 'Laboratory', 'VDRL', 12, 'Debit', '5000', NULL, 6833360, 'Pending', 1, '2021-03-30 09:27:24'),
-(43, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '800', NULL, 4381561, 'Pending', 1, '2021-03-30 09:32:02'),
-(44, 'General', 'Paediatric', 12, 'Debit', '1000', NULL, 4381561, 'Pending', 1, '2021-03-30 09:32:02'),
-(45, 'Laboratory', 'VDRL', 12, 'Debit', '5000', NULL, 4381561, 'Pending', 1, '2021-03-30 09:32:02'),
-(46, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '800', NULL, 3090979, 'Pending', 1, '2021-03-30 10:27:35'),
-(47, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '800', NULL, 7002599, 'Pending', 1, '2021-03-30 10:32:07'),
-(48, 'Prescription', '0.5ML SYRINGES', 12, 'Debit', '400', NULL, 6384261, 'Pending', 1, '2021-03-30 10:34:26'),
-(49, 'Prescription', '0.5ML SYRINGES', 10, 'Debit', '800', NULL, 3924556, 'Pending', 1, '2021-03-30 11:05:01'),
-(50, 'General', 'Paediatric', 10, 'Debit', '1000', NULL, 3924556, 'Pending', 1, '2021-03-30 11:05:01'),
-(51, 'General', 'Follow up', 10, 'Debit', '1000', NULL, 3924556, 'Pending', 1, '2021-03-30 11:05:01'),
-(52, 'General', 'Circumcision', 10, 'Debit', '1000', NULL, 3924556, 'Pending', 1, '2021-03-30 11:05:01'),
-(53, 'Laboratory', 'KIDNEY FUNCTION TEST', 10, 'Debit', '5000', NULL, 3924556, 'Pending', 1, '2021-03-30 11:05:01'),
-(54, 'Prescription', '0.5ML SYRINGES', 11, 'Debit', '1960', NULL, 6291190, 'Pending', 1, '2021-03-30 11:07:02'),
-(55, 'Prescription', '0.5ML SYRINGES', 7, 'Debit', '800', NULL, 9039900, 'Pending', 1, '2021-03-30 11:11:41'),
-(56, 'Prescription', 'AMOXICLAVULANIC ACID 312.5MG TABLET', 7, 'Debit', '12000', NULL, 9039900, 'Pending', 1, '2021-03-30 11:11:41'),
-(57, 'Prescription', 'PYRANTRIN TABS', 9, 'Debit', '120000', NULL, 108340, 'Paid', 1, '2021-04-03 16:16:37'),
-(58, 'Prescription', 'GOLVUS MET 50/1000MG TABS', 9, 'Debit', '5000', NULL, 108340, 'Paid', 1, '2021-04-03 16:16:37'),
-(59, 'Prescription', 'GOLVUS MET 50/850MG TABS', 9, 'Debit', '0', NULL, 108340, 'Paid', 1, '2021-04-03 16:16:37'),
-(60, 'Laboratory', 'FULL BLOOD COUNT', 7, 'Debit', '5000', NULL, 9486374, 'Paid', 1, '2021-04-04 15:33:11'),
-(61, 'Laboratory', 'Shina Test3', 7, 'Debit', '7000', NULL, 9486374, 'Paid', 1, '2021-04-04 15:33:11'),
-(62, 'Prescription', 'PARACETAMOL TABLET 500mg ', 12, 'Debit', '4000000', NULL, 651850, 'Pending', 1, '2021-04-04 15:41:00'),
-(63, 'Laboratory', 'FULL BLOOD COUNT', 7, 'Debit', '5000', NULL, 695753, 'Paid', 1, '2021-04-04 15:46:01'),
-(64, 'Laboratory', 'Shina Test1', 7, 'Debit', '5000', NULL, 695753, 'Paid', 1, '2021-04-04 15:46:01'),
-(65, 'Laboratory', 'VDRL.', 7, 'Debit', '5000', NULL, 2755260, 'Pending', 1, '2021-04-04 23:28:41'),
-(66, 'Laboratory', 'HCV.', 7, 'Debit', '5000', NULL, 2755260, 'Pending', 1, '2021-04-04 23:28:41'),
-(67, 'Laboratory', 'Serum TB.', 7, 'Debit', '5000', NULL, 2755260, 'Pending', 1, '2021-04-04 23:28:41'),
-(68, 'Laboratory', 'H. Phylori', 7, 'Debit', '5000', NULL, 2755260, 'Pending', 1, '2021-04-04 23:28:41'),
-(69, 'Laboratory', 'VDRL.', 7, 'Debit', '5000', NULL, 6881150, 'Pending', 1, '2021-04-05 00:05:39'),
-(70, 'Laboratory', 'HCV.', 7, 'Debit', '5000', NULL, 6881150, 'Pending', 1, '2021-04-05 00:05:39'),
-(71, 'Laboratory', 'Serum TB.', 7, 'Debit', '5000', NULL, 6881150, 'Pending', 1, '2021-04-05 00:05:39'),
-(72, 'Laboratory', 'H. Phylori', 7, 'Debit', '5000', NULL, 6881150, 'Pending', 1, '2021-04-05 00:05:39'),
-(73, 'Laboratory', 'HBV Profile', 7, 'Debit', '5000', NULL, 6881150, 'Pending', 1, '2021-04-05 00:05:39'),
-(74, 'Laboratory', 'LDL', 7, 'Debit', '5000', NULL, 6881150, 'Pending', 1, '2021-04-05 00:05:39'),
-(75, 'Laboratory', 'SERUM TB', 7, 'Debit', '5000', NULL, 6881150, 'Pending', 1, '2021-04-05 00:05:39');
+INSERT INTO `billings` (`id`, `category`, `item_name`, `patient_id`, `billing_type`, `amount`, `discount`, `invoice_id`, `receipt_id`, `items_group_id`, `status`, `billed_by`, `date_added`) VALUES
+(1, 'Prescription', 'PARACETAMOL TABLET 500mg ', 30, 'Debit', '500000', NULL, 4968025, 33033209, 2222824, 'Paid', 1, '2021-07-11 22:36:32'),
+(2, 'Prescription', 'PARACETAMOL INJ AMP', 30, 'Debit', '0', NULL, 9121137, 33033209, 2222824, 'Paid', 1, '2021-07-11 22:36:32'),
+(3, 'Ward', 'Ward', 16, 'Debit', '290.0000', NULL, 991939, NULL, 2273769, 'Pending', 1, '2021-07-13 15:02:11'),
+(4, 'Feeding', 'Feeding', 16, 'Debit', '6900.0000', NULL, 2045394, NULL, 2273769, 'Pending', 1, '2021-07-13 15:02:11'),
+(5, 'Utility', 'Utility', 16, 'Debit', '2300.0000', NULL, 8451939, NULL, 2273769, 'Pending', 1, '2021-07-13 15:02:11'),
+(6, 'DoctorNurse', 'DoctorNurse', 16, 'Debit', '3000.0000', NULL, 442523, NULL, 2273769, 'Pending', 1, '2021-07-13 15:02:11');
 
 -- --------------------------------------------------------
 
@@ -226,15 +209,6 @@ CREATE TABLE `consultations` (
   `summary` text DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `consultations`
---
-
-INSERT INTO `consultations` (`id`, `appointment_id`, `patient_id`, `doctor_id`, `vital_id`, `complaint`, `presenting_complaint`, `past_medical_hx`, `immunization_hx`, `family_hx`, `diet`, `examination`, `result`, `assignment`, `investigation`, `treatment`, `summary`, `date_added`) VALUES
-(4, 6, 9, 7, 10, 'Headache and fever', '', 'Nothing new iss happening', '', '', '', '', '', '', '', '', '', '2021-03-08 11:00:01'),
-(5, 9, 12, 11, 12, 'Hello No comp', 'Hello No comp2', 'Hello No comp3', 'Hello No comp4', 'Hello No comp5', 'Hello No comp6', 'Hello No comp7', 'Hello No comp8', 'Hello No comp9', 'Hello No comp10', 'Hello No comp12', 'xHello No comp', '2021-03-08 12:07:25'),
-(22, 10, 10, 16, 13, 'OH', '', '', '', '', '', '', '', '', '', 'BROMAZEPAM 3mg TABS - 34ARTENIF (ARTEMETHER LUMEFANTRIN) - Wait hereARTENIF (ARTEMETHER LUMEFANTRIN) - waitBROMAZEPAM 3mg TABS - 12+9+015CM CREPE BANDAGE - 2384774HKALLAARTENIF (ARTEMETHER LUMEFANTRIN) - www', '', '2021-03-16 18:32:56');
 
 -- --------------------------------------------------------
 
@@ -549,6 +523,28 @@ INSERT INTO `departments` (`id`, `department_name`, `head_name`, `contact_addres
 (4, 'Laboratory', NULL, NULL, NULL, '2020-10-06 12:07:54'),
 (5, 'Assistant', NULL, NULL, NULL, '2020-10-06 12:08:07'),
 (6, 'Nursing45', NULL, NULL, NULL, '2020-10-07 02:35:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `discharge_type`
+--
+
+CREATE TABLE `discharge_type` (
+  `id` int(11) NOT NULL,
+  `discharge_type_name` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `discharge_type`
+--
+
+INSERT INTO `discharge_type` (`id`, `discharge_type_name`) VALUES
+(1, 'Discharge'),
+(2, 'Death'),
+(3, 'Transfer'),
+(4, 'Referral'),
+(5, 'Left Against Medical Advice (LAMA)');
 
 -- --------------------------------------------------------
 
@@ -10626,42 +10622,6 @@ CREATE TABLE `handover_notes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `invoices`
---
-
-CREATE TABLE `invoices` (
-  `id` int(11) NOT NULL,
-  `invoice_id` varchar(10) NOT NULL,
-  `amount_paid` int(11) DEFAULT NULL,
-  `payment_mode` enum('full_payment','part_payment') DEFAULT NULL,
-  `date_added` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `invoices`
---
-
-INSERT INTO `invoices` (`id`, `invoice_id`, `amount_paid`, `payment_mode`, `date_added`) VALUES
-(1, '1234567', NULL, NULL, '2021-03-18 00:21:35'),
-(2, '1814432', 3160, 'full_payment', '2021-03-18 00:23:39'),
-(4, '4443569', 9800, '', '2021-03-18 01:14:03'),
-(5, '1826036', 10035000, '', '2021-03-18 01:18:25'),
-(6, '9989881', 2850, '', '2021-03-20 15:55:56'),
-(7, '3090979', NULL, NULL, '2021-03-30 10:27:35'),
-(8, '7002599', NULL, NULL, '2021-03-30 10:32:07'),
-(9, '6384261', 400, NULL, '2021-03-30 10:34:26'),
-(10, '3924556', 8800, NULL, '2021-03-30 11:05:00'),
-(11, '6291190', 1960, NULL, '2021-03-30 11:07:02'),
-(12, '9039900', 12800, NULL, '2021-03-30 11:11:41'),
-(13, '108340', 125000, '', '2021-04-03 16:16:37'),
-(14, '651850', NULL, NULL, '2021-04-04 15:41:00'),
-(15, '695753', 10000, '', '2021-04-04 15:46:01'),
-(16, '2755260', NULL, NULL, '2021-04-04 23:28:41'),
-(17, '6881150', NULL, NULL, '2021-04-05 00:05:39');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `issue_medicine`
 --
 
@@ -10742,52 +10702,9 @@ CREATE TABLE `lab_requests` (
 --
 
 INSERT INTO `lab_requests` (`id`, `patient_id`, `appointment_id`, `vital_id`, `doctor_id`, `sender_id`, `status`, `lab_test_id`, `lab_test_unique_id`, `diagnosis`, `collect_sample`, `sample_type`, `result`, `special_instuction`, `date_created`) VALUES
-(13, 10, 10, 13, 16, 1, 'Specimen', 1528, 69, '', 'on', 69, '', 'OK', '2021-03-12 11:39:40'),
-(14, 10, 10, 13, 16, 1, 'Specimen', 1528, 70, '', 'on', 71, '', 'OK', '2021-03-12 11:39:40'),
-(15, 10, 10, 13, 16, 1, 'Specimen', 1528, 71, '', 'on', 70, '', 'OK', '2021-03-12 11:39:40'),
-(16, 10, 10, 13, 16, 1, 'Specimen', 1528, 72, '', 'on', 71, '', 'OK', '2021-03-12 11:39:40'),
-(17, 10, 10, 13, 16, 1, 'Pending', 2539, 212, '', NULL, NULL, '', NULL, '2021-03-12 11:48:27'),
-(18, 10, 10, 13, 16, 1, 'Pending', 2539, 89, '', NULL, NULL, '', NULL, '2021-03-12 11:48:27'),
-(19, 10, 10, 13, 16, 1, 'Pending', 2539, 18, '', NULL, NULL, '', NULL, '2021-03-12 11:48:27'),
-(20, 10, 10, 13, 16, 1, 'Pending', 5832, 212, '', NULL, NULL, '', NULL, '2021-03-12 12:03:53'),
-(21, 10, 10, 13, 16, 1, 'Pending', 5832, 89, '', NULL, NULL, '', NULL, '2021-03-12 12:03:53'),
-(22, 10, 10, 13, 16, 1, 'Pending', 5832, 18, '', NULL, NULL, '', NULL, '2021-03-12 12:03:53'),
-(23, 10, 10, 13, 16, 1, 'Pending', 5832, 359, '', NULL, NULL, '', NULL, '2021-03-12 12:03:53'),
-(24, 10, 10, 13, 16, 1, 'Pending', 5832, 356, '', NULL, NULL, '', NULL, '2021-03-12 12:03:53'),
-(25, 10, 10, 13, 16, 1, 'Pending', 9876, 212, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(26, 10, 10, 13, 16, 1, 'Pending', 9876, 89, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(27, 10, 10, 13, 16, 1, 'Pending', 9876, 18, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(28, 10, 10, 13, 16, 1, 'Pending', 9876, 359, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(29, 10, 10, 13, 16, 1, 'Pending', 9876, 356, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(30, 10, 10, 13, 16, 1, 'Pending', 9876, 361, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(31, 10, 10, 13, 16, 1, 'Pending', 9876, 359, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(32, 10, 10, 13, 16, 1, 'Pending', 9876, 349, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(33, 10, 10, 13, 16, 1, 'Pending', 9876, 348, '', NULL, NULL, '', NULL, '2021-03-12 12:39:13'),
-(34, 12, 9, 12, 11, 1, 'Pending', 9183, 362, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 14:02:13'),
-(35, 12, 9, 12, 11, 1, 'Pending', 9183, 361, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 14:02:13'),
-(36, 12, 9, 12, 11, 1, 'Pending', 9183, 360, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 14:02:13'),
-(37, 12, 9, 12, 11, 1, 'Pending', 8571, 125, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 14:41:05'),
-(38, 7, 5, 11, 11, 1, 'Pending', 7065, 125, '', NULL, NULL, '', NULL, '2021-04-04 14:59:39'),
-(39, 12, 9, 12, 11, 1, 'Pending', 3896, 125, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 15:02:26'),
-(40, 12, 9, 12, 11, 1, 'Pending', 3896, 125, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 15:02:26'),
-(41, 12, 9, 12, 11, 1, 'Review', 5063, 125, 'Hello No comp9', 'on', 69, '', 'Alright', '2021-04-04 15:03:01'),
-(42, 12, 9, 12, 11, 1, 'Pending', 6315, 125, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 15:03:57'),
-(43, 12, 9, 12, 11, 1, 'Pending', 8359, 125, 'Hello No comp9', NULL, NULL, '', NULL, '2021-04-04 15:13:36'),
-(44, 7, 5, 11, 11, 1, 'Pending', 614, 125, '', NULL, NULL, '', NULL, '2021-04-04 15:33:11'),
-(45, 7, 5, 11, 11, 1, 'Pending', 614, 367, '', NULL, NULL, '', NULL, '2021-04-04 15:33:11'),
-(46, 7, 5, 11, 11, 1, 'Specimen', 8753, 125, '', 'on', 70, '', '', '2021-04-04 15:46:01'),
-(47, 7, 5, 11, 11, 1, 'Specimen', 8753, 366, '', 'on', 70, '', '', '2021-04-04 15:46:01'),
-(48, 7, 5, 11, 11, 1, 'Specimen', 3281, 364, '', 'on', 69, '', '', '2021-04-04 23:28:41'),
-(49, 7, 5, 11, 11, 1, 'Specimen', 3281, 363, '', 'on', 71, '', '', '2021-04-04 23:28:41'),
-(50, 7, 5, 11, 11, 1, 'Review', 3281, 362, '', 'on', 69, '', '', '2021-04-05 23:28:41'),
-(51, 7, 5, 11, 11, 1, 'Specimen', 3281, 361, '', 'on', 69, '', '', '2021-04-05 23:28:41'),
-(52, 7, 5, 11, 11, 1, 'Pending', 8214, 364, '', NULL, NULL, '', NULL, '2021-04-05 00:05:39'),
-(53, 7, 5, 11, 11, 1, 'Pending', 8214, 363, '', NULL, NULL, '', NULL, '2021-04-05 00:05:39'),
-(54, 7, 5, 11, 11, 1, 'Pending', 8214, 362, '', NULL, NULL, '', NULL, '2021-04-05 00:05:39'),
-(55, 7, 5, 11, 11, 1, 'Pending', 8214, 361, '', NULL, NULL, '', NULL, '2021-04-05 00:05:39'),
-(56, 7, 5, 11, 11, 1, 'Pending', 8214, 359, '', NULL, NULL, '', NULL, '2021-04-05 00:05:39'),
-(57, 7, 5, 11, 11, 1, 'Pending', 8214, 306, '', NULL, NULL, '', NULL, '2021-04-05 00:05:39'),
-(58, 7, 5, 11, 11, 1, 'Pending', 8214, 343, '', NULL, NULL, '', NULL, '2021-04-05 00:05:39');
+(1, 30, 1, 19, 16, 1, 'Pending', 3468, 125, '', NULL, NULL, '', NULL, '2021-07-11 21:45:37'),
+(2, 30, 1, 19, 16, 1, 'Pending', 3468, 371, '', NULL, NULL, '', NULL, '2021-07-11 21:45:37'),
+(3, 30, 1, 19, 16, 1, 'Pending', 3468, 370, '', NULL, NULL, '', NULL, '2021-07-11 21:45:37');
 
 -- --------------------------------------------------------
 
@@ -10972,7 +10889,11 @@ INSERT INTO `lab_tests` (`id`, `lab_test_name`, `range_value`, `measure`, `lab_g
 (365, 'Shina\'s Test', NULL, 'mm-l', 4, 'No', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '3000'),
 (366, 'Shina Test1', NULL, 'mm-l', 1, 'No', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '5000'),
 (367, 'Shina Test3', NULL, 'cm-d', 2, 'No', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '7000'),
-(368, 'Shina Test3', NULL, 'cm-d', 2, 'Yes', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '7000');
+(368, 'Shina Test3', NULL, 'cm-d', 2, 'Yes', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '7000'),
+(370, 'Big Test', NULL, 'md-md', 4, 'No', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '80000'),
+(371, 'Big Test2', NULL, 'mmdd', 1, 'Yes', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '6000'),
+(373, 'adexsimply', NULL, 'md-md', 1, 'Yes', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '90'),
+(374, 'adexsimply2', NULL, 'sds', 8, 'Yes', 0, NULL, '0.00', '0.00', '0.00', '0.00', 0, NULL, NULL, '7000');
 
 -- --------------------------------------------------------
 
@@ -11285,7 +11206,14 @@ INSERT INTO `lab_tests_subgroup` (`id`, `lab_test_subgroup_name`, `lab_test_id`,
 (817, 'Others', 246, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (818, 'ParamiShi1', 368, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (819, 'ParamShi2', 368, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(820, 'Typhi OSalmonella', 361, '', NULL, 0, NULL, NULL, NULL, NULL, NULL);
+(820, 'Typhi OSalmonella', 361, '', NULL, 0, NULL, NULL, NULL, NULL, NULL),
+(821, '69pama', 372, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(822, 'adexsimplyParam', 373, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(823, 'adeparam2', 374, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(824, 'Adexsimp33', 374, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(825, 'Big Testparam2', 371, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(826, 'BigTest2 Param3', 371, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(827, 'BigTestParam6', 371, NULL, 'dd', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -11376,7 +11304,20 @@ INSERT INTO `lab_test_range_by_test` (`id`, `lab_test_subgroup_id`, `name`, `low
 (11, 83, 'Male', '12', '16', '2021-04-03 14:38:04'),
 (12, 83, 'Female', '11.5', '15', '2021-04-03 14:38:04'),
 (13, 84, 'Male', '40', '52', '2021-04-03 14:40:22'),
-(14, 84, 'Female', '35', '45', '2021-04-03 14:40:22');
+(14, 84, 'Female', '35', '45', '2021-04-03 14:40:22'),
+(15, 370, 'Ovulatory Phase', '1', '7', '2021-04-06 17:05:50'),
+(16, 370, 'Pregnant First-trimester', '2', '8', '2021-04-06 17:05:50'),
+(17, 374, 'Ovulatory Phase', '2', '8', '2021-04-06 17:43:52'),
+(18, 374, 'Adult', '5', '9', '2021-04-06 17:43:52'),
+(19, 823, 'Ovulatory Phase', '2', '8', '2021-04-06 17:43:52'),
+(20, 823, 'Adult', '5', '9', '2021-04-06 17:43:52'),
+(21, 370, 'Follicular Phase', '1', '8', '2021-04-06 18:09:10'),
+(22, 371, 'Luteral Phase', '1', '90', '2021-04-06 18:13:51'),
+(23, 825, 'Luteral Phase', '1', '90', '2021-04-06 18:13:51'),
+(24, 371, 'Premenopausal', '5', '10', '2021-04-06 18:16:15'),
+(25, 826, 'Premenopausal', '5', '10', '2021-04-06 18:16:15'),
+(26, 371, 'Male', '1', '9', '2021-04-06 18:30:22'),
+(27, 827, 'Male', '1', '9', '2021-04-06 18:30:22');
 
 -- --------------------------------------------------------
 
@@ -11398,21 +11339,21 @@ CREATE TABLE `lab_test_result_details` (
 --
 
 INSERT INTO `lab_test_result_details` (`id`, `lab_request_id`, `lab_test_id`, `lab_test_subgroup_id`, `result`, `date_created`) VALUES
-(1, 50, 362, NULL, 'Wajejjee', '2021-04-05 06:07:07'),
-(2, 50, 362, NULL, 'Waieiiryxyse', '2021-04-05 06:09:35'),
-(3, 50, 362, NULL, 'wyetwtwtwttwtw', '2021-04-05 06:10:50'),
-(4, 41, 125, 83, 'HB', '2021-04-05 06:12:35'),
-(5, 41, 125, 84, 'PCV', '2021-04-05 06:12:35'),
-(6, 41, 125, 86, 'WBC', '2021-04-05 06:12:35'),
-(7, 41, 125, 88, 'RBC', '2021-04-05 06:12:35'),
-(8, 41, 125, 483, 'PLATELET', '2021-04-05 06:12:35'),
-(9, 41, 125, 484, 'NEUT', '2021-04-05 06:12:35'),
-(10, 41, 125, 518, 'LYMPH', '2021-04-05 06:12:35'),
-(11, 41, 125, 689, 'MIXED', '2021-04-05 06:12:35'),
-(12, 41, 125, 693, 'MCHC', '2021-04-05 06:12:35'),
-(13, 41, 125, 694, 'MCH', '2021-04-05 06:12:35'),
-(14, 41, 125, 695, 'MCV', '2021-04-05 06:12:35'),
-(15, 41, 125, 749, 'MPV', '2021-04-05 06:12:35');
+(1, 1, 125, 83, '2', '2021-07-11 21:07:12'),
+(2, 1, 125, 84, 't', '2021-07-11 21:07:12'),
+(3, 1, 125, 86, 't', '2021-07-11 21:07:12'),
+(4, 1, 125, 88, 't', '2021-07-11 21:07:12'),
+(5, 1, 125, 483, 't', '2021-07-11 21:07:12'),
+(6, 1, 125, 484, 't', '2021-07-11 21:07:12'),
+(7, 1, 125, 518, 't', '2021-07-11 21:07:12'),
+(8, 1, 125, 689, 't', '2021-07-11 21:07:12'),
+(9, 1, 125, 693, 't', '2021-07-11 21:07:12'),
+(10, 1, 125, 694, 't', '2021-07-11 21:07:12'),
+(11, 1, 125, 695, 'u', '2021-07-11 21:07:12'),
+(12, 1, 125, 749, 'u', '2021-07-11 21:07:12'),
+(13, 2, 323, NULL, '3', '2021-07-11 21:07:19'),
+(14, 4, 212, NULL, '3', '2021-07-11 21:07:24'),
+(15, 3, 238, NULL, '4', '2021-07-11 21:07:32');
 
 -- --------------------------------------------------------
 
@@ -11465,6 +11406,13 @@ CREATE TABLE `med_reports` (
   `report` text NOT NULL,
   `date_added` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `med_reports`
+--
+
+INSERT INTO `med_reports` (`id`, `appointment_id`, `patient_id`, `doctor_id`, `vital_id`, `report`, `date_added`) VALUES
+(5, 22, 25, 17, 17, 'OK sir', '2021-07-06 12:33:09');
 
 -- --------------------------------------------------------
 
@@ -11541,6 +11489,40 @@ INSERT INTO `menu_parents` (`id`, `menu_parent_name`, `date_created`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `next_of_kin_rel`
+--
+
+CREATE TABLE `next_of_kin_rel` (
+  `id` int(11) NOT NULL,
+  `rel_name` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `next_of_kin_rel`
+--
+
+INSERT INTO `next_of_kin_rel` (`id`, `rel_name`) VALUES
+(1, 'Father'),
+(2, 'Mother'),
+(3, 'Brother'),
+(4, 'Sister'),
+(5, 'Son'),
+(6, 'Daughter'),
+(7, 'Friend'),
+(8, 'In-Law'),
+(9, 'Cousin'),
+(10, 'Aunt'),
+(11, 'Pastor'),
+(12, 'Others'),
+(13, 'Husband'),
+(14, 'Wife'),
+(15, 'Spouse'),
+(16, 'Fiancée'),
+(17, 'Uncle');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nurses`
 --
 
@@ -11554,6 +11536,33 @@ CREATE TABLE `nurses` (
   `nurse_photo` varchar(200) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `occupation`
+--
+
+CREATE TABLE `occupation` (
+  `id` int(11) NOT NULL,
+  `occupation_name` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `occupation`
+--
+
+INSERT INTO `occupation` (`id`, `occupation_name`) VALUES
+(342, 'Child'),
+(343, 'Civil Servant'),
+(344, 'House Wife'),
+(345, 'Student'),
+(348, 'Nurse'),
+(349, 'Doctor'),
+(350, 'Others'),
+(351, 'Police'),
+(352, 'Security'),
+(353, 'Staff');
 
 -- --------------------------------------------------------
 
@@ -11638,6 +11647,7 @@ CREATE TABLE `patient_appointments` (
   `appointment_time` varchar(20) NOT NULL,
   `treatment_for` varchar(100) DEFAULT NULL,
   `appointment_remark` varchar(100) DEFAULT NULL,
+  `paid` enum('No','Yes') NOT NULL DEFAULT 'No',
   `date_added` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -11645,17 +11655,8 @@ CREATE TABLE `patient_appointments` (
 -- Dumping data for table `patient_appointments`
 --
 
-INSERT INTO `patient_appointments` (`id`, `patient_id`, `doctor_id`, `clinic_id`, `appointment_status`, `appointment_date`, `appointment_time`, `treatment_for`, `appointment_remark`, `date_added`) VALUES
-(1, 3, NULL, 2, 'Pending', '2020-10-16', '13:46', NULL, NULL, '2020-10-16 01:42:32'),
-(2, 2, NULL, 1, 'Pending', '2021-02-10', '03:00', NULL, NULL, '2020-10-16 01:58:22'),
-(3, 9, NULL, 1, 'Pending', '2021-01-21', '16:19', NULL, NULL, '2021-01-21 16:18:39'),
-(4, 4, NULL, 1, 'Pending', '2021-01-29', '19:31', NULL, NULL, '2021-01-28 19:29:41'),
-(5, 7, 11, 2, 'Pending', '2021-02-10', '22:35', NULL, NULL, '2021-01-28 19:32:17'),
-(6, 9, 7, 1, 'Pending', '2021-01-30', '00:37', NULL, NULL, '2021-01-28 19:32:48'),
-(7, 7, NULL, 1, 'Pending', '2021-02-10', '15:19', NULL, NULL, '2021-02-09 13:17:58'),
-(8, 3, NULL, 2, 'Pending', '2021-02-10', '16:22', NULL, NULL, '2021-02-09 13:19:57'),
-(9, 12, NULL, 1, 'Pending', '2021-03-08', '13:55', NULL, NULL, '2021-03-07 11:53:58'),
-(10, 10, NULL, 2, 'Pending', '2021-03-11', '20:08', NULL, NULL, '2021-03-11 19:08:39');
+INSERT INTO `patient_appointments` (`id`, `patient_id`, `doctor_id`, `clinic_id`, `appointment_status`, `appointment_date`, `appointment_time`, `treatment_for`, `appointment_remark`, `paid`, `date_added`) VALUES
+(1, 30, NULL, 1, 'Pending', '2021-07-08', '14:10', NULL, NULL, 'Yes', '2021-07-08 13:34:38');
 
 -- --------------------------------------------------------
 
@@ -11669,6 +11670,7 @@ CREATE TABLE `patient_details` (
   `patient_name` varchar(100) NOT NULL,
   `patient_id_num` varchar(30) DEFAULT NULL,
   `patient_email` varchar(50) DEFAULT NULL,
+  `patient_marital_status` varchar(30) NOT NULL,
   `patient_gender` varchar(15) NOT NULL,
   `patient_dob` varchar(20) NOT NULL,
   `patient_phone` varchar(20) DEFAULT NULL,
@@ -11684,11 +11686,12 @@ CREATE TABLE `patient_details` (
   `patient_city` varchar(100) DEFAULT NULL,
   `patient_state` varchar(100) DEFAULT NULL,
   `patient_country` varchar(100) DEFAULT NULL,
-  `patient_reg_date` date NOT NULL DEFAULT current_timestamp(),
+  `patient_reg_date` date NOT NULL,
   `patient_expiry_date` date DEFAULT NULL,
   `enrollee_type` varchar(100) DEFAULT NULL,
   `company` varchar(100) DEFAULT NULL,
   `enrollee_no` varchar(20) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -11696,19 +11699,34 @@ CREATE TABLE `patient_details` (
 -- Dumping data for table `patient_details`
 --
 
-INSERT INTO `patient_details` (`id`, `patient_title`, `patient_name`, `patient_id_num`, `patient_email`, `patient_gender`, `patient_dob`, `patient_phone`, `patient_tribe`, `patient_occupation`, `patient_religion`, `patient_origin`, `patient_blood_group`, `patient_address`, `patient_status`, `patient_regtype`, `patient_photo`, `patient_city`, `patient_state`, `patient_country`, `patient_reg_date`, `patient_expiry_date`, `enrollee_type`, `company`, `enrollee_no`, `date_added`) VALUES
-(1, 'Mr', 'John Snow', 'RTWR888', 'adetoyeshina@gmail.com', 'Male', '1990-02-20', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-29_at_14_17_302.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-08-07 12:18:48'),
-(2, 'Mr', 'Stephen Hawkings', 'RTWR889', 'adetoyeshina@gmail.com', 'Male', '1990-02-20', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-29_at_14_17_303.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-08-07 12:19:23'),
-(3, 'Mr', 'Ryan Gosling', 'RTWR890', 'adetoyeshina@gmail.com', 'Male', '2020-08-08', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-30_at_12_39_13.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-08-07 17:41:58'),
-(4, 'Mr', 'Ethan Hawke', 'RTWR891', 'adetoyeshina@gmail.com', 'Male', '2008-08-08', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'HMO', 'Inpatient', 'Screenshot_2020-07-30_at_12_39_131.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-08-07 17:42:07'),
-(5, 'Mr', 'Segun Agbaje', 'RTWR892', 'adetoyeshina@gmail.com', 'Male', '2020-08-08', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-30_at_12_39_132.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-08-07 17:43:04'),
-(6, 'Mr', 'Jimi Jones', 'RTWR893', 'adetoyeshina@gmail.com', 'Male', '2020-08-04', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'HMO', 'Outpatient', 'Screenshot_2020-07-30_at_12_39_133.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-08-07 17:59:39'),
-(7, 'Mr', 'Jessica Alba', 'RTWR894', 'adetoyeshina@gmail.com', 'Female', '2000-08-25', '+2348038387930', '', 'Soldier', '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-08-02_at_15_49_10.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-08-07 18:03:29'),
-(8, 'Mr', 'Shina Adetoye', 'ERE890', 'adetoyeshina@gmail.com', 'Male', '2020-10-17', '+2348038387930', '', 'Lawyer', '', '', 'A', 'No 3 George Street, Apata', 'HMO', 'Inpatient', 'auth_bg.jpg', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', '2020-10-11 01:06:39'),
-(9, 'Miss', 'Janet Jackson', 'PRST-SSS-213', 'janet@gmail.com', 'Female', '2019-08-29', '090338838383', 'Hausa', 'Farmer', 'Christianity', 'Aba', 'B', 'No 3 George Street, Apata', 'Private', 'Walk-In', 'ilikilu.png', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, '2020-10-11 02:25:17'),
-(10, 'Mr', 'Rachel Dane', 'ERE8742', 'adetoyeshina@gmail.com', 'Female', '2021-01-23', '+2348038387930', 'Igbo', 'A', 'Christianity', 'OKie', 'B', 'No 3 George Street, Apata', 'HMO', 'Walk-In', '', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, '2021-01-20 13:11:27'),
-(11, 'Miss', 'shina adetoye', 'ERE8374', 'adetoyeshina@gmail.com', 'Male', '2021-01-17', '+2348038387930', 'Igbo', 'A', 'Islam', 'OKie', 'B', 'No 3 George Street, Apata', 'Private', 'Outpatient', 'Front.jpg', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, '2021-01-20 13:14:43'),
-(12, 'Miss', 'Elizabeth Keene', 'ERE83749', 'adetoyeshina@gmail.com', 'Female', '2021-01-17', '+2348038387930', 'Igbo', '', 'Islam', NULL, 'B', 'No 3 George Street, Apata ', 'Private', 'Outpatient', 'avat.jpg', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, '2021-01-28 18:58:39');
+INSERT INTO `patient_details` (`id`, `patient_title`, `patient_name`, `patient_id_num`, `patient_email`, `patient_marital_status`, `patient_gender`, `patient_dob`, `patient_phone`, `patient_tribe`, `patient_occupation`, `patient_religion`, `patient_origin`, `patient_blood_group`, `patient_address`, `patient_status`, `patient_regtype`, `patient_photo`, `patient_city`, `patient_state`, `patient_country`, `patient_reg_date`, `patient_expiry_date`, `enrollee_type`, `company`, `enrollee_no`, `status`, `date_added`) VALUES
+(1, '6', 'John Snow', 'RTWR888', 'adetoyeshina@gmail.com', '', 'Male', '1990-02-20', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-29_at_14_17_302.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-08-07 12:18:48'),
+(2, '6', 'Stephen Hawkings', 'RTWR889', 'adetoyeshina@gmail.com', '', 'Male', '1990-02-20', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-29_at_14_17_303.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-08-07 12:19:23'),
+(3, '6', 'Ryan Gosling', 'RTWR890', 'adetoyeshina@gmail.com', '', 'Male', '2020-08-08', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-30_at_12_39_13.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-08-07 17:41:58'),
+(4, '6', 'Ethan Hawke', 'RTWR891', 'adetoyeshina@gmail.com', '', 'Male', '2008-08-08', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'HMO', 'Inpatient', 'Screenshot_2020-07-30_at_12_39_131.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-08-07 17:42:07'),
+(5, '3', 'Segun Agbaje', 'RTWR892', 'adetoyeshina@gmail.com', '', 'Male', '2020-08-08', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-07-30_at_12_39_132.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-08-07 17:43:04'),
+(6, '9', 'Jimi Jones', 'RTWR893', 'adetoyeshina@gmail.com', '', 'Male', '2020-08-04', '+2348038387930', '', NULL, '', '', 'A', 'No 3 George Street, Apata', 'HMO', 'Outpatient', 'Screenshot_2020-07-30_at_12_39_133.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-08-07 17:59:39'),
+(7, '9', 'Jessica Alba', 'RTWR894', 'adetoyeshina@gmail.com', '', 'Female', '2000-08-25', '+2348038387930', '', 'Soldier', '', '', 'A', 'No 3 George Street, Apata', 'A', 'Inpatient', 'Screenshot_2020-08-02_at_15_49_10.png', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-08-07 18:03:29'),
+(8, '10', 'Shina Adetoye', 'ERE890', 'adetoyeshina@gmail.com', '', 'Male', '2020-10-17', '+2348038387930', '', 'Lawyer', '', '', 'A', 'No 3 George Street, Apata', 'HMO', 'Inpatient', 'auth_bg.jpg', NULL, NULL, NULL, '2021-01-28', NULL, '', '', '', 0, '2020-10-11 01:06:39'),
+(9, '17', 'Janet Jackson', 'PRST-SSS-213', 'janet@gmail.com', '', 'Female', '2019-08-29', '090338838383', 'Hausa', 'Farmer', 'Christianity', 'Aba', 'B', 'No 3 George Street, Apata', 'Private', 'Walk-In', 'ilikilu.png', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, 1, '2020-10-11 02:25:17'),
+(10, '12', 'Rachel Dane', 'ERE8742', 'adetoyeshina@gmail.com', '', 'Female', '2021-01-23', '+2348038387930', 'Igbo', 'A', 'Christianity', 'OKie', 'B', 'No 3 George Street, Apata', 'HMO', 'Walk-In', '', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, 1, '2021-01-20 13:11:27'),
+(11, '6', 'shina adetoye', 'ERE8374', 'adetoyeshina@gmail.com', '', 'Male', '2021-01-17', '+2348038387930', 'Igbo', 'A', 'Islam', 'OKie', 'B', 'No 3 George Street, Apata', 'Private', 'Outpatient', 'Front.jpg', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, 1, '2021-01-20 13:14:43'),
+(12, '6', 'Elizabeth Keene', 'ERE83749', 'adetoyeshina@gmail.com', '', 'Female', '2021-01-17', '+2348038387930', 'Igbo', '', 'Islam', NULL, 'B', 'No 3 George Street, Apata ', 'Private', 'Outpatient', 'avat.jpg', NULL, NULL, NULL, '2021-01-28', NULL, NULL, NULL, NULL, 1, '2021-01-28 18:58:39'),
+(13, '6', 'shina adetoye', 'ERE', 'adetoyeshina@gmail.com', '', 'Male', '2021-05-25', '+2348038387930', '', '', '', NULL, 'OK', 'No 3 George Street, Apata\r\nNo 3 George Street, Apata', NULL, 'Outpatient', '', NULL, NULL, NULL, '2021-05-25', NULL, NULL, NULL, NULL, 1, '2021-05-25 09:05:53'),
+(14, '6', 'Shina Adetoye', 'ERE', 'adetoyeshina@gmail.com', '', 'Male', '2021-05-03', '+2348038387930', '', '', '', NULL, 'OK', 'No 3 George Street, Apata\r\nNo 3 George Street, Apata', NULL, 'Walk-In', '', NULL, NULL, NULL, '2021-05-25', NULL, NULL, NULL, NULL, 1, '2021-05-25 09:19:22'),
+(15, '6', 'Saminaka', 'HMS/0001/393939', 'abuja@nigeria.com.au', '', 'Male', '1995-06-06', '08037641977', 'Igbo', 'Business', 'Christianity', NULL, 'AA', '19 Amuri Street, OKe Ado Ekiti Road, Gwarinpa, Abuja', 'Private', 'Walk-In', '', NULL, NULL, NULL, '2021-06-03', NULL, NULL, NULL, NULL, 0, '2021-06-03 13:06:58'),
+(16, '12', 'Saminaka', 'HMS/0001/393939', 'abuja@nigeria.com.au', '', 'Male', '1995-06-06', '08037641977', 'Igbo', 'Business', 'Christianity', NULL, 'AA', '19 Amuri Street, OKe Ado Ekiti Road, Gwarinpa, Abuja ', 'Private', 'Walk-In', '', NULL, NULL, NULL, '2021-06-03', NULL, NULL, NULL, NULL, 1, '2021-06-03 13:13:24'),
+(17, '2', 'shina adetoye', 'ERE', 'adetoyeshina@gmail.com', '', 'Male', '2021-06-16', '+2348038387930', 'Hause', '', '', NULL, '', 'No 3 George Street, Apata\r\nNo 3 George Street, Apata', NULL, 'Outpatient', '', NULL, NULL, NULL, '2021-06-07', NULL, NULL, NULL, NULL, 0, '2021-06-07 09:26:54'),
+(18, '8', 'shina adetoye', 'ERE', 'adetoyeshina@gmail.com', '', 'Female', '2019-11-12', '+2348038387930', 'Hause', '', 'Christianity', NULL, 'OK', 'No 3 George Street, Apata\r\nNo 3 George Street, Apata', NULL, 'Walk-In', '5.png', NULL, NULL, NULL, '2021-06-07', NULL, NULL, NULL, NULL, 1, '2021-06-07 21:10:21'),
+(19, '2', 'Babara', 'HMS/11', 'babara@gmail.com', '', 'Male', '2002-02-08', '08038387930', '12', '351', '13', NULL, NULL, 'No 3 George Street, Apata\r\nNo 3 George Street, Apata ', NULL, 'Walk-In', '', NULL, NULL, NULL, '2021-06-08', NULL, NULL, NULL, NULL, 0, '2021-06-08 01:11:10'),
+(20, '2', 'Babara', 'HMS/11', 'babara@gmail.com', '', 'Male', '2002-02-08', '08038387930', '12', '351', '13', NULL, NULL, 'No 3 George Street, Apata\r\nNo 3 George Street, Apata ', NULL, 'Walk-In', 'how2.png', NULL, NULL, NULL, '2021-06-08', NULL, NULL, NULL, NULL, 0, '2021-06-08 01:39:58'),
+(21, '2', 'Babara Babara', 'HMS/11', 'babara@gmail.com', '', 'Male', '2002-02-08', '08038387930', '12', '351', '13', NULL, NULL, 'No 3 George Street, Apata\r\nNo 3 George Street, Apata   ', 'Private', 'Walk-In', 'how3.png', NULL, NULL, NULL, '2021-06-08', '0000-00-00', NULL, NULL, NULL, 0, '2021-06-08 01:40:28'),
+(22, '6', 'Shina Adetoye Babanla', 'HMS/11', 'adetoyeshina@gmail.com', '', 'Female', '2015-01-13', '08038387930', '2', '343', '14', NULL, NULL, 'No 3 George Street, Apata\r\nNo 3 George Street, Apata ', 'Private', 'Outpatient', '', NULL, NULL, NULL, '2021-06-08', '0000-00-00', NULL, NULL, NULL, 0, '2021-06-08 01:49:32'),
+(23, '6', 'Adetoye', 'HMS/11', 'adetoyeshina@gmail.com', '', 'Female', '2015-01-13', '08038387930', '2', '343', '14', NULL, NULL, 'No 3 George Street, Apata\r\nNo 3 George Street, Apata  ', 'Private', 'Outpatient', '', NULL, NULL, NULL, '2021-06-08', NULL, NULL, NULL, NULL, 0, '2021-06-08 01:52:03'),
+(24, '6', 'BabaJide', 'HMS/11', 'adetoyeshina@gmail.com', 'Single', 'Female', '2015-01-13', '08038387930', '2', '343', '14', NULL, NULL, 'No 3 George Street, Apata\r\nNo 3 George Street, Apata                  ', 'Private', 'Outpatient', 'user-dp.png', NULL, NULL, NULL, '2021-06-01', '2022-07-08', NULL, NULL, NULL, 1, '2021-06-08 01:52:09'),
+(25, '1', 'collins Jack robin', '1234566', 'myemail.me@gmail.com', 'Single', 'Male', '1978-11-19', '08037789292', '174', '349', '8', NULL, NULL, 'abuja', 'Private', 'Walk-In', '', NULL, NULL, NULL, '2021-06-23', '0000-00-00', NULL, NULL, NULL, 1, '2021-06-23 11:40:06'),
+(29, '74', 'Danladi Dantube', 'HMS/124/345', 'danladi@gmail.com', 'Married', 'Male', '1969-02-07', '08038387930', '7', '342', '14', NULL, NULL, 'Km 14, Lagos Ibadan Expressw', 'Private', 'Walk-In', '', NULL, NULL, NULL, '2021-07-07', '2022-07-07', NULL, NULL, NULL, 0, '2021-07-07 18:13:40'),
+(30, '71', 'Marcus Senna', 'HMS/124/3456', 'marcus@gmail.com', 'Single', 'Female', '1949-09-19', '890294882', '3', '343', '13', NULL, NULL, 'No 9 Taliban Area', 'Private', 'Walk-In', '', NULL, NULL, NULL, '2021-07-07', '2022-07-07', NULL, NULL, NULL, 1, '2021-07-07 18:50:31');
 
 -- --------------------------------------------------------
 
@@ -11869,33 +11887,61 @@ CREATE TABLE `patient_lab_tests` (
 --
 
 INSERT INTO `patient_lab_tests` (`id`, `appointment_id`, `lab_test_unique_id`, `patient_id`, `doctor_id`, `vital_id`, `lab_test_id`, `status`, `date_added`) VALUES
-(76, 6, 2147, 9, 7, 10, '83', 'Pending', '2021-03-07 15:28:59'),
-(147, 9, 9183, 12, 11, 12, '362', 'Pending', '2021-04-04 13:02:13'),
-(148, 9, 9183, 12, 11, 12, '361', 'Pending', '2021-04-04 13:02:13'),
-(149, 9, 9183, 12, 11, 12, '360', 'Pending', '2021-04-04 13:02:13'),
-(150, 9, 8571, 12, 11, 12, '125', 'Pending', '2021-04-04 13:41:05'),
-(151, 5, 7065, 7, 11, 11, '125', 'Pending', '2021-04-04 13:59:39'),
-(152, 9, 3896, 12, 11, 12, '125', 'Pending', '2021-04-04 14:02:26'),
-(153, 9, 3896, 12, 11, 12, '125', 'Pending', '2021-04-04 14:02:26'),
-(154, 9, 5063, 12, 11, 12, '125', 'Pending', '2021-04-04 14:03:01'),
-(155, 9, 6315, 12, 11, 12, '125', 'Pending', '2021-04-04 14:03:57'),
-(156, 9, 8359, 12, 11, 12, '125', 'Pending', '2021-04-04 14:13:36'),
-(157, 5, 4913, 7, 11, 11, '125', 'Pending', '2021-04-04 14:31:28'),
-(158, 5, 614, 7, 11, 11, '125', 'Pending', '2021-04-04 14:33:11'),
-(159, 5, 614, 7, 11, 11, '367', 'Pending', '2021-04-04 14:33:11'),
-(160, 5, 8753, 7, 11, 11, '125', 'Pending', '2021-04-04 14:46:01'),
-(161, 5, 8753, 7, 11, 11, '366', 'Pending', '2021-04-04 14:46:01'),
-(162, 5, 3281, 7, 11, 11, '364', 'Pending', '2021-04-04 22:28:41'),
-(163, 5, 3281, 7, 11, 11, '363', 'Pending', '2021-04-04 22:28:41'),
-(164, 5, 3281, 7, 11, 11, '362', 'Pending', '2021-04-04 22:28:41'),
-(165, 5, 3281, 7, 11, 11, '361', 'Pending', '2021-04-04 22:28:41'),
-(166, 5, 8214, 7, 11, 11, '364', 'Pending', '2021-04-04 23:05:39'),
-(167, 5, 8214, 7, 11, 11, '363', 'Pending', '2021-04-04 23:05:39'),
-(168, 5, 8214, 7, 11, 11, '362', 'Pending', '2021-04-04 23:05:39'),
-(169, 5, 8214, 7, 11, 11, '361', 'Pending', '2021-04-04 23:05:39'),
-(170, 5, 8214, 7, 11, 11, '359', 'Pending', '2021-04-04 23:05:39'),
-(171, 5, 8214, 7, 11, 11, '306', 'Pending', '2021-04-04 23:05:39'),
-(172, 5, 8214, 7, 11, 11, '343', 'Pending', '2021-04-04 23:05:39');
+(1, 1, 3468, 30, 16, 19, '125', 'Pending', '2021-07-11 20:45:37'),
+(2, 1, 3468, 30, 16, 19, '371', 'Pending', '2021-07-11 20:45:37'),
+(3, 1, 3468, 30, 16, 19, '370', 'Pending', '2021-07-11 20:45:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patient_ledger`
+--
+
+CREATE TABLE `patient_ledger` (
+  `id` int(11) NOT NULL,
+  `Date` datetime DEFAULT current_timestamp(),
+  `Description` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `InvoiceNo` int(11) DEFAULT NULL,
+  `ReceiptNo` int(11) DEFAULT NULL,
+  `Debit` decimal(19,4) DEFAULT NULL,
+  `Credit` decimal(19,4) DEFAULT NULL,
+  `patient_id` int(11) DEFAULT NULL,
+  `callertag` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `patient_ledger`
+--
+
+INSERT INTO `patient_ledger` (`id`, `Date`, `Description`, `InvoiceNo`, `ReceiptNo`, `Debit`, `Credit`, `patient_id`, `callertag`) VALUES
+(495032, '2019-08-24 00:00:00', 'Ambulance', 225140, 0, '3500.0000', '0.0000', 12, 'Pay566049'),
+(495033, '2019-08-24 00:00:00', 'Laboratory', 225141, 0, '1500.0000', '0.0000', 12, 'Pay566050'),
+(495034, '2019-08-24 00:00:00', 'Pharmacy', 225142, 0, '1200.0000', '0.0000', 12, 'Pay566051'),
+(495035, '2019-08-24 00:00:00', 'Cash Payment (225140, 225141, 225142, )', 291514, 291514, '0.0000', '6200.0000', 12, NULL),
+(495036, '2019-09-04 00:00:00', 'Adult Consulatation', 225144, 0, '2000.0000', '0.0000', 12, 'Pay566053'),
+(495037, '2019-09-04 00:00:00', 'Cash Payment (225144, )', 291516, 291516, '0.0000', '2000.0000', 12, NULL),
+(495038, '2019-09-04 00:00:00', 'MALARIA PARASITE', 225145, 0, '0.0000', '0.0000', 12, 'Lab52502'),
+(495039, '2019-09-04 00:00:00', 'WIDAL', 225146, 0, '0.0000', '0.0000', 12, 'Lab52502'),
+(495040, '2019-09-04 00:00:00', 'HVS M/C/S', 225147, 0, '0.0000', '0.0000', 12, 'Lab52502'),
+(495041, '2019-09-04 00:00:00', 'URINE M/C/S', 225148, 0, '0.0000', '0.0000', 12, 'Lab52502'),
+(495042, '2019-09-04 00:00:00', 'wound dressing and suturing', 225149, 0, '5000.0000', '0.0000', 12, 'Pay566058'),
+(495043, '2019-09-04 00:00:00', 'Cash Payment (225149, )', 291517, 291517, '0.0000', '5000.0000', 12, NULL),
+(495044, '2019-09-04 00:00:00', 'ARTEMETER /LUMEFENTRINE 80/480 TABS (COARTEM), Qty = 1', 225150, 0, '900.0000', '0.0000', 12, 'Pres63754'),
+(495045, '2019-09-04 00:00:00', 'PARACETAMOL TABLET 500mg, Qty = 18', 225151, 0, '90.0000', '0.0000', 12, 'Pres63754'),
+(495046, '2019-09-04 00:00:00', 'CIPROFLOXACIN TABLET 500mg (14) TABS, Qty = 1', 225152, 0, '500.0000', '0.0000', 12, 'Pres63754'),
+(495047, '2019-09-04 00:00:00', 'Cash Payment (225150, 225151, 225152, )', 291518, 291518, '0.0000', '1490.0000', 12, NULL),
+(495048, '2019-09-04 00:00:00', 'Registration', 225153, 0, '7500.0000', '0.0000', 12, NULL),
+(495049, '2019-09-04 00:00:00', 'Cash Payment (225153, )', 291519, 291519, '0.0000', '7500.0000', 12, NULL),
+(495050, '2019-09-04 00:00:00', 'Consultation', 225154, 0, '5000.0000', '0.0000', 12, 'Cons0'),
+(495051, '2019-09-04 00:00:00', 'Cash Payment (225145, 225146, 225147, 225148, 225154, )', 291520, 291520, '0.0000', '5000.0000', 12, NULL),
+(495052, '2019-10-02 00:00:00', 'Registration', 100001, 0, '7500.0000', '0.0000', 12, NULL),
+(495053, '2019-10-02 00:00:00', 'Cash Payment (100001, )', 100001, 100001, '0.0000', '7500.0000', 12, NULL),
+(495054, '2021-04-26 20:58:03', 'OK let us go there', NULL, NULL, '700000.0000', '0.0000', 12, NULL),
+(495055, '2021-04-26 21:16:14', 'Wait lets go', NULL, NULL, '400000.0000', NULL, 12, NULL),
+(495056, '2021-04-26 21:16:36', 'shina adetoye', NULL, NULL, '9000.0000', NULL, 12, NULL),
+(495057, '2021-04-26 21:16:36', 'Specialist ', NULL, NULL, '1000.0000', NULL, 12, NULL),
+(495058, '2021-04-26 21:16:36', 'Follow up', NULL, NULL, '1000.0000', NULL, 12, NULL),
+(495059, '2021-04-26 21:16:36', 'Cash Payment(...)', NULL, NULL, NULL, '411000.0000', 12, NULL);
 
 -- --------------------------------------------------------
 
@@ -11906,7 +11952,6 @@ INSERT INTO `patient_lab_tests` (`id`, `appointment_id`, `lab_test_unique_id`, `
 CREATE TABLE `patient_nok` (
   `id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
-  `nok_title` varchar(10) NOT NULL,
   `nok_name` varchar(50) NOT NULL,
   `nok_relationship` varchar(50) NOT NULL,
   `nok_phone` varchar(20) NOT NULL,
@@ -11918,14 +11963,29 @@ CREATE TABLE `patient_nok` (
 -- Dumping data for table `patient_nok`
 --
 
-INSERT INTO `patient_nok` (`id`, `patient_id`, `nok_title`, `nok_name`, `nok_relationship`, `nok_phone`, `nok_address`, `date_added`) VALUES
-(1, 5, 'Mr', 'Baba Rahman', 'Friend', '+2348038387930', 'Km 14, Lagos Ibadan Expressw', '2020-08-07 17:43:04'),
-(2, 6, 'Mr', 'Baba Rahman', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2020-08-07 17:59:39'),
-(3, 7, 'Mr', 'Baba Rahman', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2020-08-07 18:03:29'),
-(4, 8, 'Mr', 'Shina Adetoye', 'Friend', '08038387930', 'Km 14, Lagos Ibadan Expressw', '2020-10-11 01:06:39'),
-(5, 9, 'Mr', 'shina adetoye', 'are', '+2348038387930', 'No 3 George Street, Apata', '2020-10-11 02:25:17'),
-(6, 10, 'Mr', 'shina adetoye', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2021-01-20 13:11:27'),
-(7, 11, 'Mr', 'shina adetoye', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2021-01-20 13:14:43');
+INSERT INTO `patient_nok` (`id`, `patient_id`, `nok_name`, `nok_relationship`, `nok_phone`, `nok_address`, `date_added`) VALUES
+(1, 5, 'Baba Rahman', 'Friend', '+2348038387930', 'Km 14, Lagos Ibadan Expressw', '2020-08-07 17:43:04'),
+(2, 6, 'Baba Rahman', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2020-08-07 17:59:39'),
+(3, 7, 'Baba Rahman', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2020-08-07 18:03:29'),
+(4, 8, 'Shina Adetoye', 'Friend', '08038387930', 'Km 14, Lagos Ibadan Expressw', '2020-10-11 01:06:39'),
+(5, 9, 'shina adetoye', 'are', '+2348038387930', 'No 3 George Street, Apata', '2020-10-11 02:25:17'),
+(6, 10, 'shina adetoye', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2021-01-20 13:11:27'),
+(7, 11, 'shina adetoye', 'Friend', '+2348038387930', 'No 3 George Street, Apata', '2021-01-20 13:14:43'),
+(8, 13, 'shina adetoye', 'Friend', '8387930', 'No 3 George Street, Apata', '2021-05-25 09:05:53'),
+(9, 14, 'shina adetoye', 'Friend', '8387930', 'No 3 George Street, Apata', '2021-05-25 09:19:22'),
+(10, 15, 'Amaka Okekaruma', 'Wife', '09028282828282', '19 Amuri Street, OKe Ado Ekiti Road, Gwarinpa, Abuja', '2021-06-03 13:06:58'),
+(11, 16, 'Amaka Okekaruma', 'Wife', '09028282828282', '19 Amuri Street, OKe Ado Ekiti Road, Gwarinpa, Abuja', '2021-06-03 13:13:24'),
+(12, 17, 'shina adetoye', 'Friend', '8387930', 'No 3 George Street, Apata', '2021-06-07 09:26:54'),
+(13, 18, 'shina adetoye', 'Friend', '8387930', 'No 3 George Street, Apata', '2021-06-07 21:10:21'),
+(14, 19, 'Shina Adetoye', '4', '08038387930', 'No 3 George Street, Apata', '2021-06-08 01:11:10'),
+(15, 20, 'Shina Adetoye', '4', '08038387930', 'No 3 George Street, Apata', '2021-06-08 01:39:58'),
+(16, 21, 'Shina Adetoye', '4', '08038387930', 'No 3 George Street, Apata', '2021-06-08 01:40:28'),
+(17, 22, 'shina adetoye', '3', '08038387930', 'No 3 George Street, Apata', '2021-06-08 01:49:32'),
+(18, 23, 'shina adetoye', '3', '08038387930', 'No 3 George Street, Apata', '2021-06-08 01:52:03'),
+(19, 24, 'shina adetoye', '3', '08038387930', 'No 3 George Street, Apata', '2021-06-08 01:52:09'),
+(20, 25, 'Mr Wallance Ekiro', '1', '080', 'abuja', '2021-06-23 11:40:06'),
+(22, 29, 'Bro Paul', '4', '80930294837', 'Km 14, Lagos Ibadan Expressw', '2021-07-07 18:13:40'),
+(23, 30, 'Mr Roach', '3', '89203828282', 'no 15', '2021-07-07 18:50:31');
 
 -- --------------------------------------------------------
 
@@ -11971,46 +12031,10 @@ CREATE TABLE `patient_prescriptions2` (
 --
 
 INSERT INTO `patient_prescriptions2` (`id`, `appointment_id`, `patient_id`, `doctor_id`, `vital_id`, `prescription_unique_id`, `prescription_id`, `qty_given`, `status`, `prescription`, `date_added`) VALUES
-(10, 6, 9, 7, 10, 4859, 4532, 1, 'Prescription', 'OK now', '2021-02-15 19:27:27'),
-(11, 6, 9, 7, 10, 4859, 4533, 1, 'Prescription', 'OK now', '2021-02-15 19:27:27'),
-(12, 6, 9, 7, 10, 4859, 4534, 30, 'Prescription', 'OK now', '2021-02-15 19:27:27'),
-(13, 6, 9, 7, 10, 7984, 4100, 5, 'Prescription', 'yq7q7298', '2021-03-15 08:57:15'),
-(14, 6, 9, 7, 10, 7984, 4014, 2, 'Prescription', '8793kajuyw', '2021-03-15 08:57:15'),
-(15, 6, 9, 7, 10, 3572, 4308, 1, 'Treated', '6773626/lkkena', '2021-03-16 01:49:35'),
-(16, 6, 9, 7, 10, 9352, 3872, 5, 'Treated', '36672992', '2021-03-15 08:49:22'),
-(17, 6, 9, 7, 10, 195, 4014, 0, 'Pending', '5656wawQ', '2021-03-01 11:26:38'),
-(18, 6, 9, 7, 10, 195, 4100, 0, 'Pending', '1QWREWTREYT', '2021-03-01 11:26:38'),
-(19, 5, 7, 11, 11, 743, 4014, 90, 'Prescription', '2/3 plus 5', '2021-03-16 01:46:26'),
-(20, 6, 9, 7, 10, 7162, 4540, 30, 'Treated', '67/36463YWYQ', '2021-03-16 01:41:23'),
-(21, 6, 9, 7, 10, 3640, 3872, 20, 'Treated', 'wait here', '2021-03-16 01:40:26'),
-(22, 9, 12, 11, 12, 6514, 4308, 2, 'Treated', 'wyeyreytqada', '2021-03-09 08:40:46'),
-(23, 9, 12, 11, 12, 714, 4541, 0, 'Pending', '2/3 + 4/7', '2021-03-16 01:49:18'),
-(24, 9, 12, 11, 12, 714, 4541, 0, 'Pending', '2/3 + 4/7', '2021-03-16 01:49:23'),
-(25, 9, 12, 11, 12, 714, 3870, 4, 'Treated', '700mg', '2021-03-11 16:57:10'),
-(83, 9, 12, 11, 12, 8921, 4308, 1, 'Treated', '2 tds x 2/7', '2021-03-16 01:49:10'),
-(84, 9, 12, 11, 12, 8921, 3930, 5, 'Treated', 'staart', '2021-03-16 01:49:06'),
-(91, 10, 10, 16, 13, 6495, 4541, 10, 'Prescription', 'www', '2021-03-16 01:05:28'),
-(92, 10, 10, 16, 13, 1826, 4106, 1, 'Treated', '2384774HKALLA', '2021-03-15 08:42:12'),
-(93, 10, 10, 16, 13, 1826, 3946, 1, 'Treated', '47588292', '2021-03-15 08:42:12'),
-(94, 10, 10, 16, 13, 1826, 4540, 1, 'Treated', '3567aha', '2021-03-15 08:42:12'),
-(95, 9, 12, 11, 12, 967, 4345, 3, 'Prescription', 'OK sir', '2021-03-16 01:48:37'),
-(96, 9, 12, 11, 12, 967, 4030, 3, 'Prescription', 'uye8839803', '2021-03-16 01:48:27'),
-(97, 10, 10, 16, 13, 9214, 4178, 6, 'Prescription', '12+9+0', '2021-03-16 03:11:21'),
-(98, 10, 10, 16, 13, 9214, 4267, 4, 'Prescription', '6089', '2021-03-16 03:11:21'),
-(99, 10, 10, 16, 13, 8437, 4541, 5, 'Prescription', 'wait', '2021-03-16 03:13:59'),
-(100, 10, 10, 16, 13, 3084, 4541, 2, 'Prescription', 'Wait here', '2021-03-16 15:54:25'),
-(102, 10, 10, 16, 13, 4037, 4178, 20, 'Treated', '34', '2021-03-16 16:01:04'),
-(105, 9, 12, 11, 12, 2740, 4541, 2000, 'Treated', '234tttwww', '2021-03-18 00:13:37'),
-(106, 9, 12, 11, 12, 2740, 4178, 50, 'Treated', '34fte3', '2021-03-18 00:13:37'),
-(107, 9, 12, 11, 12, 2348, 3908, 50, 'Treated', 'wasr345', '2021-03-18 00:16:03'),
-(108, 9, 12, 11, 12, 2348, 3870, 1000, 'Treated', '3646usw', '2021-03-18 00:16:03'),
-(109, 10, 10, 16, 13, 7450, 4496, 3, 'Treated', '12322', '2021-03-20 14:55:06'),
-(110, 10, 10, 16, 13, 7450, 3872, 5, 'Treated', '1221343', '2021-03-20 14:55:06'),
-(111, 10, 10, 16, 13, 7450, 4178, 5, 'Treated', '1232', '2021-03-20 14:55:06'),
-(112, 9, 12, 11, 12, 5629, 4157, 0, 'Pending', '20', '2021-04-03 14:58:05'),
-(113, 9, 12, 11, 12, 5629, 4169, 0, 'Pending', '10', '2021-04-03 14:58:05'),
-(114, 9, 12, 11, 12, 5629, 4007, 0, 'Pending', '10', '2021-04-03 14:58:05'),
-(115, 9, 12, 11, 12, 7832, 3870, 400, 'Prescription', '20', '2021-04-04 14:17:06');
+(1, 1, 30, 16, 19, 9163, 4541, 0, 'Pending', '50', '2021-07-08 13:36:09'),
+(2, 1, 30, 16, 19, 9163, 3870, 0, 'Pending', '40', '2021-07-08 13:36:09'),
+(3, 1, 30, 16, 19, 5379, 3872, 3, 'Prescription', '3', '2021-07-11 20:48:15'),
+(4, 1, 30, 16, 19, 5379, 3870, 50, 'Prescription', '50', '2021-07-11 20:48:15');
 
 -- --------------------------------------------------------
 
@@ -12042,7 +12066,17 @@ INSERT INTO `patient_procedure_tests` (`id`, `appointment_id`, `patient_id`, `vi
 (5, 10, 10, 13, 16, 1, 1592, 2478, 'Wait for your result', 'Pending', '2021-03-13 09:34:15'),
 (6, 10, 10, 13, 16, 1, 1592, 2476, 'Wait for your result', 'Pending', '2021-03-13 09:34:15'),
 (7, 10, 10, 13, 16, 1, 1592, 2474, 'Wait for your result', 'Pending', '2021-03-13 09:34:15'),
-(8, 10, 10, 13, 16, 1, 1592, 2473, 'Wait for your result', 'Pending', '2021-03-13 09:34:15');
+(8, 10, 10, 13, 16, 1, 1592, 2473, 'Wait for your result', 'Pending', '2021-03-13 09:34:15'),
+(9, 5, 7, 11, 11, 1, 9571, 2461, '', 'Pending', '2021-04-08 06:42:03'),
+(10, 5, 7, 11, 11, 1, 9571, 2479, '', 'Pending', '2021-04-08 06:42:03'),
+(11, 5, 7, 11, 11, 1, 9571, 2478, '', 'Pending', '2021-04-08 06:42:03'),
+(12, 5, 7, 11, 11, 1, 2980, 2478, '', 'Pending', '2021-04-08 07:19:53'),
+(13, 5, 7, 11, 11, 1, 2980, 2479, '', 'Pending', '2021-04-08 07:19:53'),
+(14, 5, 7, 11, 11, 1, 2980, 2472, '', 'Pending', '2021-04-08 07:19:53'),
+(15, 5, 7, 11, 11, 1, 2980, 2473, '', 'Pending', '2021-04-08 07:19:53'),
+(16, 22, 25, 17, 17, 1, 6583, 2478, '', 'Pending', '2021-06-23 11:21:27'),
+(17, 22, 25, 17, 17, 1, 6583, 2422, '', 'Pending', '2021-06-23 11:21:27'),
+(18, 22, 25, 17, 17, 1, 6583, 2471, '', 'Pending', '2021-06-23 11:21:27');
 
 -- --------------------------------------------------------
 
@@ -12060,6 +12094,7 @@ CREATE TABLE `patient_radiology_tests` (
   `radiology_test_id` int(10) NOT NULL,
   `special_instuction` text DEFAULT NULL,
   `result` text DEFAULT NULL,
+  `sender_id` int(11) DEFAULT NULL,
   `status` enum('Pending','Treated') NOT NULL DEFAULT 'Pending',
   `date_added` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -12068,17 +12103,11 @@ CREATE TABLE `patient_radiology_tests` (
 -- Dumping data for table `patient_radiology_tests`
 --
 
-INSERT INTO `patient_radiology_tests` (`id`, `appointment_id`, `patient_id`, `vital_id`, `doctor_id`, `radiology_test_unique_id`, `radiology_test_id`, `special_instuction`, `result`, `status`, `date_added`) VALUES
-(20, 5, 7, 11, 11, 2856, 2387, NULL, NULL, 'Pending', '2021-03-11 19:47:17'),
-(21, 5, 7, 11, 11, 2856, 2384, NULL, NULL, 'Pending', '2021-03-11 19:47:17'),
-(38, 6, 9, 10, 7, 2356, 2387, 'here we go', 'here  we go', 'Treated', '2021-03-12 08:02:56'),
-(39, 6, 9, 10, 7, 2356, 2384, 'here we go', 'here we o now', 'Treated', '2021-03-12 08:02:56'),
-(40, 6, 9, 10, 7, 2356, 2383, 'here we go', 'Wait Brother Sir', 'Treated', '2021-03-12 08:02:56'),
-(41, 10, 10, 13, 16, 5268, 2387, 'Welcome', 'Wait Here', 'Treated', '2021-03-13 09:29:02'),
-(42, 10, 10, 13, 16, 5268, 2380, 'Welcome', 'Wait Here4353', 'Treated', '2021-03-13 09:29:02'),
-(43, 10, 10, 13, 16, 5268, 2374, 'Welcome', 'Wait Here67866', 'Treated', '2021-03-13 09:29:02'),
-(44, 0, 0, 13, 0, 5268, 2374, 'Welcome', NULL, 'Pending', '2021-03-13 16:30:46'),
-(45, 0, 0, 13, 0, 5268, 2380, 'Welcome', NULL, 'Pending', '2021-03-13 16:30:46');
+INSERT INTO `patient_radiology_tests` (`id`, `appointment_id`, `patient_id`, `vital_id`, `doctor_id`, `radiology_test_unique_id`, `radiology_test_id`, `special_instuction`, `result`, `sender_id`, `status`, `date_added`) VALUES
+(1, 1, 30, 19, 16, 1823, 2387, '', NULL, NULL, 'Pending', '2021-07-08 13:49:03'),
+(2, 1, 30, 19, 16, 1823, 2384, '', NULL, NULL, 'Pending', '2021-07-08 13:49:03'),
+(3, 1, 30, 19, 16, 1823, 2375, '', NULL, NULL, 'Pending', '2021-07-08 13:49:03'),
+(4, 1, 30, 19, 16, 1823, 2376, '', NULL, NULL, 'Pending', '2021-07-08 13:49:03');
 
 -- --------------------------------------------------------
 
@@ -12113,9 +12142,9 @@ CREATE TABLE `patient_vitals` (
   `height` int(10) NOT NULL,
   `BMI` int(10) DEFAULT NULL,
   `bmi_remark` varchar(50) DEFAULT NULL,
-  `HC` int(10) NOT NULL,
-  `MUAC` int(10) NOT NULL,
-  `nutritional_status` varchar(50) NOT NULL,
+  `HC` int(10) DEFAULT NULL,
+  `MUAC` int(10) DEFAULT NULL,
+  `nutritional_status` varchar(50) DEFAULT NULL,
   `BP` varchar(10) NOT NULL,
   `temp` int(10) NOT NULL,
   `ANC` int(10) NOT NULL,
@@ -12124,7 +12153,7 @@ CREATE TABLE `patient_vitals` (
   `SPO2` int(10) NOT NULL,
   `RE` int(10) NOT NULL,
   `LE` int(10) NOT NULL,
-  `LMP` varchar(20) NOT NULL,
+  `LMP` varchar(20) DEFAULT NULL,
   `EGA` varchar(50) DEFAULT NULL,
   `EDD` varchar(50) DEFAULT NULL,
   `vital_status` enum('Pending','Treated') NOT NULL DEFAULT 'Pending',
@@ -12139,7 +12168,13 @@ INSERT INTO `patient_vitals` (`id`, `appointment_id`, `patient_id`, `doctor_id`,
 (10, 6, 9, 7, 1, 75, 175, NULL, NULL, 46, 75, '60', '11/11', 56, 12, 45, 34, 60, 12, 12, '2021-02-11', '0 Months, 1 Weeks, 1 Days', 'Thursday 18th of November 2021 12:00:00 AM', 'Pending', '2021-02-02 17:36:11'),
 (11, 5, 7, 11, 1, 75, 175, NULL, NULL, 46, 75, '60', '11/11', 56, 12, 45, 34, 60, 12, 12, '2021-02-11', '0 Months, 1 Weeks, 1 Days', 'Thursday 18th of November 2021 12:00:00 AM', 'Pending', '2021-02-02 17:36:11'),
 (12, 9, 12, 11, 1, 75, 2, 24, 'Normal', 46, 75, '60', '111/1', 56, 12, 45, 34, 60, 12, 12, '2021-03-01', '0 Months, 1 Weeks, 7 Days', '06 Dec 2021', 'Pending', '2021-03-08 09:13:56'),
-(13, 10, 10, 16, 2, 68, 2, 27, 'Overweight', 46, 75, '60', '111/1', 56, 12, 45, 34, 60, 12, 12, '2021-02-08', '1 Months, 0 Weeks, 1 Days', '15 Nov 2021', 'Pending', '2021-03-11 19:10:09');
+(13, 10, 10, 16, 2, 68, 2, 27, 'Overweight', 46, 75, '60', '111/1', 56, 12, 45, 34, 60, 12, 12, '2021-02-08', '1 Months, 0 Weeks, 1 Days', '15 Nov 2021', 'Pending', '2021-03-11 19:10:09'),
+(14, 11, 10, 11, 2, 75, 2, 24, 'Normal', 46, 75, '60', '122/22', 36, 12, 23, 23, 95, 34, 34, '2021-03-11', '0 Months, 4 Weeks, 28 Days', '16 Dec 2021', 'Pending', '2021-04-09 18:12:35'),
+(15, 19, 12, 11, 1, 80, 2, 22, 'Normal', 46, 75, '60', '233/233', 36, 69, 45, 23, 60, 12, 12, '2021-03-12', '3 Months, 0 Weeks, 3 Days', '17 Dec 2021', 'Pending', '2021-06-14 12:32:11'),
+(16, 18, 21, 16, 1, 70, 2, 18, 'Underweight', NULL, NULL, NULL, '233/233', 56, 69, 45, 34, 60, 34, 12, NULL, '5 Months, 4 Weeks, 26 Days', '21 Mar 2022', 'Pending', '2021-06-14 12:40:12'),
+(17, 22, 25, 17, 2, 60, 2, 17, 'Underweight', NULL, NULL, NULL, '190/120', 36, 78, 50, 10, 6, 0, 0, NULL, '6 Months, 1 Weeks, 5 Days', '30 Mar 2022', 'Pending', '2021-06-23 12:03:09'),
+(18, 24, 7, 16, 1, 50, 120, 0, 'Underweight', NULL, NULL, NULL, '233/233', 56, 12, 45, 34, 60, 12, 12, '2021-03-03', '4 Months, 1 Weeks, 4 Days', '08 Dec 2021', 'Pending', '2021-07-06 13:41:03'),
+(19, 1, 30, 16, 1, 60, 2, 23, 'Normal', NULL, NULL, NULL, '233/233', 36, 0, 45, 34, 60, 0, 0, '2020-01-09', '6 Months, 0 Weeks, 0 Days', '15 Oct 2020', 'Pending', '2021-07-08 13:52:10');
 
 -- --------------------------------------------------------
 
@@ -12264,7 +12299,13 @@ CREATE TABLE `radiology_request` (
 
 INSERT INTO `radiology_request` (`id`, `patient_id`, `appointment_id`, `vital_id`, `doctor_id`, `sender_id`, `patient_radiology_test_id`, `radiology_test_unique_id`, `result`, `date_created`) VALUES
 (15, 9, 6, 10, 7, 1, 40, 2356, NULL, '2021-03-12 08:02:56'),
-(16, 10, 10, 13, 16, 1, 43, 5268, NULL, '2021-03-13 09:29:02');
+(16, 10, 10, 13, 16, 1, 43, 5268, NULL, '2021-03-13 09:29:02'),
+(17, 7, 5, 11, 11, 1, 49, 4627, NULL, '2021-04-08 06:02:36'),
+(18, 7, 5, 11, 11, 1, 53, 7350, NULL, '2021-04-08 07:26:42'),
+(19, 10, 10, 13, 16, 1, 54, 5496, NULL, '2021-04-09 18:53:46'),
+(20, 25, 22, 17, 17, 1, 55, 9613, NULL, '2021-06-23 11:12:50'),
+(21, 7, 5, 11, 11, 1, 60, 3714, NULL, '2021-07-06 16:08:48'),
+(22, 30, 1, 19, 16, 1, 4, 1823, NULL, '2021-07-08 13:49:03');
 
 -- --------------------------------------------------------
 
@@ -12279,12 +12320,116 @@ CREATE TABLE `radiology_services` (
   `date_added` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `radiology_services`
+-- Table structure for table `receipts`
 --
 
-INSERT INTO `radiology_services` (`id`, `type`, `cost`, `date_added`) VALUES
-(3, 'Radio2342', 20000, '2021-03-09 11:51:09');
+CREATE TABLE `receipts` (
+  `id` int(11) NOT NULL,
+  `receipt_id` varchar(10) NOT NULL,
+  `items_group_id` int(11) DEFAULT NULL,
+  `amount_paid` int(11) DEFAULT NULL,
+  `payment_mode` enum('full_payment','part_payment') DEFAULT NULL,
+  `date_added` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `receipts`
+--
+
+INSERT INTO `receipts` (`id`, `receipt_id`, `items_group_id`, `amount_paid`, `payment_mode`, `date_added`) VALUES
+(1, '33033209', 2222824, 500000, '', '2021-07-11 22:36:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `receipt_grid`
+--
+
+CREATE TABLE `receipt_grid` (
+  `ReceiptID` int(11) NOT NULL,
+  `ReceiptNo` int(11) DEFAULT NULL,
+  `HospNo` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+  `Name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `Registration` decimal(19,4) DEFAULT 0.0000,
+  `Consultation` decimal(19,4) DEFAULT 0.0000,
+  `MedicalDocument` decimal(19,4) DEFAULT 0.0000,
+  `Laboratory` decimal(19,4) DEFAULT 0.0000,
+  `Pharmacy` decimal(19,4) DEFAULT 0.0000,
+  `Accomodation` decimal(19,4) DEFAULT 0.0000,
+  `Delivery` decimal(19,4) DEFAULT 0.0000,
+  `Surgery` decimal(19,4) DEFAULT 0.0000,
+  `OtherProcedures` decimal(19,4) DEFAULT 0.0000,
+  `Deposit` decimal(19,4) DEFAULT 0.0000,
+  `Radiology` decimal(19,4) DEFAULT 0.0000,
+  `Ambulance` decimal(19,4) DEFAULT 0.0000,
+  `MedicalCheckUp` decimal(19,4) DEFAULT 0.0000,
+  `BalOfPayment` decimal(19,4) DEFAULT 0.0000,
+  `Others` decimal(19,4) DEFAULT 0.0000,
+  `Feeding` decimal(19,4) DEFAULT 0.0000,
+  `NursingCare` decimal(19,4) DEFAULT 0.0000,
+  `PartPayment` decimal(19,4) DEFAULT 0.0000,
+  `PatientID` int(11) DEFAULT 0,
+  `Date` datetime DEFAULT current_timestamp(),
+  `Total` decimal(19,4) DEFAULT 0.0000,
+  `TransType` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `English` longtext COLLATE utf8_bin DEFAULT NULL,
+  `EntryBy` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `CallerTag` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `Verified` tinyint(1) DEFAULT 0,
+  `TimePaid` datetime DEFAULT '1753-01-01 00:00:00',
+  `Service` longtext COLLATE utf8_bin DEFAULT NULL,
+  `Debt` decimal(19,4) DEFAULT 0.0000,
+  `DebtPaid` decimal(19,4) DEFAULT 0.0000,
+  `Deleted` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `receipt_grid`
+--
+
+INSERT INTO `receipt_grid` (`ReceiptID`, `ReceiptNo`, `HospNo`, `Name`, `Registration`, `Consultation`, `MedicalDocument`, `Laboratory`, `Pharmacy`, `Accomodation`, `Delivery`, `Surgery`, `OtherProcedures`, `Deposit`, `Radiology`, `Ambulance`, `MedicalCheckUp`, `BalOfPayment`, `Others`, `Feeding`, `NursingCare`, `PartPayment`, `PatientID`, `Date`, `Total`, `TransType`, `English`, `EntryBy`, `CallerTag`, `Verified`, `TimePaid`, `Service`, `Debt`, `DebtPaid`, `Deleted`) VALUES
+(30, 291512, 'NYR/182118/2019', 'Testing', '0.0000', '0.0000', '0.0000', '0.0000', '4000.0000', '10000.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 0, '2019-08-24 00:00:00', '14000.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-08-24 06:18:24', 'Admission, Pharmacy', '0.0000', '0.0000', 0),
+(31, 291513, 'NYR/182119/2019', 'Mr Amaka', '0.0000', '2000.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 0, '2019-08-24 00:00:00', '2000.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-08-24 06:21:10', 'Consultation', '0.0000', '0.0000', 0),
+(32, 291514, 'ECH/000881', 'COLLINS, Seme', '0.0000', '0.0000', '0.0000', '1500.0000', '1200.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '3500.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 154441, '2019-08-24 00:00:00', '6200.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-08-24 06:39:22', 'Ambulance, Laboratory, Pharmacy', '0.0000', '0.0000', 0),
+(33, 291515, 'NYR/182120/2019', 'Testing Receipt', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '2000.0000', '0.0000', '0.0000', 0, '2019-09-03 00:00:00', '2000.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-09-03 09:33:48', 'Feeding', '0.0000', '0.0000', 0),
+(34, 291516, 'FDAH/000883/0919', 'OWANTA, Esther', '0.0000', '2000.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 154444, '2019-09-04 00:00:00', '2000.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-09-04 10:55:40', 'Adult Consulatation', '0.0000', '0.0000', 0),
+(35, 291517, 'FDAH/000883/0919', 'OWANTA, Esther', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '5000.0000', '0.0000', '0.0000', '0.0000', 154444, '2019-09-04 00:00:00', '5000.0000', 'CASH', NULL, 'Admin (Testing)', NULL, 0, '2019-09-04 11:38:41', 'wound dressing and suturing', '0.0000', '0.0000', 0),
+(36, 291518, 'FDAH/000883/0919', 'OWANTA, Esther (Mrs.)', '0.0000', '0.0000', '0.0000', '0.0000', '1490.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 154444, '2019-09-04 00:00:00', '1490.0000', 'CASH', NULL, 'Admin (Testing)', NULL, 0, '2019-09-04 12:27:15', 'ARTEMETER /LUMEFENTRINE 80/480 TABS (COARTEM), PARACETAMOL TABLET 500mg , CIPROFLOXACIN TABLET 500mg (14) TABS', '0.0000', '0.0000', 0),
+(37, 291519, 'FDAH/000884/0919', 'XXXX, xxxxx', '7500.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 154446, '2019-09-04 00:00:00', '7500.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-09-04 15:39:45', 'Registration', '0.0000', '0.0000', 0),
+(38, 291520, 'FDAH/000883/0919', 'OWANTA, Esther', '0.0000', '5000.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 154444, '2019-09-04 00:00:00', '5000.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-09-04 17:59:23', 'MALARIA PARASITE, WIDAL, HVS M/C/S, URINE M/C/S, Consultation', '0.0000', '0.0000', 0),
+(39, 100001, 'NMH/000001/1019', 'TESTING, Any Patient', '7500.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 154447, '2019-10-02 00:00:00', '7500.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-10-02 18:15:20', 'Registration', '0.0000', '0.0000', 0),
+(40, 100002, 'NYR/100002/2019', 'Testing Receipt', '0.0000', '2500.0000', '0.0000', '1500.0000', '2400.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', '0.0000', 0, '2019-11-16 00:00:00', '6400.0000', 'CASH', NULL, 'Collins', NULL, 0, '2019-11-16 22:27:25', 'Consultation, Laboratory, Pharmacy', '0.0000', '0.0000', 0),
+(47, 33080735, 'HMS/124/3456', 'Marcus Senna', '5600.0000', '0.0000', '0.0000', NULL, NULL, NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 30, '2021-07-08 13:19:40', '0.0000', NULL, NULL, NULL, NULL, 0, '1753-01-01 00:00:00', NULL, '0.0000', '0.0000', 0),
+(48, 33073246, 'HMS/124/3456', 'Marcus Senna', '0.0000', '1000.0000', '0.0000', '1000.0000', NULL, NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 30, '2021-07-08 13:34:52', '2000.0000', NULL, NULL, NULL, NULL, 0, '1753-01-01 00:00:00', NULL, '0.0000', '0.0000', 0),
+(49, 33015714, 'HMS/124/3456', 'Marcus Senna', '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 30, '2021-07-08 14:53:42', '0.0000', NULL, NULL, NULL, NULL, 0, '1753-01-01 00:00:00', NULL, '0.0000', '0.0000', 0),
+(50, 33088459, 'HMS/124/3456', 'Marcus Senna', '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 30, '2021-07-08 15:11:22', '0.0000', 'CASH', NULL, NULL, NULL, 0, '1753-01-01 00:00:00', NULL, '0.0000', '0.0000', 0),
+(51, 33036325, 'HMS/124/3456', 'Marcus Senna', '0.0000', '0.0000', '0.0000', '90000.0000', NULL, NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 30, '2021-07-08 15:14:51', '90000.0000', 'CASH', NULL, NULL, NULL, 0, '1753-01-01 00:00:00', NULL, '0.0000', '0.0000', 0),
+(52, 33023721, 'HMS/124/3456', 'Marcus Senna', '0.0000', '0.0000', '0.0000', '20000.0000', NULL, NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 30, '2021-07-11 21:06:31', '20000.0000', 'CASH', NULL, NULL, NULL, 0, '1753-01-01 00:00:00', NULL, '0.0000', '0.0000', 0),
+(53, 33033209, 'HMS/124/3456', 'Marcus Senna', '0.0000', '0.0000', '0.0000', NULL, '500000.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, '0.0000', '0.0000', '0.0000', '0.0000', NULL, NULL, '0.0000', 30, '2021-07-11 22:36:50', '500000.0000', 'CASH', NULL, NULL, NULL, 0, '1753-01-01 00:00:00', NULL, '0.0000', '0.0000', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `religions`
+--
+
+CREATE TABLE `religions` (
+  `id` int(11) NOT NULL,
+  `religion_name` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `religions`
+--
+
+INSERT INTO `religions` (`id`, `religion_name`) VALUES
+(8, 'Christianity'),
+(13, 'Islam'),
+(14, 'Others'),
+(15, 'Traditional');
 
 -- --------------------------------------------------------
 
@@ -12417,66 +12562,31 @@ INSERT INTO `roles` (`id`, `role_name`, `date_added`) VALUES
 
 CREATE TABLE `salutations` (
   `id` int(11) NOT NULL,
-  `title` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `title` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `salutations`
 --
 
 INSERT INTO `salutations` (`id`, `title`) VALUES
-(1, 'Mr'),
-(2, 'Mrs'),
-(3, 'Miss'),
-(4, 'Ms'),
-(5, 'Dr'),
-(6, 'Professor'),
-(7, 'The Rt Revd Dr'),
-(8, 'The Most Revd'),
-(9, 'The Rt Revd'),
-(10, 'The Revd Canon'),
-(11, 'The Revd'),
-(12, 'The Rt Revd Professor'),
-(13, 'The Ven'),
-(14, 'The Most Revd Dr'),
-(15, 'Rabbi'),
-(16, 'Canon'),
-(17, 'Dame'),
-(18, 'Chief'),
-(19, 'Sister'),
-(20, 'Reverend'),
-(21, 'Major'),
-(22, 'Other'),
-(23, 'Cllr'),
-(24, 'Sir'),
-(25, 'Rt Hon Lord'),
-(26, 'Rt Hon'),
-(27, 'The Lord '),
-(28, 'Viscount'),
-(29, 'Viscountess'),
-(30, 'Baroness'),
-(31, 'Captain'),
-(32, 'Master'),
-(33, 'Very Revd'),
-(34, 'Lady'),
-(35, 'MP'),
-(36, 'King of Kings and Lord of Lords'),
-(37, 'Conquering Lion of the Tribe of Judah'),
-(38, 'Elect of God and Light of this World'),
-(39, 'His Own Divine Majesty'),
-(40, 'First Ancient King of Creation'),
-(41, 'King Alpha'),
-(42, 'Queen Omega'),
-(43, 'Beginning with Our End and First with Our Last'),
-(44, 'Protector of All Human Faith'),
-(45, 'Ruler of the Universe'),
-(46, 'Dude'),
-(47, 'Mx (gender-netural)'),
-(48, 'His Holiness'),
-(49, 'Her Holiness'),
-(50, 'Lackey'),
-(51, 'Mother of Dragons'),
-(52, 'First of His Name');
+(1, 'Chief'),
+(2, 'Dr.'),
+(3, 'Engr.'),
+(6, 'Matron'),
+(7, 'Miss.'),
+(8, 'Mr.'),
+(9, 'Mrs.'),
+(10, 'Prof.'),
+(11, 'Ms.'),
+(13, 'Alh.'),
+(25, 'Ms'),
+(32, 'Madam'),
+(70, 'Master'),
+(71, 'Arc.'),
+(72, 'Rev.'),
+(73, 'Pastor'),
+(74, 'Mallam');
 
 -- --------------------------------------------------------
 
@@ -12530,7 +12640,7 @@ INSERT INTO `service_charge_items` (`id`, `ChargeSubGroupID`, `Name`, `GroupC`, 
 (2110, 68, 'DELIVERY (NORMAL)', '30000.0000', '30000.0000', '30000.0000', NULL, NULL, '1000', 1022, NULL, '30000.0000', '7000.0000', 0),
 (2111, 68, 'UNBOOKED Normal Delivery', '70000.0000', '70000.0000', '70000.0000', NULL, NULL, '1000', 1022, NULL, '70000.0000', '1000.0000', 0),
 (2295, 61, 'BED FEE', '200.0000', '2000.0000', '5000.0000', NULL, NULL, '1000', 1027, NULL, '2000.0000', '0.0000', 0),
-(2302, 76, 'Registration (Complementary)', '0.0000', '0.0000', '0.0000', NULL, NULL, '1000', 1042, NULL, '2000.0000', '0.0000', 0),
+(2302, 76, 'Registration (Complementary)', '0.0000', '0.0000', '0.0000', NULL, NULL, '5600', 1042, NULL, '2000.0000', '0.0000', 0),
 (2303, 76, 'Registration (Family Card)', '15000.0000', '15000.0000', '15000.0000', NULL, NULL, '1000', 1042, NULL, '6000.0000', '15000.0000', 0),
 (2304, 76, 'Registration (Personal Adult)', '7500.0000', '7500.0000', '7500.0000', NULL, NULL, '1000', 1042, NULL, '2500.0000', '7500.0000', 0),
 (2305, 68, 'UNBOOKED Episiotomy', '20000.0000', '20000.0000', '20000.0000', NULL, NULL, '1000', 1022, NULL, '20000.0000', '0.0000', 0),
@@ -12568,7 +12678,9 @@ INSERT INTO `service_charge_items` (`id`, `ChargeSubGroupID`, `Name`, `GroupC`, 
 (2477, 56, 'Paediatric', '2000.0000', '2000.0000', '2000.0000', NULL, NULL, '1000', 0, NULL, '2000.0000', '2000.0000', 0),
 (2478, 56, 'Follow up', '0.0000', '0.0000', '0.0000', NULL, NULL, '1000', 0, NULL, '0.0000', '0.0000', 0),
 (2479, 56, 'Specialist ', '5000.0000', '5000.0000', '5000.0000', NULL, NULL, '1000', 0, NULL, '5000.0000', '5000.0000', 0),
-(2480, NULL, NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, '1000', 0, NULL, '0.0000', '0.0000', 0);
+(2480, NULL, NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, '1000', 0, NULL, '0.0000', '0.0000', 0),
+(2482, 82, 'shina adetoye', '0.0000', '0.0000', '0.0000', NULL, NULL, '9000', 0, NULL, '0.0000', '0.0000', 0),
+(2483, 65, 'Baba Jesu', '0.0000', '0.0000', '0.0000', NULL, NULL, '78392', 0, NULL, '0.0000', '0.0000', 0);
 
 -- --------------------------------------------------------
 
@@ -12723,6 +12835,413 @@ INSERT INTO `sub_parameters` (`id`, `parameter_id`, `name`, `date_added`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tribes`
+--
+
+CREATE TABLE `tribes` (
+  `id` int(11) NOT NULL,
+  `tribe_name` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `tribes`
+--
+
+INSERT INTO `tribes` (`id`, `tribe_name`) VALUES
+(1, 'Abayon'),
+(2, 'Abua (Odual)'),
+(3, 'Achipa (Achipawa)'),
+(4, 'Adim'),
+(5, 'Adun'),
+(6, 'Affade'),
+(7, 'Afizere'),
+(8, 'Afo'),
+(9, 'Agbo'),
+(10, 'Akaju-Ndem (Akajuk)'),
+(11, 'Akweya-Yach'),
+(12, 'Alago (Arago)'),
+(13, 'Amo'),
+(14, 'Anaguta'),
+(15, 'Anang'),
+(16, 'Andoni'),
+(17, 'Angas'),
+(18, 'Ankwei'),
+(19, 'Anyima'),
+(20, 'Attakar (Ataka)'),
+(21, 'Auyoka (Auyokawa)'),
+(22, 'Awori'),
+(23, 'Ayu'),
+(24, 'Babur'),
+(25, 'Bachama'),
+(26, 'Bachere'),
+(27, 'Bada'),
+(28, 'Bade'),
+(29, 'Bahumono'),
+(30, 'Bakulung'),
+(31, 'Bali'),
+(32, 'Bambora (Bambarawa)'),
+(33, 'Bambuko'),
+(34, 'Banda (Bandawa)'),
+(35, 'Banka (Bankalawa)'),
+(36, 'Banso (Panso)'),
+(37, 'Bara (Barawa)'),
+(38, 'Barke'),
+(39, 'Baruba (Barba)'),
+(40, 'Bashiri (Bashirawa)'),
+(41, 'Bassa'),
+(42, 'Batta'),
+(43, 'Baushi'),
+(44, 'Baya'),
+(45, 'Bekwarra'),
+(46, 'Bele (Buli, Belewa)'),
+(47, 'Beni'),
+(48, 'Betso (Bete)'),
+(49, 'Bette'),
+(50, 'Bilei'),
+(51, 'Bille'),
+(52, 'Bina (Binawa)'),
+(53, 'Bini'),
+(54, 'Birom'),
+(55, 'Bobua'),
+(56, 'Boki (Nki)'),
+(57, 'Bkkos'),
+(58, 'Boko (Bussawa, Bargawa)'),
+(59, 'Bole (Bolewa)'),
+(60, 'Botlere'),
+(61, 'Boma (Bomawa, Burmano)'),
+(62, 'Bomboro'),
+(63, 'Buduma'),
+(64, 'Buji'),
+(65, 'Buli'),
+(66, 'Bunu'),
+(67, 'Bura'),
+(68, 'Burak'),
+(69, 'Burma (Burmawa)'),
+(70, 'Buru'),
+(71, 'Buta (Butawa)'),
+(72, 'Bwall'),
+(73, 'Bwatiye'),
+(74, 'Bwazza'),
+(75, 'Challa'),
+(76, 'Chama (Chamawa Fitilai)'),
+(77, 'Chamba'),
+(78, 'Chamo'),
+(79, 'Chibok (Chibbak)'),
+(80, 'Chinine'),
+(81, 'Chip'),
+(82, 'Chokobo'),
+(83, 'Chukkol'),
+(84, 'Daba'),
+(85, 'Dadiya'),
+(86, 'Daka'),
+(87, 'Dakarkari'),
+(88, 'Danda (Dandawa)'),
+(89, 'Dangsa'),
+(90, 'Daza (Dere, Derewa)'),
+(91, 'Degema'),
+(92, 'Deno (Denawa)'),
+(93, 'Dghwede'),
+(94, 'Diba'),
+(95, 'Doemak (Dumuk)'),
+(96, 'Ouguri'),
+(97, 'Duka (Dukawa)'),
+(98, 'Duma (Dumawa)'),
+(99, 'Dunuma'),
+(100, 'Ebana (Ebani)'),
+(101, 'Ebirra (lgbirra)'),
+(102, 'Ebu'),
+(103, 'Efik'),
+(104, 'Egbema'),
+(105, 'Egede (lgedde)'),
+(106, 'Eggon'),
+(107, 'Egun (Gu)'),
+(108, 'Ejagham'),
+(109, 'Ekajuk'),
+(110, 'Eket'),
+(111, 'Ekoi'),
+(112, 'Engenni (Ngene)'),
+(113, 'Epie'),
+(114, 'Esan (Ishan)'),
+(115, 'Etche'),
+(116, 'Etolu (Etilo)'),
+(117, 'Etsako'),
+(118, 'Etung'),
+(119, 'Etuno'),
+(120, 'Palli'),
+(121, 'Fulani'),
+(122, 'Fyam (Fyem)'),
+(123, 'Fyer(Fer)'),
+(124, 'Ga\'anda'),
+(125, 'Gade'),
+(126, 'Galambi'),
+(127, 'Gamergu-Mulgwa'),
+(128, 'Qanawuri'),
+(129, 'Gavako'),
+(130, 'Gbedde'),
+(131, 'Gengle'),
+(132, 'Geji'),
+(133, 'Gera (Gere, Gerawa)'),
+(134, 'Geruma (Gerumawa)'),
+(135, 'Gingwak'),
+(136, 'Gira'),
+(137, 'Gizigz'),
+(138, 'Goernai'),
+(139, 'Gokana (Kana)'),
+(140, 'Gombi'),
+(141, 'Gornun (Gmun)'),
+(142, 'Gonia'),
+(143, 'Gubi (Gubawa)'),
+(144, 'Gude'),
+(145, 'Gudu'),
+(146, 'Gure'),
+(147, 'Gurmana'),
+(148, 'Gururntum'),
+(149, 'Gusu'),
+(150, 'Gwa (Gurawa)'),
+(151, 'Gwamba'),
+(152, 'Gwandara'),
+(153, 'Gwari (Gbari)'),
+(154, 'Gwom'),
+(155, 'Gwoza (Waha)'),
+(156, 'Gyem'),
+(157, 'Hausa'),
+(158, 'Higi (Hig)'),
+(159, 'Holma'),
+(160, 'Hona'),
+(161, 'Ibeno'),
+(162, 'Ibibio'),
+(163, 'Ichen'),
+(164, 'Idoma'),
+(165, 'Igala'),
+(167, 'ljumu'),
+(168, 'Ikorn'),
+(169, 'Irigwe'),
+(170, 'Isoko'),
+(171, 'lsekiri (Itsekiri)'),
+(172, 'lyala (lyalla)'),
+(173, 'lzondjo'),
+(174, 'Jaba'),
+(175, 'Jahuna (Jahunawa)'),
+(176, 'Jaku'),
+(177, 'Jara (Jaar Jarawa Jarawa-Dutse)'),
+(178, 'Jere (Jare, Jera, Jera, Jerawa)'),
+(179, 'Jero'),
+(180, 'Jibu'),
+(181, 'Jidda-Abu'),
+(182, 'Jimbin (Jimbinawa)'),
+(183, 'Jira'),
+(184, 'Jonjo (Jenjo)'),
+(185, 'Jukun'),
+(186, 'Kaba(Kabawa)'),
+(187, 'Kadara'),
+(188, 'Kafanchan'),
+(189, 'Kagoro'),
+(190, 'Kaje (Kache)'),
+(191, 'Kajuru (Kajurawa)'),
+(192, 'Kaka'),
+(193, 'Kamaku (Karnukawa)'),
+(194, 'Kambari'),
+(195, 'Kambu'),
+(196, 'Kamo'),
+(197, 'Kanakuru (Dera)'),
+(198, 'Kanembu'),
+(199, 'Kanikon'),
+(200, 'Kantana'),
+(201, 'Kanufi'),
+(202, 'Karekare (Karaikarai)'),
+(203, 'Karimjo'),
+(204, 'Kariya'),
+(205, 'Katab (Kataf)'),
+(206, 'Kenern (Koenoem)'),
+(207, 'Kenton'),
+(208, 'Kiballo (Kiwollo)'),
+(209, 'Kilba'),
+(210, 'Kirfi (Kirfawa)'),
+(211, 'Koma'),
+(212, 'Kona'),
+(213, 'Koro (Kwaro)'),
+(214, 'Kubi (Kubawa)'),
+(215, 'Kudachano (Kudawa)'),
+(216, 'Kugama'),
+(217, 'Kulere (Kaler)'),
+(218, 'Kunini'),
+(219, 'Kurama'),
+(220, 'Kurdul'),
+(221, 'Kushi'),
+(222, 'Kuteb'),
+(223, 'Kutin'),
+(224, 'Kwalla'),
+(225, 'Kwami (Kwom)'),
+(226, 'Kwanchi'),
+(227, 'Kwanka (Kwankwa)'),
+(228, 'Kwaro'),
+(229, 'Kwato'),
+(230, 'Kyenga (Kengawa)'),
+(231, 'Laaru (Larawa)'),
+(232, 'Lakka'),
+(233, 'Lala'),
+(234, 'Lama'),
+(235, 'Lamja'),
+(236, 'Lau'),
+(237, 'Ubbo'),
+(238, 'Limono'),
+(239, 'Lopa (Lupa, Lopawa)'),
+(240, 'Longuda (Lunguda)'),
+(241, 'Mabo'),
+(242, 'Mada'),
+(243, 'Mama'),
+(244, 'Mambilla'),
+(245, 'Manchok'),
+(246, 'Mandara (Wandala)'),
+(247, 'Manga (Mangawa)'),
+(248, 'Margi (Marghi)'),
+(249, 'Matakarn'),
+(250, 'Mbembe'),
+(251, 'Mbol'),
+(252, 'Mbube'),
+(253, 'Mbula'),
+(254, 'Mbum'),
+(255, 'Memyang (Meryan)'),
+(256, 'Miango'),
+(257, 'Miligili (Migili)'),
+(258, 'Miya (Miyawa)'),
+(259, 'Mobber'),
+(260, 'Montol'),
+(261, 'Moruwa (Moro\'a, Morwa)'),
+(262, 'Muchaila'),
+(263, 'Mumuye'),
+(264, 'Mundang'),
+(265, 'Munga (Mupang)'),
+(266, 'Mushere'),
+(267, 'Mwahavul (Mwaghavul)'),
+(268, 'Ndoro'),
+(269, 'Ngamo'),
+(270, 'Ngizim'),
+(271, 'Ngweshe (Ndhang Ngoshe-Ndhang)'),
+(272, 'Ningi (Ningawa)'),
+(273, 'Ninzam (Ninzo)'),
+(274, 'Njayi'),
+(275, 'Nkim'),
+(276, 'Nkum'),
+(277, 'Nokere (Nakere)'),
+(278, 'Nunku'),
+(279, 'Nupe'),
+(280, 'Nyandang'),
+(281, 'Ododop'),
+(282, 'Ogori'),
+(283, 'Okobo (Okkobor)'),
+(284, 'Okpamheri'),
+(285, 'Olulumo'),
+(286, 'Oron'),
+(287, 'Owan'),
+(288, 'Owe'),
+(289, 'Oworo'),
+(290, 'Pa\'a (Pa\'awa Afawa)'),
+(291, 'Pai'),
+(292, 'Panyam'),
+(293, 'Pero'),
+(294, 'Pire'),
+(295, 'Pkanzom'),
+(296, 'Poll'),
+(297, 'Polchi Habe'),
+(298, 'Pongo (Pongu)'),
+(299, 'Potopo'),
+(300, 'Pyapun (Piapung)'),
+(301, 'Qua'),
+(302, 'Rebina (Rebinawa)'),
+(303, 'Reshe'),
+(304, 'Rindire (Rendre)'),
+(305, 'Rishuwa'),
+(306, 'Ron'),
+(307, 'Rubu'),
+(308, 'Rukuba'),
+(309, 'Rumada'),
+(310, 'Rumaya'),
+(311, 'Sakbe'),
+(312, 'Sanga'),
+(313, 'Sate'),
+(314, 'Saya (Sayawa Za\'ar)'),
+(315, 'Segidi (Sigidawa)'),
+(316, 'Shanga (Shangawa)'),
+(317, 'Shangawa (Shangau)'),
+(318, 'Shan-Shan'),
+(319, 'Shira (Shirawa)'),
+(320, 'Shomo'),
+(321, 'Shuwa'),
+(322, 'Sikdi'),
+(323, 'Siri (Sirawa)'),
+(324, 'Srubu (Surubu)'),
+(325, 'Sukur'),
+(326, 'Sura'),
+(327, 'Tangale'),
+(328, 'Tarok'),
+(329, 'Teme'),
+(330, 'Tera (Terawa)'),
+(331, 'Teshena (Teshenawa)'),
+(332, 'Tigon'),
+(333, 'Tikar'),
+(334, 'Tiv'),
+(335, 'Tula'),
+(336, 'Tur'),
+(337, 'Ufia'),
+(338, 'Ukelle'),
+(339, 'Ukwani (Kwale)'),
+(340, 'Uncinda'),
+(341, 'Uneme (Ineme)'),
+(342, 'Ura (Ula)'),
+(343, 'Urhobo'),
+(344, 'Utonkong'),
+(345, 'Uyanga'),
+(346, 'Vemgo'),
+(347, 'Verre'),
+(348, 'Vommi'),
+(349, 'Wagga'),
+(350, 'Waja'),
+(351, 'Waka'),
+(352, 'Warja (Warja)'),
+(353, 'Warji'),
+(354, 'Wula'),
+(355, 'Wurbo'),
+(356, 'Wurkun'),
+(357, 'Yache'),
+(358, 'Yagba'),
+(359, 'Yakurr (Yako)'),
+(360, 'Yalla'),
+(361, 'Yandang'),
+(362, 'Yergan (Yergum)'),
+(363, 'Yoruba'),
+(364, 'Yott'),
+(365, 'Yumu'),
+(366, 'Yungur'),
+(367, 'Yuom'),
+(368, 'Zabara'),
+(369, 'Zaranda'),
+(370, 'Zarma (Zarmawa)'),
+(371, 'Zayam (Zeam)'),
+(372, 'Zul (Zulawa)'),
+(373, 'Gbagyi'),
+(374, 'Zango'),
+(375, 'Unkown'),
+(376, 'Ogoja'),
+(377, 'Obudu'),
+(378, 'Auchi'),
+(379, 'Ijaw'),
+(380, 'Ika'),
+(381, 'Afemai'),
+(383, 'Ibo'),
+(384, 'ikulu'),
+(385, 'EKPENYON'),
+(386, 'Others'),
+(387, 'igarra'),
+(389, 'Berom'),
+(391, 'Eniyan'),
+(392, 'becheve'),
+(393, 'pyem'),
+(394, 'afafanyi');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -12866,9 +13385,53 @@ INSERT INTO `vitals_request` (`id`, `appointment_id`, `sent_by`, `patient_id`, `
 
 CREATE TABLE `wards` (
   `id` int(11) NOT NULL,
-  `ward_name` varchar(100) NOT NULL,
-  `date_added` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `ward_name` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `status` enum('Free','Occupied') COLLATE utf8_bin DEFAULT 'Free',
+  `account_id` int(11) DEFAULT NULL,
+  `doctor_nurse_fee` decimal(19,4) DEFAULT 0.0000,
+  `utility` decimal(19,4) DEFAULT 0.0000,
+  `feeding` decimal(19,4) DEFAULT 0.0000,
+  `ward_rate` decimal(19,4) DEFAULT 0.0000,
+  `ward_type_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `wards`
+--
+
+INSERT INTO `wards` (`id`, `ward_name`, `status`, `account_id`, `doctor_nurse_fee`, `utility`, `feeding`, `ward_rate`, `ward_type_id`) VALUES
+(1, 'Female Ward 23', 'Free', NULL, '3000.0000', '2300.0000', '6900.0000', '290.0000', 21),
+(2, 'Pead Ward 23', 'Occupied', NULL, '3000.0000', '2300.0000', '6900.0000', '290.0000', 23),
+(3, 'Labour Ward', 'Occupied', NULL, '3000.0000', '2300.0000', '6900.0000', '2902.0000', 22),
+(4, 'Post Natal 345', 'Occupied', NULL, '3000.0000', '2300.0000', '6900.0000', '2902.0000', 21);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ward_type`
+--
+
+CREATE TABLE `ward_type` (
+  `id` int(11) NOT NULL,
+  `ward_type_name` varchar(50) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `ward_type`
+--
+
+INSERT INTO `ward_type` (`id`, `ward_type_name`) VALUES
+(16, 'FEMALE MEDICAL WARD'),
+(17, 'FEMALE SURGICAL WARD'),
+(18, 'MALE SURGICAL WARD'),
+(19, 'MEDICAL WARD'),
+(20, 'VIP WARD'),
+(21, 'POST-NATAL WARD'),
+(22, 'LABOUR WARD'),
+(23, 'PEADIATRICS WARD'),
+(24, 'NEONATAL WARD'),
+(25, 'ICU WARD'),
+(26, 'A&E WARD');
 
 --
 -- Indexes for dumped tables
@@ -12878,6 +13441,12 @@ CREATE TABLE `wards` (
 -- Indexes for table `admission_requests`
 --
 ALTER TABLE `admission_requests`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `admission_status`
+--
+ALTER TABLE `admission_status`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -12932,6 +13501,12 @@ ALTER TABLE `dental_clinics`
 -- Indexes for table `departments`
 --
 ALTER TABLE `departments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `discharge_type`
+--
+ALTER TABLE `discharge_type`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -13004,12 +13579,6 @@ ALTER TABLE `general_settings`
 -- Indexes for table `handover_notes`
 --
 ALTER TABLE `handover_notes`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `invoices`
---
-ALTER TABLE `invoices`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -13115,6 +13684,18 @@ ALTER TABLE `menu_parents`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `next_of_kin_rel`
+--
+ALTER TABLE `next_of_kin_rel`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `occupation`
+--
+ALTER TABLE `occupation`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `operations`
 --
 ALTER TABLE `operations`
@@ -13178,6 +13759,12 @@ ALTER TABLE `patient_lab_test2`
 -- Indexes for table `patient_lab_tests`
 --
 ALTER TABLE `patient_lab_tests`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `patient_ledger`
+--
+ALTER TABLE `patient_ledger`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -13265,6 +13852,24 @@ ALTER TABLE `radiology_services`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `receipts`
+--
+ALTER TABLE `receipts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `receipt_grid`
+--
+ALTER TABLE `receipt_grid`
+  ADD PRIMARY KEY (`ReceiptID`);
+
+--
+-- Indexes for table `religions`
+--
+ALTER TABLE `religions`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `request_destinations`
 --
 ALTER TABLE `request_destinations`
@@ -13337,6 +13942,12 @@ ALTER TABLE `sub_parameters`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tribes`
+--
+ALTER TABLE `tribes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -13373,6 +13984,12 @@ ALTER TABLE `wards`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `ward_type`
+--
+ALTER TABLE `ward_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -13380,7 +13997,13 @@ ALTER TABLE `wards`
 -- AUTO_INCREMENT for table `admission_requests`
 --
 ALTER TABLE `admission_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `admission_status`
+--
+ALTER TABLE `admission_status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `ailments`
@@ -13404,7 +14027,7 @@ ALTER TABLE `bed_allotments`
 -- AUTO_INCREMENT for table `billings`
 --
 ALTER TABLE `billings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `clinics`
@@ -13416,7 +14039,7 @@ ALTER TABLE `clinics`
 -- AUTO_INCREMENT for table `consultations`
 --
 ALTER TABLE `consultations`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `countries`
@@ -13435,6 +14058,12 @@ ALTER TABLE `dental_clinics`
 --
 ALTER TABLE `departments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `discharge_type`
+--
+ALTER TABLE `discharge_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `diseases`
@@ -13509,12 +14138,6 @@ ALTER TABLE `handover_notes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `invoices`
---
-ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
-
---
 -- AUTO_INCREMENT for table `issue_medicine`
 --
 ALTER TABLE `issue_medicine`
@@ -13536,7 +14159,7 @@ ALTER TABLE `lab_group`
 -- AUTO_INCREMENT for table `lab_requests`
 --
 ALTER TABLE `lab_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `lab_specimens`
@@ -13548,13 +14171,13 @@ ALTER TABLE `lab_specimens`
 -- AUTO_INCREMENT for table `lab_tests`
 --
 ALTER TABLE `lab_tests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=369;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=375;
 
 --
 -- AUTO_INCREMENT for table `lab_tests_subgroup`
 --
 ALTER TABLE `lab_tests_subgroup`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=821;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=828;
 
 --
 -- AUTO_INCREMENT for table `lab_test_parameters`
@@ -13572,7 +14195,7 @@ ALTER TABLE `lab_test_range`
 -- AUTO_INCREMENT for table `lab_test_range_by_test`
 --
 ALTER TABLE `lab_test_range_by_test`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `lab_test_result_details`
@@ -13596,7 +14219,7 @@ ALTER TABLE `medications`
 -- AUTO_INCREMENT for table `med_reports`
 --
 ALTER TABLE `med_reports`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `menu_assigned`
@@ -13617,6 +14240,18 @@ ALTER TABLE `menu_parents`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `next_of_kin_rel`
+--
+ALTER TABLE `next_of_kin_rel`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `occupation`
+--
+ALTER TABLE `occupation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=354;
+
+--
 -- AUTO_INCREMENT for table `operations`
 --
 ALTER TABLE `operations`
@@ -13632,13 +14267,13 @@ ALTER TABLE `parameters`
 -- AUTO_INCREMENT for table `patient_appointments`
 --
 ALTER TABLE `patient_appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `patient_details`
 --
 ALTER TABLE `patient_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `patient_details2`
@@ -13680,13 +14315,19 @@ ALTER TABLE `patient_lab_test2`
 -- AUTO_INCREMENT for table `patient_lab_tests`
 --
 ALTER TABLE `patient_lab_tests`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `patient_ledger`
+--
+ALTER TABLE `patient_ledger`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=495060;
 
 --
 -- AUTO_INCREMENT for table `patient_nok`
 --
 ALTER TABLE `patient_nok`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `patient_prescriptions`
@@ -13698,19 +14339,19 @@ ALTER TABLE `patient_prescriptions`
 -- AUTO_INCREMENT for table `patient_prescriptions2`
 --
 ALTER TABLE `patient_prescriptions2`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `patient_procedure_tests`
 --
 ALTER TABLE `patient_procedure_tests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `patient_radiology_tests`
 --
 ALTER TABLE `patient_radiology_tests`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `patient_radiology_tests22`
@@ -13722,7 +14363,7 @@ ALTER TABLE `patient_radiology_tests22`
 -- AUTO_INCREMENT for table `patient_vitals`
 --
 ALTER TABLE `patient_vitals`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `patient_ward`
@@ -13758,13 +14399,31 @@ ALTER TABLE `prescription_request_items`
 -- AUTO_INCREMENT for table `radiology_request`
 --
 ALTER TABLE `radiology_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `radiology_services`
 --
 ALTER TABLE `radiology_services`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `receipts`
+--
+ALTER TABLE `receipts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `receipt_grid`
+--
+ALTER TABLE `receipt_grid`
+  MODIFY `ReceiptID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+
+--
+-- AUTO_INCREMENT for table `religions`
+--
+ALTER TABLE `religions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `request_destinations`
@@ -13800,7 +14459,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `salutations`
 --
 ALTER TABLE `salutations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `service_charge_group`
@@ -13812,7 +14471,7 @@ ALTER TABLE `service_charge_group`
 -- AUTO_INCREMENT for table `service_charge_items`
 --
 ALTER TABLE `service_charge_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2481;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2484;
 
 --
 -- AUTO_INCREMENT for table `service_charge_subgroup`
@@ -13837,6 +14496,12 @@ ALTER TABLE `states`
 --
 ALTER TABLE `sub_parameters`
   MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tribes`
+--
+ALTER TABLE `tribes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=395;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -13872,7 +14537,13 @@ ALTER TABLE `vitals_request`
 -- AUTO_INCREMENT for table `wards`
 --
 ALTER TABLE `wards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `ward_type`
+--
+ALTER TABLE `ward_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
